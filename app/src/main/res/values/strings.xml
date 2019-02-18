@@ -7,7 +7,8 @@
     <string name="number_of_players">Number of players</string>
     <string name="correct">CORRECT</string>
     <string name="incorrect">INCORRECT</string>
-    <string name="add_players">Add Players</string>
+    <string name="add_players_label">Add Player (max 6 players)</string>
+    <string name="add_player_button">Add Player</string>
     <string name="enter_player_name">Enter player name</string>
     <string name="max_player_error">Max player error!</string>
 

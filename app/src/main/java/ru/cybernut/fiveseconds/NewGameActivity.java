@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 public class NewGameActivity extends SingleFragmentFullScreenActivity {
     @Override
     protected Fragment createFragment() {
-        return NewGameFragment.newInstance();
+        return NewGameAddPlayersFragment.newInstance();
     }
 
     public static Intent newIntent(Context context) {
