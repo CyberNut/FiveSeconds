@@ -11,5 +11,9 @@
     <string name="enter_player_name">Enter player name</string>
     <string name="max_player_error">Max player error!</string>
 
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 
 </resources>
