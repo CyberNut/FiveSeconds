@@ -14,13 +14,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
 
-public class NewGameAddPlayersFragment extends Fragment implements View.OnKeyListener {
+public class NewGameAddPlayersFragment extends Fragment {
 
     private List<Player> playersList;
 
@@ -40,6 +41,17 @@ public class NewGameAddPlayersFragment extends Fragment implements View.OnKeyLis
         playersList = PlayersList.getInstance().getList();
 
         playerName = (EditText) v.findViewById(R.id.playerName);
+        playerName.setOnKeyListener(new View.OnKeyListener() {
+          public boolean onKey(View v, int keyCode, KeyEvent event)
+          {
+              if(event.getAction() == KeyEvent.ACTION_DOWN && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                  addPlayer();
+                  return true;
+              }
+              return false;
+          }
+        });
+
         playerListView = (ListView) v.findViewById(R.id.playersListView);
 
         playerListAdapter = new PlayersAdapter(getActivity(), playersList);
@@ -49,30 +61,19 @@ public class NewGameAddPlayersFragment extends Fragment implements View.OnKeyLis
         addPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = playerName.getText().toString();
-                if(name != null) {
-                    Player player = new Player(name);
-                    PlayersList.getInstance().addPlayer(player);
-                    playerListAdapter.notifyDataSetChanged();
-                    playerName.setText("");
-                }
+                addPlayer();
             }
         });
         return v;
     }
 
-    @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        switch (v.getId()) {
-            case R.id.playerName:
-                if(keyCode == KeyEvent.KEYCODE_ENTER) {
-                    Player player = new Player(playerName.getText().toString());
-                    PlayersList.getInstance().addPlayer(player);
-                    playerListAdapter.notifyDataSetChanged();
-                    playerName.setText("");
-                }
+    private void addPlayer() {
+        if(!playerName.getText().toString().isEmpty()) {
+            Player player = new Player(playerName.getText().toString());
+            PlayersList.getInstance().addPlayer(player);
+            playerListAdapter.notifyDataSetChanged();
+            playerName.setText("");
         }
-        return true;
     }
 
     private class PlayersAdapter extends ArrayAdapter<Player> {
