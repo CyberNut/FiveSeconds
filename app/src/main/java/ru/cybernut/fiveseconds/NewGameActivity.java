@@ -4,8 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.Toast;
 
-public class NewGameActivity extends SingleFragmentFullScreenActivity {
+public class NewGameActivity extends SingleFragmentFullScreenActivity  implements NewGameSettingsFragment.OnGamePreparedListener {
 
     private static final String GAME_SETTINGS_FRAGMENT = "GAME_SETTINGS_FRAGMENT";
 
@@ -21,5 +22,12 @@ public class NewGameActivity extends SingleFragmentFullScreenActivity {
 
     public void onNextGameSettingsButtonClick(View view) {
         replaceFragment(NewGameSettingsFragment.newInstance(), GAME_SETTINGS_FRAGMENT);
+    }
+
+    @Override
+    public void onGamePrepared(int numberOfQuestions) {
+        Toast.makeText(this, "Number of questions :" + numberOfQuestions, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
     }
 }

@@ -3,6 +3,7 @@ package ru.cybernut.fiveseconds;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import java.util.List;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
 
-public class NewGameAddPlayersFragment extends Fragment {
+public class NewGameAddPlayersFragment extends Fragment implements View.OnKeyListener {
 
     private List<Player> playersList;
 
@@ -60,6 +61,20 @@ public class NewGameAddPlayersFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        switch (v.getId()) {
+            case R.id.playerName:
+                if(keyCode == KeyEvent.KEYCODE_ENTER) {
+                    Player player = new Player(playerName.getText().toString());
+                    PlayersList.getInstance().addPlayer(player);
+                    playerListAdapter.notifyDataSetChanged();
+                    playerName.setText("");
+                }
+        }
+        return true;
+    }
+
     private class PlayersAdapter extends ArrayAdapter<Player> {
         private Context context;
         private List<Player> list;
@@ -81,4 +96,6 @@ public class NewGameAddPlayersFragment extends Fragment {
             return rowView;
         }
     }
+
+
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.View;
@@ -43,7 +44,7 @@ public abstract class SingleFragmentFullScreenActivity extends AppCompatActivity
         fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(backStackString)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
-
   }
