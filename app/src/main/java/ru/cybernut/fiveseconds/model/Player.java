@@ -1,4 +1,4 @@
-package ru.cybernut.fiveseconds.database;
+package ru.cybernut.fiveseconds.model;
 
 import android.graphics.drawable.Drawable;
 
@@ -42,5 +42,10 @@ public class Player {
 
     public void setGameMaster(boolean gameMaster) {
         isGameMaster = gameMaster;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }
