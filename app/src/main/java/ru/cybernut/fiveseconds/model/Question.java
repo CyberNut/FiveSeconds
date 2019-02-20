@@ -1,4 +1,4 @@
-package ru.cybernut.fiveseconds;
+package ru.cybernut.fiveseconds.model;
 
 import java.util.UUID;
 

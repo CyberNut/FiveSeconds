@@ -1,4 +1,4 @@
-package ru.cybernut.fiveseconds;
+package ru.cybernut.fiveseconds.model;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -52,20 +52,20 @@ public class QuestionSet {
         return new FiveSecondsCursorWrapper(cursor);
     }
 
-    public List<Question> getCrimes() {
-        List<Question> crimes = new ArrayList<>();
+    public List<Question> getQuestions() {
+        List<Question> questions = new ArrayList<>();
 
         FiveSecondsCursorWrapper cursorWrapper = queryQuestions(null, null);
         try {
             cursorWrapper.moveToFirst();
             while (!cursorWrapper.isAfterLast()) {
-                crimes.add(cursorWrapper.getQuestion());
+                questions.add(cursorWrapper.getQuestion());
                 cursorWrapper.moveToNext();
             }
         } finally {
             cursorWrapper.close();
         }
-        return crimes;
+        return questions;
     }
 
     public void addQuestion(Question question) {

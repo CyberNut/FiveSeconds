@@ -5,7 +5,7 @@ import android.database.CursorWrapper;
 
 import java.util.UUID;
 
-import ru.cybernut.fiveseconds.Question;
+import ru.cybernut.fiveseconds.model.Question;
 
 import static ru.cybernut.fiveseconds.database.FiveSecondsDBSchema.*;
 
@@ -20,6 +20,7 @@ public class FiveSecondsCursorWrapper extends CursorWrapper {
         String title = getString(getColumnIndex(FSTable.Cols.QUESTION_TEXT));
 
         Question question = new Question(UUID.fromString(uuidString));
+        question.setText(title);
         return question;
     }
 }
