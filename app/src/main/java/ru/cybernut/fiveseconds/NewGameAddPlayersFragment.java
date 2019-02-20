@@ -10,14 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import java.util.List;
 
 import ru.cybernut.fiveseconds.model.Game;
 import ru.cybernut.fiveseconds.model.Player;
@@ -26,7 +23,6 @@ import ru.cybernut.fiveseconds.model.PlayersList;
 public class NewGameAddPlayersFragment extends Fragment {
 
     private static final String PREFERENCE_USER_NAME = "PREFERENCE_USER_NAME";
-    //private List<Player> playersList;
 
     private ImageButton addPlayerButton;
     private EditText playerName;
@@ -151,6 +147,16 @@ public class NewGameAddPlayersFragment extends Fragment {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.item_photo);
             textView.setText(PlayersList.getInstance().getPlayer(position).getName());
             imageView.setImageResource(R.drawable.player_list_empty_photo);
+            ImageButton deletePlayerButton = (ImageButton) rowView.findViewById(R.id.item_delete_player_button);
+            final int pos = position;
+            deletePlayerButton.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      PlayersList.getInstance().deletePlayer(pos);
+                      playersAdapter.notifyDataSetChanged();
+                  }
+              }
+            );
             return rowView;
         }
     }

@@ -33,6 +33,12 @@ public class PlayersList {
         }
     }
 
+    public void deletePlayer(int position) {
+        if(position <= getNumberOfPlayers()) {
+            list.remove(position);
+        }
+    }
+
     public Player getPlayer(int number) {
         return list.get(number);
     }
