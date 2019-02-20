@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,9 +26,9 @@ import ru.cybernut.fiveseconds.model.PlayersList;
 public class NewGameAddPlayersFragment extends Fragment {
 
     private static final String PREFERENCE_USER_NAME = "PREFERENCE_USER_NAME";
-    private List<Player> playersList;
+    //private List<Player> playersList;
 
-    private Button addPlayerButton;
+    private ImageButton addPlayerButton;
     private EditText playerName;
     private ListView playerListView;
     private PlayersAdapter playersAdapter;
@@ -70,10 +71,11 @@ public class NewGameAddPlayersFragment extends Fragment {
             for (int i = 0; i < Game.MAX_PLAYERS; i++) {
                 if(sharedPreferences.contains(PREFERENCE_USER_NAME + i)) {
                     Player player = new Player(sharedPreferences.getString(PREFERENCE_USER_NAME + i, "Player"));
-                    playersList.add(player);
+                    PlayersList.getInstance().putPlayer(player, i);
                 }
             }
         }
+        playersAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -92,7 +94,6 @@ public class NewGameAddPlayersFragment extends Fragment {
     }
 
     private void prepareUI(View view) {
-        playersList = PlayersList.getInstance().getList();
 
         playerName = (EditText) view.findViewById(R.id.playerName);
         playerName.setOnKeyListener(new View.OnKeyListener() {
@@ -111,7 +112,7 @@ public class NewGameAddPlayersFragment extends Fragment {
         playersAdapter = new PlayersAdapter(getActivity());
         playerListView.setAdapter(playersAdapter);
 
-        addPlayerButton = (Button) view.findViewById(R.id.addPlayerButton);
+        addPlayerButton = (ImageButton) view.findViewById(R.id.addPlayerButton);
         addPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

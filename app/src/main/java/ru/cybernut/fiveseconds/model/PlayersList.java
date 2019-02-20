@@ -27,6 +27,12 @@ public class PlayersList {
         list.add(player);
     }
 
+    public void putPlayer(Player player, int position) {
+        if(position >= 0) {
+            list.add(position, player);
+        }
+    }
+
     public Player getPlayer(int number) {
         return list.get(number);
     }

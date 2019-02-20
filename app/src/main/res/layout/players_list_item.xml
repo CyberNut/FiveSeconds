@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/item_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/player_list_empty_photo" />
+        android:src="@drawable/player_list_empty_photo"
+        app:layout_constraintEnd_toStartOf="@+id/item_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/item_name"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/image_delete_button"
+        app:layout_constraintEnd_toStartOf="@+id/image_delete_button"
+        app:layout_constraintStart_toEndOf="@+id/item_photo"
+        app:layout_constraintTop_toTopOf="@+id/image_delete_button" />
 
-</LinearLayout>
+    <ImageButton
+        android:id="@+id/image_delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/item_name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/delete_player" />
+
+</android.support.constraint.ConstraintLayout>
