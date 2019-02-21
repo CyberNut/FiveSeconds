@@ -9,10 +9,12 @@ import android.widget.Toast;
 public class NewGameActivity extends SingleFragmentFullScreenActivity  implements NewGameSettingsFragment.OnGamePreparedListener {
 
     private static final String GAME_SETTINGS_FRAGMENT = "GAME_SETTINGS_FRAGMENT";
+    private NewGameAddPlayersFragment newGameAddPlayersFragment;
 
     @Override
     protected Fragment createFragment() {
-        return NewGameAddPlayersFragment.newInstance();
+        newGameAddPlayersFragment = NewGameAddPlayersFragment.newInstance();
+        return newGameAddPlayersFragment;
     }
 
     public static Intent newIntent(Context context) {
@@ -21,6 +23,7 @@ public class NewGameActivity extends SingleFragmentFullScreenActivity  implement
     }
 
     public void onNextGameSettingsButtonClick(View view) {
+        newGameAddPlayersFragment.saveSettings();
         replaceFragment(NewGameSettingsFragment.newInstance(), GAME_SETTINGS_FRAGMENT);
     }
 

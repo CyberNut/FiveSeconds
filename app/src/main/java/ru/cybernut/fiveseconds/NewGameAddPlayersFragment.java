@@ -36,18 +36,15 @@ public class NewGameAddPlayersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.new_game_players_fragment, container, false);
+         if(savedInstanceState== null) {
+             loadSettings();
+         }
 
         prepareUI(v);
         return v;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadSettings();
-    }
-
-    private void saveSettings() {
+    public void saveSettings() {
         Context context = getActivity();
         if(context != null) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -71,7 +68,10 @@ public class NewGameAddPlayersFragment extends Fragment {
                 }
             }
         }
-        playersAdapter.notifyDataSetChanged();
+
+        if (playersAdapter != null) {
+            playersAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
