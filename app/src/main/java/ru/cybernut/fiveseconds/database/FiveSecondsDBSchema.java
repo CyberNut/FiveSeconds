@@ -8,7 +8,5 @@ public class FiveSecondsDBSchema {
             public static final String UUID = "uuid";
             public static final String QUESTION_TEXT = "text";
         }
-
     }
-
 }

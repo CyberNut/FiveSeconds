@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import ru.cybernut.fiveseconds.database.FiveSecondsBaseHelper;
@@ -20,7 +21,7 @@ public class QuestionSet {
     private Context context;
     private SQLiteDatabase database;
 
-    public static QuestionSet get(Context context) {
+    public static QuestionSet getInstance(Context context) {
         if(questionSet == null) {
             questionSet = new QuestionSet(context);
         }
@@ -29,7 +30,7 @@ public class QuestionSet {
 
     private QuestionSet(Context context) {
         this.context = context;
-        this.database = new FiveSecondsBaseHelper(this.context).getWritableDatabase();
+        this.database = FiveSecondsBaseHelper.getInstance(this.context).getWritableDatabase();
     }
 
     private static ContentValues getContentValues(Question question) {
@@ -50,6 +51,35 @@ public class QuestionSet {
                 null
         );
         return new FiveSecondsCursorWrapper(cursor);
+    }
+
+    public List<String> getRandomIdList(int numberOfQuestions) {
+        int recievedQuestion = 0;
+        int count = 0;
+        ArrayList<Integer> fullIDList = new ArrayList<>();
+        ArrayList<String> randomIDList = new ArrayList<>();
+        Random random = new Random();
+        //get number of records in DB
+        FiveSecondsCursorWrapper cursor = queryQuestions(null, null);
+        count = cursor.getCount();
+        if (count > 0) {
+            while (cursor.moveToNext()) {
+                fullIDList.add(cursor.getInt(0));
+            }
+            int min = Math.min(count, numberOfQuestions);
+            while (recievedQuestion < min) {
+                int tempId = fullIDList.get(random.nextInt(count));
+                if (!randomIDList.contains(tempId)) {
+                    cursor = queryQuestions("_id = ?", new String[] {String.valueOf(tempId)});
+                    if(cursor.moveToFirst()) {
+                        String uuidString = cursor.getString(cursor.getColumnIndex(FSTable.Cols.UUID));
+                        randomIDList.add(uuidString);
+                        recievedQuestion++;
+                    }
+                }
+            }
+        }
+        return randomIDList;
     }
 
     public List<Question> getQuestions() {
@@ -84,8 +114,8 @@ public class QuestionSet {
         database.delete(FSTable.NAME, FSTable.Cols.UUID + " = ?", new String[] {uuidString});
     }
 
-    public Question getQuestion(UUID id){
-        FiveSecondsCursorWrapper cursor = queryQuestions(FSTable.Cols.UUID + " = ?", new String[] {id.toString()});
+    public Question getQuestion(String id){
+        FiveSecondsCursorWrapper cursor = queryQuestions(FSTable.Cols.UUID + " = ?", new String[] {id});
         try {
             if(cursor.getCount() == 0) {
                 return null;
@@ -96,5 +126,4 @@ public class QuestionSet {
             cursor.close();
         }
     }
-
 }

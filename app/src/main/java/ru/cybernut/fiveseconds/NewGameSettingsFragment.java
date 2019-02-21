@@ -46,20 +46,20 @@ public class NewGameSettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.new_game_settings_fragment, container, false);
 
-        numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
         numberOfQuestionsTextView = (TextView)v.findViewById(R.id.numberOfQuestions);
+        numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
 
         startNewGameButton = (ImageButton)v.findViewById(R.id.startNewGameButton);
         startNewGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onGamePreparedListener.onGamePrepared(numberOfPlayers);
+                onGamePreparedListener.onGamePrepared(numberOfQuestionsSeekBar.getProgress());
             }
         });
 
         numberOfQuestionsSeekBar = (SeekBar)v.findViewById(R.id.numberOfQuestionsSeekBar);
         numberOfQuestionsSeekBar.setMax(MAX_QUANTITY_OF_QUESTIONS);
-        numberOfQuestionsSeekBar.setProgress(MIN_QUANTITY_OF_QUESTIONS);
+        numberOfQuestionsSeekBar.setProgress(MIN_QUANTITY_OF_QUESTIONS * numberOfPlayers);
         updateNumberOfQuestionsTextView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             numberOfQuestionsSeekBar.setMin(MIN_QUANTITY_OF_QUESTIONS);
@@ -89,6 +89,7 @@ public class NewGameSettingsFragment extends Fragment {
 
 
     private void updateNumberOfQuestionsTextView() {
+        numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
         numberOfQuestionsTextView.setText(String.valueOf(numberOfPlayers * numberOfQuestionsSeekBar.getProgress()));
     }
 
