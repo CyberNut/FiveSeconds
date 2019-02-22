@@ -2,12 +2,16 @@ package ru.cybernut.fiveseconds;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Constraints;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
@@ -18,6 +22,9 @@ public class MainGameActivity extends AppCompatActivity {
 
     private int numberOfQuestions;
     private PlayerCardFragment playerCardFragment;
+    private PlayersList playersList;
+    private ConstraintLayout mainContainer;
+
 
     public static Intent newIntent(Context context, int numberOfQuestions) {
         Intent intent = new Intent(context, MainGameActivity.class);
@@ -29,16 +36,38 @@ public class MainGameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         numberOfQuestions = getIntent().getExtras().getInt(NUMBER_OF_QUESTIONS_KEY);
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.main_game_activity);
+        mainContainer = findViewById(R.id.main_game_container);
+        prepareUI();
+
     }
 
     private void prepareUI() {
 
+        playersList = PlayersList.getInstance();
 
-        PlayersList playersList = PlayersList.getInstance();
         if(playersList.getNumberOfPlayers() == 0) {
             return;
         }
+
+//        for (Player player : playersList.getList()) {
+
+            FrameLayout frameLayout = new FrameLayout(this);
+
+            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.topToTop = 0;
+            layoutParams.bottomToBottom = 0;
+            layoutParams.endToEnd = 0;
+
+            frameLayout.setLayoutParams(layoutParams);
+            TextView textView = new TextView(this);
+            textView.setText("TEST");
+            frameLayout.addView(textView);
+
+            mainContainer.addView(frameLayout);
+//        }
 
         Player firstPlayer = playersList.getPlayer(0);
         playerCardFragment = PlayerCardFragment.newInstance(firstPlayer);
