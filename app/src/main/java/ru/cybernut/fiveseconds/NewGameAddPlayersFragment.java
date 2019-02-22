@@ -36,17 +36,14 @@ public class NewGameAddPlayersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.new_game_players_fragment, container, false);
-         if(savedInstanceState== null) {
-             loadSettings();
-         }
-
+        loadSettings();
         prepareUI(v);
         return v;
     }
 
     public void saveSettings() {
         Context context = getActivity();
-        if(context != null) {
+        if(context != null ) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             for (int i = 0; i < PlayersList.getInstance().getNumberOfPlayers(); i++) {
                 Player player = PlayersList.getInstance().getPlayer(i);
@@ -59,7 +56,7 @@ public class NewGameAddPlayersFragment extends Fragment {
 
     private void loadSettings() {
         Context context = getActivity();
-        if(context != null) {
+        if(context != null && (PlayersList.getInstance().getNumberOfPlayers() == 0)) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             for (int i = 0; i < Game.MAX_PLAYERS; i++) {
                 if(sharedPreferences.contains(PREFERENCE_USER_NAME + i)) {

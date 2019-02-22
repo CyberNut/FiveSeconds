@@ -30,7 +30,8 @@ public class NewGameActivity extends SingleFragmentFullScreenActivity  implement
     @Override
     public void onGamePrepared(int numberOfQuestions) {
         Toast.makeText(this, "Number of questions :" + numberOfQuestions, Toast.LENGTH_SHORT).show();
-        Intent intent = GameActivity.newIntent(this, numberOfQuestions);
+        //Intent intent = GameActivity.newIntent(this, numberOfQuestions);
+        Intent intent = MainGameActivity.newIntent(this, numberOfQuestions);
         startActivity(intent);
     }
 }

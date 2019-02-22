@@ -2,7 +2,9 @@ package ru.cybernut.fiveseconds.model;
 
 import android.graphics.drawable.Drawable;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable {
 
     private String name;
     private Drawable photo;
@@ -47,6 +49,10 @@ public class Player {
 
     public int getScore() {
         return score;
+    }
+
+    public void increaseScore() {
+        score++;
     }
 
     public void setScore(int score) {
