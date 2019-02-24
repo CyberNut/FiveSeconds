@@ -1,6 +1,7 @@
 package ru.cybernut.fiveseconds.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PlayersList {
@@ -33,10 +34,21 @@ public class PlayersList {
         }
     }
 
+    public Player getPlayerById(int id) {
+        if(list.size() >= id && id > 0) {
+            return list.get(id - 1);
+        }
+        return null;
+    }
+
     public void deletePlayer(int position) {
         if(position <= getNumberOfPlayers()) {
             list.remove(position);
         }
+    }
+
+    public int getId(Player player) {
+        return list.indexOf(player) + 1;
     }
 
     public Player getPlayer(int number) {

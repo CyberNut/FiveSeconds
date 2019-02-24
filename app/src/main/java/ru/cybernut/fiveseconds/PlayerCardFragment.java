@@ -3,6 +3,7 @@ package ru.cybernut.fiveseconds;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import ru.cybernut.fiveseconds.model.Player;
 
 public class PlayerCardFragment extends Fragment {
 
+    private static final String TAG = "PlayerCardFragment";
     private static final String PLAYER_ARGS_KEY = "PLAYER_ARGS_KEY";
 
     private Player player;
@@ -55,7 +57,11 @@ public class PlayerCardFragment extends Fragment {
 
     public void updateUI() {
         playerScore.setText(String.valueOf(player.getScore()));
-        isCurrentImageView.setVisibility(player.isCurrentPlayer() ? View.VISIBLE : View.INVISIBLE);
+        //isCurrentImageView.setVisibility(player.isCurrentPlayer() ? View.VISIBLE : View.INVISIBLE);
     }
 
+    public void setCurrentLabel(boolean isCurrent) {
+        Log.i(TAG, "setCurrentLabel: " + isCurrent);
+        isCurrentImageView.setVisibility(isCurrent ? View.VISIBLE : View.INVISIBLE);
+    }
 }

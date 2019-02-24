@@ -6,29 +6,21 @@ import java.io.Serializable;
 
 public class Player implements Serializable {
 
-    private static int count = 1;
-
     private String name;
     private Drawable photo;
     private boolean isGameMaster;
     private int score;
-    private int id;
-    private boolean isCurrentPlayer;
 
     public Player(String name) {
         this.name = name;
         this.isGameMaster = false;
         this.photo = null;
-        this.id = count++;
-        this.isCurrentPlayer = false;
     }
 
     public Player(String name, Drawable photo, boolean isGameMaster) {
         this.name = name;
         this.photo = photo;
         this.isGameMaster = isGameMaster;
-        this.id = count++;
-        this.isCurrentPlayer = false;
     }
 
     public String getName() {
@@ -65,18 +57,6 @@ public class Player implements Serializable {
 
     public void setScore(int score) {
         this.score = score;
-    }
-
-    public boolean isCurrentPlayer() {
-        return isCurrentPlayer;
-    }
-
-    public void setCurrentPlayer(boolean currentPlayer) {
-        isCurrentPlayer = currentPlayer;
-    }
-
-    public int getId() {
-        return id;
     }
 
     @Override

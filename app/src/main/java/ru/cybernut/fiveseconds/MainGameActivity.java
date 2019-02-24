@@ -2,27 +2,28 @@ package ru.cybernut.fiveseconds;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import ru.cybernut.fiveseconds.model.Game;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
 import ru.cybernut.fiveseconds.model.Question;
 
-public class MainGameActivity extends AppCompatActivity {
+public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpdatable {
 
+    private static final String TAG = "MainGameActivity";
     private static final String NUMBER_OF_QUESTIONS_KEY = "NUMBER_OF_QUESTIONS_KEY";
     private static final int ID_START_VALUE = 770070;
 
@@ -30,7 +31,7 @@ public class MainGameActivity extends AppCompatActivity {
     private PlayerCardFragment playerCardFragment;
     private PlayersList playersList;
     private ConstraintLayout mainContainer;
-    private List<PlayerCardFragment> playerCardFragmentList;
+    private Map<Integer, PlayerCardFragment> playerCardFragmentMap;
     private Game game;
     private TextView questionTextView;
 
@@ -53,15 +54,23 @@ public class MainGameActivity extends AppCompatActivity {
     }
 
     private void initialize() {
-        game = new Game(this, PlayersList.getInstance().getList(), numberOfQuestions);
+        game = new Game(this, numberOfQuestions, this);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        playerCardFragment = playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer()));
+        if(playerCardFragment != null) {
+            playerCardFragment.setCurrentLabel(true);
+        }
     }
 
     private void prepareUI() {
 
         playersList = PlayersList.getInstance();
         int numberOfPlayers = playersList.getNumberOfPlayers();
-        playerCardFragmentList = new ArrayList<>();
+        playerCardFragmentMap = new HashMap<>();
 
         if(numberOfPlayers == 0) {
             return;
@@ -71,19 +80,23 @@ public class MainGameActivity extends AppCompatActivity {
 
         for (Player player : playersList.getList()) {
 
+            int playerId = playersList.getId(player);
+            if(playerId <= 0) {
+                continue;
+            }
             FrameLayout frameLayout = new FrameLayout(this);
-            setLayoutParamsById(frameLayout, player.getId(), numberOfPlayers);
-            frameLayout.setId(ID_START_VALUE + player.getId());
+            setLayoutParamsById(frameLayout, playerId, numberOfPlayers);
+            frameLayout.setId(ID_START_VALUE + playerId);
             mainContainer.addView(frameLayout);
 
             playerCardFragment = PlayerCardFragment.newInstance(player);
-            Fragment fragment = fm.findFragmentById(ID_START_VALUE + player.getId());
+            Fragment fragment = fm.findFragmentById(ID_START_VALUE + playerId);
             if(fragment == null) {
                 fm.beginTransaction()
-                        .replace(ID_START_VALUE + player.getId(), playerCardFragment)
+                        .replace(ID_START_VALUE + playerId, playerCardFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit();
-                playerCardFragmentList.add(playerCardFragment);
+                playerCardFragmentMap.put(playerId, playerCardFragment);
             }
         }
     }
@@ -98,7 +111,7 @@ public class MainGameActivity extends AppCompatActivity {
                 layoutParams.endToEnd = 0;
                 layoutParams.bottomToBottom = 0;
                 if(numberOfPlayers <= 4) {
-                    layoutParams.horizontalBias = 0.5f;
+                    layoutParams.horizontalBias = 0.7f;
                 } else {
                     layoutParams.horizontalBias = 0.25f;
                 }
@@ -108,7 +121,7 @@ public class MainGameActivity extends AppCompatActivity {
                     layoutParams.endToEnd = 0;
                     layoutParams.topToTop = 0;
                     layoutParams.bottomToBottom = 0;
-                    layoutParams.verticalBias = 0.5f;
+                    layoutParams.verticalBias = 0.3f;
                     frameLayout.setRotation(-90);
                 } else {
                     layoutParams.startToStart = 0;
@@ -122,7 +135,7 @@ public class MainGameActivity extends AppCompatActivity {
                     layoutParams.startToStart = 0;
                     layoutParams.endToEnd = 0;
                     layoutParams.topToTop = 0;
-                    layoutParams.horizontalBias = 0.5f;
+                    layoutParams.horizontalBias = 0.3f;
                     frameLayout.setRotation(-180);
                 } else {
                     layoutParams.endToEnd = 0;
@@ -137,7 +150,7 @@ public class MainGameActivity extends AppCompatActivity {
                     layoutParams.startToStart = 0;
                     layoutParams.bottomToBottom = 0;
                     layoutParams.topToTop = 0;
-                    layoutParams.verticalBias = 0.5f;
+                    layoutParams.verticalBias = 0.7f;
                     frameLayout.setRotation(-270);
                 } else {
                     layoutParams.endToEnd = 0;
@@ -166,40 +179,25 @@ public class MainGameActivity extends AppCompatActivity {
     }
 
     public void onStartButtonClick(View view) {
-        new GameTask().execute();
-        //view.setVisibility(View.INVISIBLE);
-    }
-
-    private class GameTask extends AsyncTask<Void, Void, Question> {
-
-        @Override
-        protected Question doInBackground(Void... voids) {
-            return game.getNextQuestion();
+        playerCardFragment = playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer()));
+        if(playerCardFragment != null) {
+            playerCardFragment.setCurrentLabel(false);
         }
-
-        @Override
-        protected void onPostExecute(Question question) {
-            if(question != null) {
-                questionTextView.setText(question.getText());
-                updateUI();
-            }
-        }
+        game.nextTurn(true);
     }
 
     private void updateUI() {
 
-        int numberOfPlayers = playersList.getList().size();
-        for (Player player : playersList.getList()) {
-            if (player.isCurrentPlayer()) {
-                int currentId = player.getId();
-                int nextId = 0;
-                if (currentId == numberOfPlayers) {
-                    nextId = 1;
-                } else {
-                    nextId = ++currentId;
-                }
-                //playersList.getPlayer(ne)
-            }
+        playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer())).setCurrentLabel(true);
+        Question question = game.getCurrentQuestion();
+        if(question != null) {
+            questionTextView.setText(question.getText());
         }
+    }
+
+    @Override
+    public void update() {
+        Log.i(TAG, "update: ");
+        updateUI();
     }
 }
