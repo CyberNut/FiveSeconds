@@ -12,6 +12,7 @@ public class Game {
     private Context context;
     private List<Player> playerList;
     private Player currentPlayer;
+    private Question currentQuestion;
     private int numberOfQuestions;
     List<String> uuidList;
 
@@ -20,14 +21,16 @@ public class Game {
         this.playerList = playerList;
         this.numberOfQuestions = numberOfQuestions;
         this.uuidList = QuestionSet.getInstance(context).getRandomIdList(numberOfQuestions);
+        PlayersList.getInstance().getPlayer(0).setCurrentPlayer(true);
     }
 
     public Question getNextQuestion() {
         if(uuidList.size() > 0) {
             String uuid = uuidList.get(0);
             uuidList.remove(0);
-            Question question = QuestionSet.getInstance(context).getQuestion(uuid);
-            return question;
+            currentQuestion = QuestionSet.getInstance(context).getQuestion(uuid);
+
+            return currentQuestion;
         }
         return null;
     }

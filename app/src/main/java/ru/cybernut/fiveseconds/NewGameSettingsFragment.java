@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import ru.cybernut.fiveseconds.model.PlayersList;
 
@@ -53,17 +54,19 @@ public class NewGameSettingsFragment extends Fragment {
         startNewGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onGamePreparedListener.onGamePrepared(numberOfQuestionsSeekBar.getProgress());
+                int numberOfQuestions = MIN_QUANTITY_OF_QUESTIONS * numberOfPlayers + numberOfPlayers * numberOfQuestionsSeekBar.getProgress();
+                if (numberOfQuestions <= MIN_QUANTITY_OF_QUESTIONS || numberOfPlayers < 2) {
+                    Toast.makeText(getActivity(), R.string.incorrect_number_of_questions, Toast.LENGTH_SHORT).show();
+                } else {
+                    onGamePreparedListener.onGamePrepared(numberOfQuestions);
+                }
             }
         });
 
         numberOfQuestionsSeekBar = (SeekBar)v.findViewById(R.id.numberOfQuestionsSeekBar);
-        numberOfQuestionsSeekBar.setMax(MAX_QUANTITY_OF_QUESTIONS);
-        numberOfQuestionsSeekBar.setProgress(MIN_QUANTITY_OF_QUESTIONS * numberOfPlayers);
+        numberOfQuestionsSeekBar.setMax(MAX_QUANTITY_OF_QUESTIONS - MIN_QUANTITY_OF_QUESTIONS);
+        numberOfQuestionsSeekBar.setProgress(numberOfPlayers);
         updateNumberOfQuestionsTextView();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            numberOfQuestionsSeekBar.setMin(MIN_QUANTITY_OF_QUESTIONS);
-        }
         numberOfQuestionsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -90,7 +93,7 @@ public class NewGameSettingsFragment extends Fragment {
 
     private void updateNumberOfQuestionsTextView() {
         numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
-        numberOfQuestionsTextView.setText(String.valueOf(numberOfPlayers * numberOfQuestionsSeekBar.getProgress()));
+        numberOfQuestionsTextView.setText(String.valueOf(MIN_QUANTITY_OF_QUESTIONS * numberOfPlayers +  numberOfPlayers * numberOfQuestionsSeekBar.getProgress()));
     }
 
 

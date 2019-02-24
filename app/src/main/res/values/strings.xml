@@ -11,6 +11,7 @@
     <string name="add_player_button">Add Player</string>
     <string name="enter_player_name">Enter player name</string>
     <string name="max_player_error">Max player error!</string>
+    <string name="incorrect_number_of_questions">Incorrect number of questions or players!</string>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>

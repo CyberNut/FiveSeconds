@@ -9,6 +9,7 @@
         android:id="@+id/player_card_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         app:srcCompat="@drawable/avatar" />
 
     <TextView
@@ -16,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:layout_margin="8dp"
+        android:layout_margin="2dp"
         android:text="TextView" />
 
     <TextView
@@ -24,6 +25,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:layout_margin="8dp"
         android:text="TextView" />
+
+    <ImageView
+        android:id="@+id/is_current_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
 </FrameLayout>
