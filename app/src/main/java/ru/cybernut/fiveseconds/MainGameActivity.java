@@ -64,6 +64,9 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
         if(playerCardFragment != null) {
             playerCardFragment.setCurrentLabel(true);
         }
+        if(game.getCurrentQuestion()!= null) {
+            questionTextView.setText(game.getCurrentQuestion().getText());
+        }
     }
 
     private void prepareUI() {

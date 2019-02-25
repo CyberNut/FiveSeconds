@@ -31,16 +31,13 @@ public class Game {
         this.uuidList = QuestionSet.getInstance(context).getRandomIdList(numberOfQuestions);
         this.currentQuestion = getNextQuestion();
         this.currentPlayer = playerList.getPlayer(0);
-        new GameTask().execute();
     }
 
     public Question getNextQuestion() {
         if(uuidList.size() > 0) {
             String uuid = uuidList.get(0);
             uuidList.remove(0);
-            currentQuestion = QuestionSet.getInstance(context).getQuestion(uuid);
-
-            return currentQuestion;
+            return QuestionSet.getInstance(context).getQuestion(uuid);
         }
         return null;
     }
@@ -54,6 +51,7 @@ public class Game {
 
         @Override
         protected void onPostExecute(Question question) {
+            currentQuestion = nextQuestion;
             nextQuestion = question;
         }
     }
@@ -72,9 +70,8 @@ public class Game {
             currentPlayer.increaseScore();
         }
         int currentPlayerId = playerList.getId(currentPlayer);
-        currentPlayer = playerList.getPlayer(getNextId(currentPlayerId) - 1);
+        currentPlayer = playerList.getPlayer(getNextId(currentPlayerId));
         Log.i(TAG, "nextTurn: ");        
-        currentQuestion = nextQuestion;
         new GameTask().execute();
         mainGameActivity.update();
     }
