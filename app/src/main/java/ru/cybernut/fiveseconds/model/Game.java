@@ -53,6 +53,7 @@ public class Game {
         protected void onPostExecute(Question question) {
             currentQuestion = nextQuestion;
             nextQuestion = question;
+            mainGameActivity.update();
         }
     }
 
@@ -73,14 +74,13 @@ public class Game {
         currentPlayer = playerList.getPlayer(getNextId(currentPlayerId));
         Log.i(TAG, "nextTurn: ");        
         new GameTask().execute();
-        mainGameActivity.update();
     }
 
     private int getNextId(int id) {
-        if(id == numberOfPlayers) {
-            return 1;
+        if(id >= (numberOfPlayers - 1)) {
+            return 0;
         } else {
-            return id++;
+            return ++id;
         }
     }
 

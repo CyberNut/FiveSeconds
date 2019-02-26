@@ -84,7 +84,7 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
         for (Player player : playersList.getList()) {
 
             int playerId = playersList.getId(player);
-            if(playerId <= 0) {
+            if(playerId < 0) {
                 continue;
             }
             FrameLayout frameLayout = new FrameLayout(this);
@@ -104,12 +104,12 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
         }
     }
 
-    private void setLayoutParamsById(FrameLayout frameLayout, int id, int numberOfPlayers) {
+    private void setLayoutParamsById(FrameLayout frameLayout, int playerIndex, int numberOfPlayers) {
 
         ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(8, 8,8,8);
-        switch(id) {
-            case 1:
+        switch(playerIndex) {
+            case 0:
                 layoutParams.startToStart = 0;
                 layoutParams.endToEnd = 0;
                 layoutParams.bottomToBottom = 0;
@@ -119,7 +119,7 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
                     layoutParams.horizontalBias = 0.25f;
                 }
                 break;
-            case 2:
+            case 1:
                 if(numberOfPlayers <= 4) {
                     layoutParams.endToEnd = 0;
                     layoutParams.topToTop = 0;
@@ -133,7 +133,7 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
                     layoutParams.horizontalBias = 0.75f;
                 }
                 break;
-            case 3:
+            case 2:
                 if(numberOfPlayers <= 4) {
                     layoutParams.startToStart = 0;
                     layoutParams.endToEnd = 0;
@@ -148,7 +148,7 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
                     frameLayout.setRotation(-90);
                 }
                 break;
-            case 4:
+            case 3:
                 if(numberOfPlayers <= 4) {
                     layoutParams.startToStart = 0;
                     layoutParams.bottomToBottom = 0;
@@ -163,14 +163,14 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
                     frameLayout.setRotation(-180);
                 }
                 break;
-            case 5:
+            case 4:
                 layoutParams.endToEnd = 0;
                 layoutParams.topToTop = 0;
                 layoutParams.startToStart = 0;
                 layoutParams.horizontalBias = 0.25f;
                 frameLayout.setRotation(-180);
                 break;
-            case 6:
+            case 5:
                 layoutParams.bottomToBottom = 0;
                 layoutParams.topToTop = 0;
                 layoutParams.startToStart = 0;

@@ -35,8 +35,8 @@ public class PlayersList {
     }
 
     public Player getPlayerById(int id) {
-        if(list.size() >= id && id > 0) {
-            return list.get(id - 1);
+        if(list.size() > id && id > 0) {
+            return list.get(id);
         }
         return null;
     }
@@ -48,7 +48,7 @@ public class PlayersList {
     }
 
     public int getId(Player player) {
-        return list.indexOf(player) + 1;
+        return list.indexOf(player);
     }
 
     public Player getPlayer(int number) {
