@@ -192,6 +192,9 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
     private void updateUI() {
 
         playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer())).setCurrentLabel(true);
+        for (PlayerCardFragment cardFragment : playerCardFragmentMap.values()) {
+            cardFragment.updateUI();
+        }
         Question question = game.getCurrentQuestion();
         if(question != null) {
             questionTextView.setText(question.getText());
