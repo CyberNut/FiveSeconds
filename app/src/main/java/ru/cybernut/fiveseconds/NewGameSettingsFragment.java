@@ -1,20 +1,20 @@
 package ru.cybernut.fiveseconds;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import ru.cybernut.fiveseconds.model.PlayersList;
+import ru.cybernut.fiveseconds.view.RoundedSquareProgressView;
 
 
 public class NewGameSettingsFragment extends Fragment {
@@ -27,6 +27,8 @@ public class NewGameSettingsFragment extends Fragment {
     private TextView numberOfQuestionsTextView;
     private ImageButton startNewGameButton;
     private OnGamePreparedListener onGamePreparedListener;
+    private RoundedSquareProgressView progressBarView;
+    private Button testButton;
 
     public static NewGameSettingsFragment newInstance() {
         return new NewGameSettingsFragment();
@@ -60,6 +62,16 @@ public class NewGameSettingsFragment extends Fragment {
                 } else {
                     onGamePreparedListener.onGamePrepared(numberOfQuestions);
                 }
+            }
+        });
+
+        progressBarView = (RoundedSquareProgressView) v.findViewById(R.id.progressBar);
+        progressBarView.setProgress(0);
+        testButton = (Button) v.findViewById(R.id.test_button);
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressBarView.setProgress(progressBarView.getProgress() + 1);
             }
         });
 
