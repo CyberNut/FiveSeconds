@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ru.cybernut.fiveseconds.model.Player;
+import ru.cybernut.fiveseconds.view.RoundedSquareProgressView;
 
 public class PlayerCardFragment extends Fragment {
 
@@ -22,6 +23,8 @@ public class PlayerCardFragment extends Fragment {
     private TextView playerScore;
     private TextView playerName;
     private ImageView isCurrentImageView;
+    private RoundedSquareProgressView progressView;
+
 
     public static PlayerCardFragment newInstance(Player player) {
 
@@ -39,12 +42,15 @@ public class PlayerCardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View playerCard = inflater.inflate(R.layout.player_card, container, false);
+        //View playerCard = inflater.inflate(R.layout.player_card, container, false);
+        View playerCard = inflater.inflate(R.layout.new_player_card, container, false);
         playerName = (TextView) playerCard.findViewById(R.id.player_card_name);
         playerScore = (TextView) playerCard.findViewById(R.id.player_card_score);
         playerPhoto = (ImageView) playerCard.findViewById(R.id.player_card_photo);
         isCurrentImageView = (ImageView) playerCard.findViewById(R.id.is_current_image_view);
         isCurrentImageView.setVisibility(View.INVISIBLE);
+        progressView = (RoundedSquareProgressView) playerCard.findViewById(R.id.rounded_progress_bar);
+        progressView.setProgress(0);
 
         player = (Player) getArguments().getSerializable(PLAYER_ARGS_KEY);
 
@@ -60,8 +66,23 @@ public class PlayerCardFragment extends Fragment {
         //isCurrentImageView.setVisibility(player.isCurrentPlayer() ? View.VISIBLE : View.INVISIBLE);
     }
 
+    public void setProgress(double progress) {
+        progressView.setProgress(progress);
+    }
+
     public void setCurrentLabel(boolean isCurrent) {
         Log.i(TAG, "setCurrentLabel: " + isCurrent);
-        isCurrentImageView.setVisibility(isCurrent ? View.VISIBLE : View.INVISIBLE);
+        if(isCurrent) {
+            isCurrentImageView.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
+        }
+        else {
+            isCurrentImageView.setVisibility( View.INVISIBLE);
+            progressView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public double getProgress() {
+        return progressView.getProgress();
     }
 }

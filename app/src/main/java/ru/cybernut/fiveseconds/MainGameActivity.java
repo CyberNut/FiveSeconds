@@ -20,6 +20,7 @@ import ru.cybernut.fiveseconds.model.Game;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
 import ru.cybernut.fiveseconds.model.Question;
+import ru.cybernut.fiveseconds.view.RoundedSquareProgressView;
 
 public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpdatable {
 
@@ -183,6 +184,7 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
 
     public void onStartButtonClick(View view) {
         playerCardFragment = playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer()));
+        playerCardFragment.setProgress(playerCardFragment.getProgress() + 1);
         if(playerCardFragment != null) {
             playerCardFragment.setCurrentLabel(false);
         }
@@ -206,4 +208,5 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
         Log.i(TAG, "update: ");
         updateUI();
     }
+
 }

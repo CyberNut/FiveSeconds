@@ -27,8 +27,6 @@ public class NewGameSettingsFragment extends Fragment {
     private TextView numberOfQuestionsTextView;
     private ImageButton startNewGameButton;
     private OnGamePreparedListener onGamePreparedListener;
-    private RoundedSquareProgressView progressBarView;
-    private Button testButton;
 
     public static NewGameSettingsFragment newInstance() {
         return new NewGameSettingsFragment();
@@ -62,16 +60,6 @@ public class NewGameSettingsFragment extends Fragment {
                 } else {
                     onGamePreparedListener.onGamePrepared(numberOfQuestions);
                 }
-            }
-        });
-
-        progressBarView = (RoundedSquareProgressView) v.findViewById(R.id.progressBar);
-        progressBarView.setProgress(0);
-        testButton = (Button) v.findViewById(R.id.test_button);
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBarView.setProgress(progressBarView.getProgress() + 1);
             }
         });
 

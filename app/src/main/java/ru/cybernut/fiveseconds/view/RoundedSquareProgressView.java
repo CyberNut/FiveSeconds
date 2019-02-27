@@ -2,6 +2,7 @@ package ru.cybernut.fiveseconds.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -14,10 +15,10 @@ public class RoundedSquareProgressView extends View {
     private double progress;
     private Paint progressBarPaint;
 
-    private float widthInDp = 10;
+    private float widthInDp = 4;
     private float strokewidth = 0;
     private Canvas canvas;
-    private boolean roundedCorners = true;
+    private float roundedCornersRadius = 10;
 
     public RoundedSquareProgressView(Context context) {
         super(context);
@@ -42,6 +43,7 @@ public class RoundedSquareProgressView extends View {
                 widthInDp, getContext()));
         progressBarPaint.setAntiAlias(true);
         progressBarPaint.setStyle(Paint.Style.STROKE);
+        progressBarPaint.setPathEffect(new CornerPathEffect(roundedCornersRadius));
 
     }
 
@@ -49,6 +51,7 @@ public class RoundedSquareProgressView extends View {
     protected void onDraw(Canvas canvas) {
         this.canvas = canvas;
         super.onDraw(canvas);
+
         strokewidth = CalculationUtil.convertDpToPx(widthInDp, getContext());
         int cW = canvas.getWidth();
         int cH = canvas.getHeight();
