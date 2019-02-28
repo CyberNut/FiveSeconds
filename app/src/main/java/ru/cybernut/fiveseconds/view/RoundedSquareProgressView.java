@@ -12,7 +12,7 @@ import ru.cybernut.fiveseconds.utils.CalculationUtil;
 
 public class RoundedSquareProgressView extends View {
 
-    private double progress;
+    private double progress = 0.01;
     private Paint progressBarPaint;
 
     private float widthInDp = 4;

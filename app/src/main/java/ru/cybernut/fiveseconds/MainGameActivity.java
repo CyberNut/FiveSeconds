@@ -1,11 +1,15 @@
 package ru.cybernut.fiveseconds;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +39,9 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
     private Map<Integer, PlayerCardFragment> playerCardFragmentMap;
     private Game game;
     private TextView questionTextView;
+    private AlertDialog.Builder alertDialogBuilder;
+    private CountDownTimer gameTimer;
+    private FrameLayout questionContainer;
 
     public static Intent newIntent(Context context, int numberOfQuestions) {
         Intent intent = new Intent(context, MainGameActivity.class);
@@ -56,6 +63,19 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
 
     private void initialize() {
         game = new Game(this, numberOfQuestions, this);
+        gameTimer = new CountDownTimer(5000, 100) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                playerCardFragment = playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer()));
+                playerCardFragment.setProgress(playerCardFragment.getProgress() + 4);
+            }
+
+            @Override
+            public void onFinish() {
+                playerCardFragment.setProgress(100);
+                alertDialogBuilder.show();
+            }
+        };
     }
 
     @Override
@@ -64,6 +84,7 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
         playerCardFragment = playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer()));
         if(playerCardFragment != null) {
             playerCardFragment.setCurrentLabel(true);
+            playerCardFragment.setProgress(0.01);
         }
         if(game.getCurrentQuestion()!= null) {
             questionTextView.setText(game.getCurrentQuestion().getText());
@@ -79,6 +100,40 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
         if(numberOfPlayers == 0) {
             return;
         }
+
+        questionContainer = findViewById(R.id.question_container);
+
+        alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(R.string.answer_dialog_title);
+        alertDialogBuilder.setMessage(R.string.answer_dialog_message);
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                playerCardFragment = playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer()));
+                if(playerCardFragment != null) {
+                    playerCardFragment.setProgress(0.01);
+                    playerCardFragment.setCurrentLabel(false);
+                    game.nextTurn(true);
+                    updateQuestionTextPosition();
+                    gameTimer.start();
+
+                }
+            }
+        });
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                playerCardFragment = playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer()));
+                if(playerCardFragment != null) {
+                    playerCardFragment.setProgress(0.01);
+                    playerCardFragment.setCurrentLabel(false);
+                    game.nextTurn(false);
+                    updateQuestionTextPosition();
+                    gameTimer.start();
+                }
+            }
+        });
+        alertDialogBuilder.setCancelable(false);
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -182,13 +237,49 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
         frameLayout.setLayoutParams(layoutParams);
     }
 
+    private void updateQuestionTextPosition() {
+        int currentPlayerId = playersList.getId(game.getCurrentPlayer());
+        int numberOfPlayers = playersList.getNumberOfPlayers();
+        switch (currentPlayerId) {
+            case 0:
+                questionContainer.setRotation(0);
+                break;
+            case 1:
+                if(numberOfPlayers <= 4) {
+                    questionContainer.setRotation(-90);
+                } else {
+                    questionContainer.setRotation(0);
+                }
+                break;
+            case 2:
+                if(numberOfPlayers <= 4) {
+                    questionContainer.setRotation(-180);
+                } else {
+                    questionContainer.setRotation(-90);
+                }
+                break;
+            case 3:
+                if(numberOfPlayers <= 4) {
+                    questionContainer.setRotation(-270);
+                } else {
+                    questionContainer.setRotation(-180);
+                }
+                break;
+            case 4:
+                questionContainer.setRotation(-180);
+                break;
+            case 5:
+                questionContainer.setRotation(-270);
+                break;
+        }
+    }
+
     public void onStartButtonClick(View view) {
         playerCardFragment = playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer()));
-        playerCardFragment.setProgress(playerCardFragment.getProgress() + 1);
-        if(playerCardFragment != null) {
-            playerCardFragment.setCurrentLabel(false);
+
+        if(gameTimer != null) {
+            gameTimer.start();
         }
-        game.nextTurn(true);
     }
 
     private void updateUI() {

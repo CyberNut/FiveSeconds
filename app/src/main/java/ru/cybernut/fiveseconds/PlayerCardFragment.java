@@ -50,7 +50,7 @@ public class PlayerCardFragment extends Fragment {
         isCurrentImageView = (ImageView) playerCard.findViewById(R.id.is_current_image_view);
         isCurrentImageView.setVisibility(View.INVISIBLE);
         progressView = (RoundedSquareProgressView) playerCard.findViewById(R.id.rounded_progress_bar);
-        progressView.setProgress(0);
+        progressView.setProgress(0.01);
 
         player = (Player) getArguments().getSerializable(PLAYER_ARGS_KEY);
 
