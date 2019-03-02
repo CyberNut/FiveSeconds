@@ -88,7 +88,6 @@ public class NewGameAddPlayersFragment extends Fragment {
             if(PlayersList.getInstance().addPlayer(player) == false) {
                 Toast.makeText(getActivity(), R.string.max_player_error, Toast.LENGTH_SHORT).show();
             } else {
-                PlayersList.getInstance().addPlayer(player);
                 playersAdapter.notifyDataSetChanged();
             }
             playerName.setText("");

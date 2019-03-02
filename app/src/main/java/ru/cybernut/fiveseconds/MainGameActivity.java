@@ -40,6 +40,7 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
     private AlertDialog.Builder alertDialogBuilder;
     private CountDownTimer gameTimer;
     private FrameLayout questionContainer;
+    private boolean isPaused = false;
 
     public static Intent newIntent(Context context, int numberOfQuestions) {
         Intent intent = new Intent(context, MainGameActivity.class);
@@ -64,8 +65,10 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
         gameTimer = new CountDownTimer(5000, 100) {
             @Override
             public void onTick(long millisUntilFinished) {
-                playerCardFragment = playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer()));
-                playerCardFragment.setProgress(playerCardFragment.getProgress() + 2);
+                if(!isPaused) {
+                    playerCardFragment = playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer()));
+                    playerCardFragment.setProgress(playerCardFragment.getProgress() + 2);
+                }
             }
 
             @Override
@@ -87,6 +90,18 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
         if(game.getCurrentQuestion()!= null) {
             questionTextView.setText(game.getCurrentQuestion().getText());
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isPaused = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isPaused = false;
     }
 
     private void prepareUI() {

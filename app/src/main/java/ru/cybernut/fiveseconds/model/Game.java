@@ -6,8 +6,6 @@ import android.util.Log;
 
 import java.util.List;
 
-import ru.cybernut.fiveseconds.MainGameActivity;
-
 public class Game {
     private static final String TAG = "Game";
     public static final int MAX_PLAYERS = 6;
@@ -28,7 +26,7 @@ public class Game {
         this.playerList = PlayersList.getInstance();
         this.numberOfQuestions = numberOfQuestions;
         this.numberOfPlayers = playerList.getNumberOfPlayers();
-        this.uuidList = QuestionSet.getInstance(context).getRandomIdList(numberOfQuestions);
+        this.uuidList = QuestionList.getInstance(context).getRandomIdList(numberOfQuestions);
         this.currentQuestion = getNextQuestion();
         this.currentPlayer = playerList.getPlayer(0);
     }
@@ -37,7 +35,7 @@ public class Game {
         if(uuidList.size() > 0) {
             String uuid = uuidList.get(0);
             uuidList.remove(0);
-            return QuestionSet.getInstance(context).getQuestion(uuid);
+            return QuestionList.getInstance(context).getQuestion(uuid);
         }
         return null;
     }
