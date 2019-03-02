@@ -4,17 +4,21 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
 
 import ru.cybernut.fiveseconds.model.Game;
 import ru.cybernut.fiveseconds.model.Player;
@@ -23,10 +27,11 @@ import ru.cybernut.fiveseconds.model.PlayersList;
 public class NewGameAddPlayersFragment extends Fragment {
 
     private static final String PREFERENCE_USER_NAME = "PREFERENCE_USER_NAME";
+    private static final int NUMBER_OF_PLAYERS_LIST_COLUMNS = 2;
 
     private ImageButton addPlayerButton;
     private EditText playerName;
-    private ListView playerListView;
+    private RecyclerView playerRecyclerView;
     private PlayersAdapter playersAdapter;
 
     public static NewGameAddPlayersFragment newInstance() {
@@ -80,15 +85,19 @@ public class NewGameAddPlayersFragment extends Fragment {
     private void addPlayer() {
         if(!playerName.getText().toString().isEmpty()) {
             Player player = new Player(playerName.getText().toString());
-            PlayersList.getInstance().addPlayer(player);
-            playersAdapter.notifyDataSetChanged();
+            if(PlayersList.getInstance().addPlayer(player) == false) {
+                Toast.makeText(getActivity(), R.string.max_player_error, Toast.LENGTH_SHORT).show();
+            } else {
+                PlayersList.getInstance().addPlayer(player);
+                playersAdapter.notifyDataSetChanged();
+            }
             playerName.setText("");
         }
     }
 
     private void prepareUI(View view) {
 
-        playerName = (EditText) view.findViewById(R.id.playerName);
+        playerName = (EditText) view.findViewById(R.id.player_name);
         playerName.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event)
             {
@@ -100,12 +109,13 @@ public class NewGameAddPlayersFragment extends Fragment {
             }
         });
 
-        playerListView = (ListView) view.findViewById(R.id.playersListView);
+        playerRecyclerView = (RecyclerView) view.findViewById(R.id.players_recycler_view);
+        playerRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), NUMBER_OF_PLAYERS_LIST_COLUMNS));
 
-        playersAdapter = new PlayersAdapter(getActivity());
-        playerListView.setAdapter(playersAdapter);
+        playersAdapter = new PlayersAdapter(PlayersList.getInstance().getList());
+        playerRecyclerView.setAdapter(playersAdapter);
 
-        addPlayerButton = (ImageButton) view.findViewById(R.id.addPlayerButton);
+        addPlayerButton = (ImageButton) view.findViewById(R.id.add_player_button);
         addPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,47 +124,67 @@ public class NewGameAddPlayersFragment extends Fragment {
         });
     }
 
-    private class PlayersAdapter extends BaseAdapter {
-        private Context context;
+    private class PlayersHolder extends RecyclerView.ViewHolder {
 
-        public PlayersAdapter(Context context) {
-            this.context = context;
-        }
+        private Player player;
+        private TextView playerNameTextView;
+        private ImageView playerPhotoImageView;
+        private ImageButton deletePlayerButton;
+        private int index;
 
-        @Override
-        public int getCount() {
-            return PlayersList.getInstance().getNumberOfPlayers();
-        }
+        public PlayersHolder(LayoutInflater inflater, ViewGroup parent) {
+            super(inflater.inflate(R.layout.players_list_item, parent, false));
 
-        @Override
-        public Player getItem(int position) {
-            return PlayersList.getInstance().getPlayer(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.players_list_item, parent, false);
-            TextView textView = (TextView) rowView.findViewById(R.id.item_name);
-            ImageView imageView = (ImageView) rowView.findViewById(R.id.item_photo);
-            textView.setText(PlayersList.getInstance().getPlayer(position).getName());
-            imageView.setImageResource(R.drawable.player_list_empty_photo);
-            ImageButton deletePlayerButton = (ImageButton) rowView.findViewById(R.id.item_delete_player_button);
-            final int pos = position;
+            playerNameTextView = (TextView) itemView.findViewById(R.id.item_name);
+            playerPhotoImageView = (ImageView) itemView.findViewById(R.id.item_photo);
+            deletePlayerButton = (ImageButton) itemView.findViewById(R.id.item_delete_player_button);
             deletePlayerButton.setOnClickListener(new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-                      PlayersList.getInstance().deletePlayer(pos);
-                      playersAdapter.notifyDataSetChanged();
-                  }
-              }
+                    @Override
+                    public void onClick(View v) {
+                        PlayersList.getInstance().deletePlayer(index);
+                        playersAdapter.notifyDataSetChanged();
+                    }
+                }
             );
-            return rowView;
+
+        }
+
+        public void bind(Player player, int index) {
+            this.player = player;
+            this.index = index;
+            playerNameTextView.setText(this.player.getName());
+            //TODO: need store photo
+//            if(this.player.getPhoto() == null) {
+//                playerPhotoImageView.setImageDrawable(this.player.getPhoto());
+//            } else {
+                playerPhotoImageView.setImageResource(R.drawable.player_list_empty_photo);
+//            }
+        }
+    }
+
+    private class PlayersAdapter extends RecyclerView.Adapter<PlayersHolder> {
+
+        private List<Player> playerList;
+
+        public PlayersAdapter(List<Player> players) {
+            this.playerList = players;
+        }
+
+        @Override
+        public PlayersHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            return new PlayersHolder(inflater, viewGroup);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull PlayersHolder playersHolder, int position) {
+            Player player = PlayersList.getInstance().getPlayer(position);
+            playersHolder.bind(player, position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return playerList.size();
         }
     }
 }

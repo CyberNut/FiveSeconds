@@ -3,7 +3,7 @@ package ru.cybernut.fiveseconds;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -24,7 +23,6 @@ import ru.cybernut.fiveseconds.model.Game;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
 import ru.cybernut.fiveseconds.model.Question;
-import ru.cybernut.fiveseconds.view.RoundedSquareProgressView;
 
 public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpdatable {
 
@@ -67,7 +65,7 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
             @Override
             public void onTick(long millisUntilFinished) {
                 playerCardFragment = playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer()));
-                playerCardFragment.setProgress(playerCardFragment.getProgress() + 4);
+                playerCardFragment.setProgress(playerCardFragment.getProgress() + 2);
             }
 
             @Override

@@ -8,7 +8,7 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/addPlayersLabel"
+        android:id="@+id/add_players_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/playerName"
+        android:id="@+id/player_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -28,18 +28,18 @@
         android:hint="@string/enter_player_name"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addPlayersLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/add_players_label" />
 
     <ImageButton
-        android:id="@+id/addPlayerButton"
+        android:id="@+id/add_player_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:background="@null"
         android:text="@string/add_player_button"
-        app:layout_constraintBottom_toBottomOf="@+id/playerName"
-        app:layout_constraintStart_toEndOf="@+id/playerName"
-        app:layout_constraintTop_toTopOf="@+id/playerName"
+        app:layout_constraintBottom_toBottomOf="@+id/player_name"
+        app:layout_constraintStart_toEndOf="@+id/player_name"
+        app:layout_constraintTop_toTopOf="@+id/player_name"
         app:srcCompat="@drawable/add_player" />
 
     <android.support.design.widget.FloatingActionButton
@@ -54,19 +54,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_media_next" />
 
-    <ListView
-        android:id="@+id/playersListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/players_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/add_player_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addPlayerButton"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/player_name" />
 
 
 </android.support.constraint.ConstraintLayout>

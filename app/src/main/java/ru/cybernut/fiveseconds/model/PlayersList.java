@@ -24,8 +24,12 @@ public class PlayersList {
         return list.size();
     }
 
-    public void addPlayer(Player player) {
-        list.add(player);
+    public boolean addPlayer(Player player) {
+        if(list.size() < Game.MAX_PLAYERS) {
+            list.add(player);
+            return true;
+        }
+        return false;
     }
 
     public void putPlayer(Player player, int position) {
