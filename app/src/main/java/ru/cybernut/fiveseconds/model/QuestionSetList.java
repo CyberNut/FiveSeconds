@@ -66,5 +66,17 @@ public class QuestionSetList {
         return sets;
     }
 
+    public QuestionSet getQuestionSet(int id) {
+        FiveSecondsCursorWrapper cursor = queryQuestionSets("_id = ?", new String[] {String.valueOf(id)});
+        try {
+            if(cursor.getCount() == 0) {
+                return null;
+            }
+            cursor.moveToFirst();
+            return cursor.getQuestionSet();
+        } finally {
+            cursor.close();
+        }
+    }
 
 }

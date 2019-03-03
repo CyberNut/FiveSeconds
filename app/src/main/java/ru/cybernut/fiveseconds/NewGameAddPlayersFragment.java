@@ -7,11 +7,13 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,6 +26,8 @@ import java.util.List;
 import ru.cybernut.fiveseconds.model.Game;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
+import ru.cybernut.fiveseconds.model.QuestionSet;
+import ru.cybernut.fiveseconds.model.QuestionSetList;
 
 public class NewGameAddPlayersFragment extends Fragment {
 
@@ -38,7 +42,9 @@ public class NewGameAddPlayersFragment extends Fragment {
     private ImageButton addPlayerButton;
     private EditText playerName;
     private RecyclerView playerRecyclerView;
+    private RecyclerView questionSetsRecyclerView;
     private PlayersAdapter playersAdapter;
+    private QuestionSetAdapter questionSetAdapter;
 
     public static NewGameAddPlayersFragment newInstance() {
         return new NewGameAddPlayersFragment();
@@ -150,6 +156,11 @@ public class NewGameAddPlayersFragment extends Fragment {
                 addPlayer();
             }
         });
+
+        questionSetsRecyclerView = view.findViewById(R.id.question_sets_recycler_view);
+        questionSetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        QuestionSetAdapter questionSetAdapter = new QuestionSetAdapter(QuestionSetList.getInstance(getActivity()).getQuestionSets());
+        questionSetsRecyclerView.setAdapter(questionSetAdapter);
     }
 
 
@@ -221,4 +232,54 @@ public class NewGameAddPlayersFragment extends Fragment {
             return playerList.size();
         }
     }
+
+    private class QuestionSetHolder extends RecyclerView.ViewHolder {
+
+        private QuestionSet questionSet;
+        private CheckBox questionSetNameCheckBox;
+        private int index;
+
+        public QuestionSetHolder(LayoutInflater inflater, ViewGroup parent) {
+            super(inflater.inflate(R.layout.question_set_list_item, parent, false));
+
+            questionSetNameCheckBox = (CheckBox) itemView.findViewById(R.id.question_set_name_checkbox);
+        }
+
+        public void bind(QuestionSet questionSet, int index) {
+            this.questionSet = questionSet;
+            this.index = index;
+            if(this.questionSet!= null) {
+                questionSetNameCheckBox.setText(this.questionSet.getName());
+            }
+        }
+    }
+
+    private class QuestionSetAdapter extends RecyclerView.Adapter<QuestionSetHolder> {
+
+        private List<QuestionSet> questionSetList;
+
+        public QuestionSetAdapter(List<QuestionSet> questionSetList) {
+            this.questionSetList = questionSetList;
+        }
+
+        @Override
+        public QuestionSetHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            return new QuestionSetHolder(inflater, viewGroup);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull QuestionSetHolder questionSetHolder, int position) {
+            QuestionSet questionSet = questionSetList.get(position);
+            if(questionSet!= null) {
+                questionSetHolder.bind(questionSet, position);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return questionSetList.size();
+        }
+    }
+
 }
