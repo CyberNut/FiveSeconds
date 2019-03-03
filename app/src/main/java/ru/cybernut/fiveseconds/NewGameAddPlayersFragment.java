@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +29,12 @@ public class NewGameAddPlayersFragment extends Fragment {
 
     private static final String PREFERENCE_USER_NAME = "PREFERENCE_USER_NAME";
     private static final int NUMBER_OF_PLAYERS_LIST_COLUMNS = 2;
+    private static final int MAX_QUANTITY_OF_QUESTIONS = 20;
+    private static final int MIN_QUANTITY_OF_QUESTIONS = 3;
 
+    private int numberOfPlayers = 2;
+    private SeekBar numberOfQuestionsSeekBar;
+    private TextView numberOfQuestionsTextView;
     private ImageButton addPlayerButton;
     private EditText playerName;
     private RecyclerView playerRecyclerView;
@@ -108,6 +114,29 @@ public class NewGameAddPlayersFragment extends Fragment {
             }
         });
 
+        numberOfQuestionsTextView = (TextView)view.findViewById(R.id.number_of_questions);
+        numberOfQuestionsSeekBar = (SeekBar)view.findViewById(R.id.number_of_questions_seek_bar);
+        numberOfQuestionsSeekBar.setMax(MAX_QUANTITY_OF_QUESTIONS - MIN_QUANTITY_OF_QUESTIONS);
+        numberOfQuestionsSeekBar.setProgress(numberOfPlayers);
+        updateNumberOfQuestionsTextView();
+        numberOfQuestionsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                updateNumberOfQuestionsTextView();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                updateNumberOfQuestionsTextView();
+            }
+        });
+
+
         playerRecyclerView = (RecyclerView) view.findViewById(R.id.players_recycler_view);
         playerRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), NUMBER_OF_PLAYERS_LIST_COLUMNS));
 
@@ -121,6 +150,12 @@ public class NewGameAddPlayersFragment extends Fragment {
                 addPlayer();
             }
         });
+    }
+
+
+    private void updateNumberOfQuestionsTextView() {
+        numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
+        numberOfQuestionsTextView.setText(String.valueOf(MIN_QUANTITY_OF_QUESTIONS * numberOfPlayers +  numberOfPlayers * numberOfQuestionsSeekBar.getProgress()));
     }
 
     private class PlayersHolder extends RecyclerView.ViewHolder {
