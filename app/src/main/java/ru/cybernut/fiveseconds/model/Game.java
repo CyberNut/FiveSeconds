@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
@@ -20,13 +21,13 @@ public class Game {
     List<String> uuidList;
     GUIUpdatable mainGameActivity;
 
-    public Game(Context context, int numberOfQuestions, GUIUpdatable guiUpdatable)  {
+    public Game(Context context, int numberOfQuestions, ArrayList<Integer> setIds, GUIUpdatable guiUpdatable)  {
         this.context = context;
         mainGameActivity = guiUpdatable;
         this.playerList = PlayersList.getInstance();
         this.numberOfQuestions = numberOfQuestions;
         this.numberOfPlayers = playerList.getNumberOfPlayers();
-        this.uuidList = QuestionList.getInstance(context).getRandomIdList(numberOfQuestions);
+        this.uuidList = QuestionList.getInstance(context).getRandomIdList(numberOfQuestions, setIds);
         this.currentQuestion = getNextQuestion();
         this.currentPlayer = playerList.getPlayer(0);
     }

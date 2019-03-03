@@ -52,14 +52,28 @@ public class QuestionList {
         return new FiveSecondsCursorWrapper(cursor);
     }
 
-    public List<String> getRandomIdList(int numberOfQuestions) {
+    public List<String> getRandomIdList(int numberOfQuestions, ArrayList<Integer> questionSetIdList) {
         int recievedQuestion = 0;
         int count = 0;
         ArrayList<Integer> fullIDList = new ArrayList<>();
         ArrayList<String> randomIDList = new ArrayList<>();
         Random random = new Random();
+        String whereClause = "";
+        String[] whereArgs = new String[questionSetIdList.size()];
+
+        if(questionSetIdList.size() > 0) {
+            for (int i = 0; i < questionSetIdList.size(); i++) {
+                if(whereClause.length() > 0) {
+                    whereClause = whereClause + " OR question_set_id = ? ";
+                } else {
+                    whereClause = " question_set_id = ? ";
+                }
+                whereArgs[i] = questionSetIdList.get(i).toString();
+            }
+        }
+
         //get number of records in DB
-        FiveSecondsCursorWrapper cursor = queryQuestions(null, null);
+        FiveSecondsCursorWrapper cursor = queryQuestions(whereClause, whereArgs);
         count = cursor.getCount();
         if (count > 0) {
             while (cursor.moveToNext()) {

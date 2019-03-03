@@ -16,8 +16,12 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import ru.cybernut.fiveseconds.model.Game;
 import ru.cybernut.fiveseconds.model.Player;
@@ -28,6 +32,8 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
 
     private static final String TAG = "MainGameActivity";
     private static final String NUMBER_OF_QUESTIONS_KEY = "NUMBER_OF_QUESTIONS_KEY";
+    private static final String QUESTION_SET_IDS_KEY = "QUESTION_SET_IDS_KEY";
+    private static final String QUESTION_SET_IDS_BUNDLE_KEY = "QUESTION_SET_IDS_BUNDLE_KEY";
     private static final int ID_START_VALUE = 770070;
 
     private int numberOfQuestions;
@@ -41,16 +47,19 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
     private CountDownTimer gameTimer;
     private FrameLayout questionContainer;
     private boolean isPaused = false;
+    private ArrayList<Integer> setIds;
 
-    public static Intent newIntent(Context context, int numberOfQuestions) {
+    public static Intent newIntent(Context context, int numberOfQuestions, ArrayList<Integer> setsIds) {
         Intent intent = new Intent(context, MainGameActivity.class);
         intent.putExtra(NUMBER_OF_QUESTIONS_KEY, numberOfQuestions);
+        intent.putIntegerArrayListExtra(QUESTION_SET_IDS_KEY, setsIds);
         return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         numberOfQuestions = getIntent().getExtras().getInt(NUMBER_OF_QUESTIONS_KEY);
+        setIds = getIntent().getExtras().getIntegerArrayList(QUESTION_SET_IDS_KEY);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_game_activity);
@@ -61,7 +70,7 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
     }
 
     private void initialize() {
-        game = new Game(this, numberOfQuestions, this);
+        game = new Game(this, numberOfQuestions, setIds, this);
         gameTimer = new CountDownTimer(5000, 100) {
             @Override
             public void onTick(long millisUntilFinished) {
