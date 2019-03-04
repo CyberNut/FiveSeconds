@@ -16,14 +16,12 @@
     <string name="answer_dialog_message">CORRECT ?</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
-
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="choose_question_sets_label_text">Choose question sets:</string>
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="choose_question_sets_label_text">Choose question sets:</string>
 
 
 </resources>

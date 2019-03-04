@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.zip.ZipInputStream;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -168,7 +169,7 @@ public class NewGameSettingsFragment extends Fragment {
             loadSoundsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    downloadTask.execute("https://www.stanki.ru/bitrix/templates/main/css/img/logo.png");
+                    downloadTask.execute("https://cloud.mail.ru/public/5k3W/uWvq5Khmy");
                 }
             });
             questionSetNameCheckBox = (CheckBox) itemView.findViewById(R.id.question_set_name_checkbox);
@@ -269,10 +270,14 @@ public class NewGameSettingsFragment extends Fragment {
 
                 // download the file
                 input = connection.getInputStream();
-                String filePath = context.getExternalFilesDir(null) + PATH + currentLocale;
-                String fileName = "Logo.png";
+                String filePath = context.getExternalFilesDir(null) + PATH + currentLocale + "/";
+                String fileName = "test.zip";
                 Log.i(TAG, "doInBackground: file path:" + filePath);
-                File file = new File(filePath, fileName);
+                File file = new File(filePath);
+                if(!file.exists()) {
+                    file.mkdirs();
+                    file = new File(filePath + fileName);
+                }
                 output = new FileOutputStream(file);
 
                 byte data[] = new byte[4096];
