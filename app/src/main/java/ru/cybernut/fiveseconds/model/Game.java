@@ -29,6 +29,7 @@ public class Game {
         this.numberOfPlayers = playerList.getNumberOfPlayers();
         this.uuidList = QuestionList.getInstance(context).getRandomIdList(numberOfQuestions, setIds);
         this.currentQuestion = getNextQuestion();
+        this.nextQuestion = getNextQuestion();
         this.currentPlayer = playerList.getPlayer(0);
     }
 

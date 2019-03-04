@@ -81,13 +81,16 @@ public class QuestionList {
             }
             int min = Math.min(count, numberOfQuestions);
             while (recievedQuestion < min) {
-                int tempId = fullIDList.get(random.nextInt(count));
+                int randomValue = random.nextInt(count);
+                int tempId = fullIDList.get(randomValue);
                 if (!randomIDList.contains(tempId)) {
                     cursor = queryQuestions("_id = ?", new String[] {String.valueOf(tempId)});
                     if(cursor.moveToFirst()) {
                         String uuidString = cursor.getString(cursor.getColumnIndex(QuestionsTable.Cols.UUID));
                         randomIDList.add(uuidString);
                         recievedQuestion++;
+                        count--;
+                        fullIDList.remove(randomValue);
                     }
                 }
             }
