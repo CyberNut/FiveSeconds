@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
+
+    public enum GameType {AUTO_PLAY_SOUND, ADDITION_TIME_FOR_READING, MANUAL}
+
     private static final String TAG = "Game";
     public static final int MAX_PLAYERS = 6;
     private static final int MAX_SOUND = 2;
@@ -27,13 +30,22 @@ public class Game {
     private List<String> uuidList;
     private GUIUpdatable mainGameActivity;
     private SoundPool soundPool;
+    private int currentSoundId;
+    private int nextSoundId;
     private AssetManager assetManager;
+    private GameType gameType;
+    private boolean isGameOver = false;
+    private boolean isGameReady = false;
 
-    public Game(Context context, int numberOfQuestions, ArrayList<Integer> setIds, GUIUpdatable guiUpdatable)  {
+    public Game(Context context, GUIUpdatable guiUpdatable, GameType gameType)  {
         this.context = context;
-        mainGameActivity = guiUpdatable;
-        this.playerList = PlayersList.getInstance();
+        this.gameType = gameType;
+        this.mainGameActivity = guiUpdatable;
+    }
+
+    public boolean init(int numberOfQuestions, ArrayList<Integer> setIds) {
         this.numberOfQuestions = numberOfQuestions;
+        this.playerList = PlayersList.getInstance();
         this.numberOfPlayers = playerList.getNumberOfPlayers();
         this.uuidList = QuestionList.getInstance(context).getRandomIdList(numberOfQuestions, setIds);
         this.currentQuestion = getNextQuestion();
@@ -42,6 +54,21 @@ public class Game {
         assetManager = context.getAssets();
         soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
 
+        if(gameType == GameType.AUTO_PLAY_SOUND) {
+
+        } else {
+            isGameReady = true;
+        }
+
+        if(uuidList.size() == 0 || currentQuestion == null || currentPlayer == null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean isGameOver() {
+        return isGameOver;
     }
 
     public Question getNextQuestion() {
@@ -65,7 +92,6 @@ public class Game {
             currentQuestion = nextQuestion;
             nextQuestion = question;
             mainGameActivity.update();
-            playSound(nextQuestion.getId().toString());
         }
     }
 
@@ -100,19 +126,35 @@ public class Game {
         public void update();
     }
 
-    private void playSound(String uuid) {
+    private void prepareNextSound(String uuid) {
+        //TODO need use language setting
         String path = "en/" + uuid + ".mp3";
         AssetFileDescriptor assetFileDescriptor;
         try {
             assetFileDescriptor = assetManager.openFd(path);
+            Integer soundId = soundPool.load(assetFileDescriptor, 1);
+            soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+                @Override
+                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                    if(status == 0) {
+                        Log.i(TAG, "onLoadComplete: " + sampleId);
+                        nextSoundId = sampleId;
+                        soundPool.unload(currentSoundId);
+                        currentSoundId = 0;
+                    }
+                }
+            });
         } catch (IOException e) {
             Log.e(TAG, "playSound: ", e);
             return;
         }
-        Integer soundId = soundPool.load(assetFileDescriptor, 1);
-        if (soundId!= null) {
-            Log.i(TAG, "playSound: soundId=" + soundId);
-            soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f);
+    }
+
+    private void playCurrentSound() {
+            if(currentSoundId!=0) {
+                soundPool.play(currentSoundId, 1.0f, 1.0f, 1, 0, 1.0f);
+                prepareNextSound(nextQuestion.getId().toString());
+            }
         }
     }
 }
