@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import ru.cybernut.fiveseconds.model.Game;
 import ru.cybernut.fiveseconds.model.Player;
@@ -43,6 +45,7 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
     private Map<Integer, PlayerCardFragment> playerCardFragmentMap;
     private Game game;
     private TextView questionTextView;
+    private ProgressBar gameInitProgressBar;
     private AlertDialog.Builder alertDialogBuilder;
     private CountDownTimer gameTimer;
     private FrameLayout questionContainer;
@@ -65,12 +68,24 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
         setContentView(R.layout.main_game_activity);
         mainContainer = findViewById(R.id.main_game_container);
         questionTextView = (TextView) findViewById(R.id.question_text_view);
+        gameInitProgressBar = (ProgressBar) findViewById(R.id.init_game_progressbar);
         initialize();
         prepareUI();
     }
 
     private void initialize() {
-        game = new Game(this, numberOfQuestions, setIds, this);
+        game = new Game(this,  Game.GameType.AUTO_PLAY_SOUND, numberOfQuestions);
+
+        game.init(setIds);
+        do {
+            try {
+                TimeUnit.MILLISECONDS.sleep(100);
+            } catch (InterruptedException e) {
+                Log.e(TAG, "initialize: init", e);
+            }
+        } while (game.isGameReady() == false);
+        gameInitProgressBar.setVisibility(View.INVISIBLE);
+
         gameTimer = new CountDownTimer(5000, 100) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -180,6 +195,8 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
                 playerCardFragmentMap.put(playerId, playerCardFragment);
             }
         }
+
+        game.playCurrentSound();
     }
 
     private void setLayoutParamsById(FrameLayout frameLayout, int playerIndex, int numberOfPlayers) {
@@ -298,9 +315,11 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
 
     public void onStartButtonClick(View view) {
         playerCardFragment = playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer()));
-
-        if(gameTimer != null) {
+        
+        if(game.isGameReady() && gameTimer != null) {
             gameTimer.start();
+        } else {
+            Log.i(TAG, "onStartButtonClick: Game is not ready or gameTimer == null");
         }
     }
 
