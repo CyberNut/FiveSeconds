@@ -169,7 +169,7 @@ public class NewGameSettingsFragment extends Fragment {
             loadSoundsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    downloadTask.execute("https://cloud.mail.ru/public/5k3W/uWvq5Khmy");
+                    downloadTask.execute("http://mealplans.ru/wp-content/uploads/2019/03/FiveSeconds_Sounds.zip");
                 }
             });
             questionSetNameCheckBox = (CheckBox) itemView.findViewById(R.id.question_set_name_checkbox);
@@ -253,12 +253,12 @@ public class NewGameSettingsFragment extends Fragment {
             try {
                 URL url = new URL(sUrl[0]);
                 Log.i(TAG, "doInBackground: trying to connect");
-                connection = (HttpsURLConnection) url.openConnection();
+                connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
 
                 // expect HTTP 200 OK, so we don't mistakenly save error report
                 // instead of the file
-                if (connection.getResponseCode() != HttpsURLConnection.HTTP_OK) {
+                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     return "Server returned HTTP " + connection.getResponseCode()
                             + " " + connection.getResponseMessage();
                 }
