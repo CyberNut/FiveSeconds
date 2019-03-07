@@ -12,13 +12,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game {
+public class Game implements SoundPool.OnLoadCompleteListener {
 
     public enum GameType {AUTO_PLAY_SOUND, ADDITION_TIME_FOR_READING, MANUAL}
 
     private static final String TAG = "Game";
     public static final int MAX_PLAYERS = 6;
-    private static final int MAX_SOUND = 2;
+    private static final int MAX_SOUND = 5;
 
     private Context context;
     private PlayersList playerList;
@@ -35,7 +35,7 @@ public class Game {
     private AssetManager assetManager;
     private GameType gameType;
     private boolean isGameOver = false;
-    private boolean isGameReady = false;
+    private volatile boolean isGameReady = false;
 
     public Game(Context context, GameType gameType, int numberOfQuestions)  {
         this.context = context;
@@ -43,6 +43,8 @@ public class Game {
         this.numberOfQuestions = numberOfQuestions;
         this.mainGameActivity = (GUIUpdatable) context;
         this.assetManager = context.getAssets();
+        soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
+        soundPool.setOnLoadCompleteListener(this);
     }
 
     public void init(ArrayList<Integer> setIds) {
@@ -78,9 +80,6 @@ public class Game {
             currentQuestion = getNextQuestion();
             nextQuestion = getNextQuestion();
             currentPlayer = playerList.getPlayer(0);
-
-            soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
-
             if(gameType == GameType.AUTO_PLAY_SOUND) {
                 prepareNextSound(currentQuestion.getId().toString());
             } else {
@@ -141,27 +140,23 @@ public class Game {
         public void update();
     }
 
+    public interface Initializable {
+        public void initDone();
+    }
+
     private void prepareNextSound(String uuid) {
         //TODO need use language setting
         final String path = "en/" + uuid + ".mp3";
         AssetFileDescriptor assetFileDescriptor;
+        Log.i(TAG, "prepareNextSound: isGameReady = " + isGameReady);
         try {
             assetFileDescriptor = assetManager.openFd(path);
-            Integer soundId = soundPool.load(assetFileDescriptor, 1);
-            soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-                @Override
-                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                    if(status == 0) {
-                        Log.i(TAG, "onLoadComplete: " + path + " sampleId =" + sampleId);
-                        currentSoundId = sampleId;
-                        isGameReady = true;
-                    }
-                }
-            });
+            currentSoundId = soundPool.load(assetFileDescriptor, 1);
         } catch (IOException e) {
             Log.e(TAG, "playSound: ", e);
             isGameReady = true;
         }
+        Log.i(TAG, "prepareNextSound: EXIT isGameReady = " + isGameReady);
     }
 
     public void playCurrentSound() {
@@ -176,4 +171,10 @@ public class Game {
 
     }
 
+    @Override
+    public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+        Log.i(TAG, "onLoadComplete: sampleId =" + sampleId);
+        isGameReady = true;
+        ((Initializable)context).initDone();
+    }
 }
