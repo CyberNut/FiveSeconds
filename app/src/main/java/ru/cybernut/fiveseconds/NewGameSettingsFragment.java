@@ -4,7 +4,6 @@ package ru.cybernut.fiveseconds;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,13 +29,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
-import java.util.zip.ZipInputStream;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import ru.cybernut.fiveseconds.model.PlayersList;
 import ru.cybernut.fiveseconds.model.QuestionSet;

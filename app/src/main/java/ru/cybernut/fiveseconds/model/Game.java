@@ -47,6 +47,15 @@ public class Game implements SoundPool.OnLoadCompleteListener {
         soundPool.setOnLoadCompleteListener(this);
     }
 
+    public Game(GameType gameType, int numberOfQuestions)  {
+        this.gameType = gameType;
+        this.numberOfQuestions = numberOfQuestions;
+        this.mainGameActivity = (GUIUpdatable) context;
+        this.assetManager = context.getAssets();
+        soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
+        soundPool.setOnLoadCompleteListener(this);
+    }
+
     public void init(ArrayList<Integer> setIds) {
         GameInitTask gameInitTask = new GameInitTask();
         gameInitTask.execute(setIds);
