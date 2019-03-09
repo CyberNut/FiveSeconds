@@ -1,5 +1,6 @@
 package ru.cybernut.fiveseconds;
 
+import android.databinding.DataBindingUtil;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ru.cybernut.fiveseconds.databinding.NewPlayerCardBinding;
+import ru.cybernut.fiveseconds.databinding.PlayerCardBinding;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.view.RoundedSquareProgressView;
 
@@ -24,6 +27,7 @@ public class PlayerCardFragment extends Fragment {
     private TextView playerName;
     private ImageView isCurrentImageView;
     private RoundedSquareProgressView progressView;
+    private NewPlayerCardBinding binding;
 
 
     public static PlayerCardFragment newInstance(Player player) {
@@ -42,20 +46,19 @@ public class PlayerCardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //View playerCard = inflater.inflate(R.layout.player_card, container, false);
         View playerCard = inflater.inflate(R.layout.new_player_card, container, false);
-        playerName = (TextView) playerCard.findViewById(R.id.player_card_name);
-        playerScore = (TextView) playerCard.findViewById(R.id.player_card_score);
-        playerPhoto = (ImageView) playerCard.findViewById(R.id.player_card_photo);
-        isCurrentImageView = (ImageView) playerCard.findViewById(R.id.is_current_image_view);
-        isCurrentImageView.setVisibility(View.INVISIBLE);
-        progressView = (RoundedSquareProgressView) playerCard.findViewById(R.id.rounded_progress_bar);
-        progressView.setProgress(0.01);
+        binding = DataBindingUtil.inflate(inflater, R.layout.new_player_card, container, false );
+//        playerName = (TextView) playerCard.findViewById(R.id.player_card_name);
+//        playerScore = (TextView) playerCard.findViewById(R.id.player_card_score);
+//        playerPhoto = (ImageView) playerCard.findViewById(R.id.player_card_photo);
+        binding.isCurrentImageView.setVisibility(View.INVISIBLE);
+        binding.roundedProgressBar.setProgress(0.01);
 
         player = (Player) getArguments().getSerializable(PLAYER_ARGS_KEY);
 
-        playerName.setText(player.getName());
-        playerScore.setText(String.valueOf(player.getScore()));
+        binding.setPlayer(player);
+//        playerName.setText(player.getName());
+//        playerScore.setText(String.valueOf(player.getScore()));
         //playerPhoto.setImageDrawable(player.getPhoto());
 
         return playerCard;
@@ -67,18 +70,18 @@ public class PlayerCardFragment extends Fragment {
     }
 
     public void setProgress(double progress) {
-        progressView.setProgress(progress);
+        binding.roundedProgressBar.setProgress(progress);
     }
 
     public void setCurrentLabel(boolean isCurrent) {
         Log.i(TAG, "setCurrentLabel: " + isCurrent);
         if(isCurrent) {
-            isCurrentImageView.setVisibility(View.VISIBLE);
-            progressView.setVisibility(View.VISIBLE);
+            binding.isCurrentImageView.setVisibility(View.VISIBLE);
+            binding.roundedProgressBar.setVisibility(View.VISIBLE);
         }
         else {
-            isCurrentImageView.setVisibility( View.INVISIBLE);
-            progressView.setVisibility(View.INVISIBLE);
+            binding.isCurrentImageView.setVisibility( View.INVISIBLE);
+            binding.roundedProgressBar.setVisibility(View.INVISIBLE);
         }
     }
 

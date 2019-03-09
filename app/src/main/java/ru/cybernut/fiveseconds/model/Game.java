@@ -3,6 +3,8 @@ package ru.cybernut.fiveseconds.model;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
@@ -12,7 +14,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game implements SoundPool.OnLoadCompleteListener {
+import ru.cybernut.fiveseconds.BR;
+
+public class Game  extends BaseObservable implements SoundPool.OnLoadCompleteListener {
 
     public enum GameType {AUTO_PLAY_SOUND, ADDITION_TIME_FOR_READING, MANUAL}
 
@@ -41,16 +45,7 @@ public class Game implements SoundPool.OnLoadCompleteListener {
         this.context = context;
         this.gameType = gameType;
         this.numberOfQuestions = numberOfQuestions;
-        this.mainGameActivity = (GUIUpdatable) context;
-        this.assetManager = context.getAssets();
-        soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
-        soundPool.setOnLoadCompleteListener(this);
-    }
-
-    public Game(GameType gameType, int numberOfQuestions)  {
-        this.gameType = gameType;
-        this.numberOfQuestions = numberOfQuestions;
-        this.mainGameActivity = (GUIUpdatable) context;
+        //this.mainGameActivity = (GUIUpdatable) context;
         this.assetManager = context.getAssets();
         soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
         soundPool.setOnLoadCompleteListener(this);
@@ -114,7 +109,8 @@ public class Game implements SoundPool.OnLoadCompleteListener {
         protected void onPostExecute(Question question) {
             currentQuestion = nextQuestion;
             nextQuestion = question;
-            mainGameActivity.update();
+            //mainGameActivity.update();
+            notifyPropertyChanged(BR.currentQuestion);
         }
     }
 
@@ -122,6 +118,7 @@ public class Game implements SoundPool.OnLoadCompleteListener {
         return currentPlayer;
     }
 
+    @Bindable
     public Question getCurrentQuestion() {
         return currentQuestion;
     }
@@ -184,6 +181,6 @@ public class Game implements SoundPool.OnLoadCompleteListener {
     public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
         Log.i(TAG, "onLoadComplete: sampleId =" + sampleId);
         isGameReady = true;
-        ((Initializable)context).initDone();
+        //((Initializable)context).initDone();
     }
 }
