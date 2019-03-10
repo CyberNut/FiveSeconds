@@ -42,7 +42,6 @@ public class PlayerCardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //View playerCard = inflater.inflate(R.layout.player_card, container, false);
         View playerCard = inflater.inflate(R.layout.new_player_card, container, false);
         playerName = (TextView) playerCard.findViewById(R.id.player_card_name);
         playerScore = (TextView) playerCard.findViewById(R.id.player_card_score);

@@ -1,6 +1,7 @@
 package ru.cybernut.fiveseconds.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
@@ -8,6 +9,7 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 
+import ru.cybernut.fiveseconds.R;
 import ru.cybernut.fiveseconds.utils.CalculationUtil;
 
 public class RoundedSquareProgressView extends View {
@@ -22,20 +24,22 @@ public class RoundedSquareProgressView extends View {
 
     public RoundedSquareProgressView(Context context) {
         super(context);
-        initializePaints(context);
+        initializePaints(context, null, 0);
     }
 
     public RoundedSquareProgressView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initializePaints(context);
+        initializePaints(context, attrs, 0);
     }
 
     public RoundedSquareProgressView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initializePaints(context);
+        initializePaints(context, attrs, defStyleAttr);
+
+
     }
 
-    private void initializePaints(Context context) {
+    private void initializePaints(Context context, AttributeSet attrs, int defStyleAttr) {
         progressBarPaint = new Paint();
         progressBarPaint.setColor(context.getResources().getColor(
                 android.R.color.holo_green_dark));
@@ -45,6 +49,11 @@ public class RoundedSquareProgressView extends View {
         progressBarPaint.setStyle(Paint.Style.STROKE);
         progressBarPaint.setPathEffect(new CornerPathEffect(roundedCornersRadius));
 
+        // Load attributes
+        final TypedArray a = getContext().obtainStyledAttributes(
+                attrs, R.styleable.RoundedSquareProgressView, defStyleAttr, 0);
+        progress = a.getFloat(R.styleable.RoundedSquareProgressView_progress, 0.0f);
+        a.recycle();
     }
 
     @Override

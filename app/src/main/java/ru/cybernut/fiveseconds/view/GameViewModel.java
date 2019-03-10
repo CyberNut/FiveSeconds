@@ -1,25 +1,126 @@
 package ru.cybernut.fiveseconds.view;
 
+import android.content.Context;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
+import ru.cybernut.fiveseconds.BR;
 import ru.cybernut.fiveseconds.model.Game;
+import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
+import ru.cybernut.fiveseconds.model.Question;
 
-public class GameViewModel {
+public class GameViewModel extends BaseObservable {
 
+    private static final String TAG = "GameViewModel";
+    
+    private boolean isStarted = false;
     private boolean isGameReady = false;
     private Game game;
     private String currentQuestionText;
+    private PlayersList playersList;
+    private ArrayList<Integer> setIds;
+    private Question currentQuestion;
+    private Question nextQuestion;
 
-    public GameViewModel(int numberOfQuestions, ArrayList<Integer> setIds) {
+    public GameViewModel(Context appContext, int numberOfQuestions, ArrayList<Integer> setIds) {
+        playersList = PlayersList.getInstance();
+        this.setIds = setIds;
+        game = new Game(appContext, Game.GameType.AUTO_PLAY_SOUND, numberOfQuestions);
+    }
 
+    public void initialize() {
+        new GameInitTask().execute();
+    }
 
-
+    public Player getPlayer(int index) {
+        if (index <= (playersList.getNumberOfPlayers() - 1)) {
+            return playersList.getPlayer(index);
+        } else {
+            return null;
+        }
     }
 
     public int getNumberOfPlayers() {
         return PlayersList.getInstance().getNumberOfPlayers();
     }
 
+    @Bindable
+    public boolean isGameReady() {
+        return isGameReady;
+    }
+
+    private void setGameReady(boolean gameReady) {
+        isGameReady = gameReady;
+        notifyPropertyChanged(BR.gameReady);
+        Log.i(TAG, "setGameReady: ");
+    }
+
+    @Bindable
+    public boolean isStarted() {
+        return isStarted;
+    }
+
+    private void setStarted(boolean started) {
+        isStarted = started;
+        notifyPropertyChanged(BR.started);
+    }
+
+    @Bindable
+    public String getCurrentQuestionText() {
+        return currentQuestionText;
+    }
+
+    private void setCurrentQuestionText(String currentQuestionText) {
+        this.currentQuestionText = currentQuestionText;
+        notifyPropertyChanged(BR.currentQuestionText);
+    }
+
+    @Bindable
+    public Question getCurrentQuestion() {
+        return currentQuestion;
+    }
+
+    public void onNextTurn(View v) {
+
+        currentQuestion = game.getCurrentQuestion();
+        setStarted(true);
+        Log.i(TAG, "onNextTurn: " + currentQuestionText);
+        notifyPropertyChanged(BR.currentQuestion);
+        notifyPropertyChanged(BR.started);
+    }
+    
+    private class GameInitTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            game.init(setIds);
+            Log.i(TAG, "doInBackground: ");
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            currentQuestion = game.getCurrentQuestion();
+            setGameReady(true);
+            setCurrentQuestionText(game.getCurrentQuestion().getText());
+        }
+    }
+    private class GameTurnTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            currentQuestion = nextQuestion;
+            nextQuestion = game.getNextQuestion();
+            return null;
+        }
+    }
 
 }

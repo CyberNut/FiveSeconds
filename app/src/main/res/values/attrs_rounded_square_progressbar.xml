@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="RoundedSquareProgressView">
+        <attr name="progress" format="float" />
+    </declare-styleable>
+</resources>

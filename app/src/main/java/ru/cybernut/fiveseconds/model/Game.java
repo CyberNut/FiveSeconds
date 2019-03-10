@@ -41,7 +41,7 @@ public class Game implements SoundPool.OnLoadCompleteListener {
         this.context = context;
         this.gameType = gameType;
         this.numberOfQuestions = numberOfQuestions;
-        this.mainGameActivity = (GUIUpdatable) context;
+        //this.mainGameActivity = (GUIUpdatable) context;
         this.assetManager = context.getAssets();
         soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
         soundPool.setOnLoadCompleteListener(this);
@@ -50,15 +50,30 @@ public class Game implements SoundPool.OnLoadCompleteListener {
     public Game(GameType gameType, int numberOfQuestions)  {
         this.gameType = gameType;
         this.numberOfQuestions = numberOfQuestions;
-        this.mainGameActivity = (GUIUpdatable) context;
+        //this.mainGameActivity = (GUIUpdatable) context;
         this.assetManager = context.getAssets();
         soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
         soundPool.setOnLoadCompleteListener(this);
     }
 
-    public void init(ArrayList<Integer> setIds) {
-        GameInitTask gameInitTask = new GameInitTask();
-        gameInitTask.execute(setIds);
+    public boolean init(ArrayList<Integer> setIds) {
+        playerList = PlayersList.getInstance();
+        numberOfPlayers = playerList.getNumberOfPlayers();
+        uuidList = QuestionList.getInstance(context).getRandomIdList(numberOfQuestions, setIds);
+        currentQuestion = getNextQuestion();
+        nextQuestion = getNextQuestion();
+        currentPlayer = playerList.getPlayer(0);
+//        if(gameType == GameType.AUTO_PLAY_SOUND) {
+//            prepareNextSound(currentQuestion.getId().toString());
+//        } else {
+            isGameReady = true;
+//        }
+
+        if(uuidList.size() == 0 || currentQuestion == null || currentPlayer == null) {
+            isGameReady = false;
+        }
+
+        return isGameReady;
     }
 
     public boolean isGameReady() {
@@ -114,7 +129,7 @@ public class Game implements SoundPool.OnLoadCompleteListener {
         protected void onPostExecute(Question question) {
             currentQuestion = nextQuestion;
             nextQuestion = question;
-            mainGameActivity.update();
+            //mainGameActivity.update();
         }
     }
 
@@ -184,6 +199,6 @@ public class Game implements SoundPool.OnLoadCompleteListener {
     public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
         Log.i(TAG, "onLoadComplete: sampleId =" + sampleId);
         isGameReady = true;
-        ((Initializable)context).initDone();
+        //((Initializable)context).initDone();
     }
 }

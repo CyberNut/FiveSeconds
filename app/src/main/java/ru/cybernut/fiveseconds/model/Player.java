@@ -1,10 +1,14 @@
 package ru.cybernut.fiveseconds.model;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.graphics.drawable.Drawable;
 
 import java.io.Serializable;
 
-public class Player implements Serializable {
+import ru.cybernut.fiveseconds.BR;
+
+public class Player extends BaseObservable implements Serializable {
 
     private String name;
     private Drawable photo;
@@ -23,12 +27,14 @@ public class Player implements Serializable {
         this.isGameMaster = isGameMaster;
     }
 
+    @Bindable
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+        notifyPropertyChanged(BR.name);
     }
 
     public Drawable getPhoto() {
@@ -47,16 +53,19 @@ public class Player implements Serializable {
         isGameMaster = gameMaster;
     }
 
+    @Bindable
     public int getScore() {
         return score;
     }
 
     public void increaseScore() {
         score++;
+        notifyPropertyChanged(BR.score);
     }
 
     public void setScore(int score) {
         this.score = score;
+        notifyPropertyChanged(BR.score);
     }
 
     @Override
