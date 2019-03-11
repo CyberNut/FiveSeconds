@@ -75,7 +75,7 @@ public class MainGameActivity extends AppCompatActivity  implements Game.GUIUpda
     }
 
     private void initialize() {
-        game = new Game(this,  Game.GameType.AUTO_PLAY_SOUND, numberOfQuestions);
+        game = new Game(this, null,  Game.GameType.AUTO_PLAY_SOUND, numberOfQuestions);
         game.init(setIds);
 
 

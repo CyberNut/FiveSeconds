@@ -28,6 +28,7 @@ public class Game implements SoundPool.OnLoadCompleteListener {
     private int numberOfQuestions;
     private int numberOfPlayers;
     private List<String> uuidList;
+    private Initializable viewModel;
     private GUIUpdatable mainGameActivity;
     private SoundPool soundPool;
     private int currentSoundId;
@@ -37,20 +38,11 @@ public class Game implements SoundPool.OnLoadCompleteListener {
     private boolean isGameOver = false;
     private volatile boolean isGameReady = false;
 
-    public Game(Context context, GameType gameType, int numberOfQuestions)  {
+    public Game(Context context, Initializable viewModel, GameType gameType, int numberOfQuestions)  {
         this.context = context;
         this.gameType = gameType;
         this.numberOfQuestions = numberOfQuestions;
-        //this.mainGameActivity = (GUIUpdatable) context;
-        this.assetManager = context.getAssets();
-        soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
-        soundPool.setOnLoadCompleteListener(this);
-    }
-
-    public Game(GameType gameType, int numberOfQuestions)  {
-        this.gameType = gameType;
-        this.numberOfQuestions = numberOfQuestions;
-        //this.mainGameActivity = (GUIUpdatable) context;
+        this.viewModel = viewModel;
         this.assetManager = context.getAssets();
         soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
         soundPool.setOnLoadCompleteListener(this);
@@ -63,14 +55,18 @@ public class Game implements SoundPool.OnLoadCompleteListener {
         currentQuestion = getNextQuestion();
         nextQuestion = getNextQuestion();
         currentPlayer = playerList.getPlayer(0);
-//        if(gameType == GameType.AUTO_PLAY_SOUND) {
-//            prepareNextSound(currentQuestion.getId().toString());
-//        } else {
+        if(gameType == GameType.AUTO_PLAY_SOUND) {
+            prepareNextSound(currentQuestion.getId().toString());
+        } else {
             isGameReady = true;
-//        }
+        }
 
         if(uuidList.size() == 0 || currentQuestion == null || currentPlayer == null) {
             isGameReady = false;
+        }
+
+        if (isGameReady) {
+            viewModel.initDone();
         }
 
         return isGameReady;
@@ -89,6 +85,8 @@ public class Game implements SoundPool.OnLoadCompleteListener {
             String uuid = uuidList.get(0);
             uuidList.remove(0);
             return QuestionList.getInstance(context).getQuestion(uuid);
+        } else {
+            isGameOver = true;
         }
         return null;
     }
@@ -179,6 +177,7 @@ public class Game implements SoundPool.OnLoadCompleteListener {
         } catch (IOException e) {
             Log.e(TAG, "playSound: ", e);
             isGameReady = true;
+            viewModel.initDone();
         }
         Log.i(TAG, "prepareNextSound: EXIT isGameReady = " + isGameReady);
     }
@@ -199,6 +198,6 @@ public class Game implements SoundPool.OnLoadCompleteListener {
     public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
         Log.i(TAG, "onLoadComplete: sampleId =" + sampleId);
         isGameReady = true;
-        //((Initializable)context).initDone();
+        viewModel.initDone();
     }
 }

@@ -11,7 +11,6 @@
     </data>
 
     <android.support.constraint.ConstraintLayout
-
         android:id="@+id/root_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,7 +27,7 @@
             android:layout_marginBottom="8dp"
             android:background="@null"
             android:onClick="@{viewModel::onNextTurn}"
-            android:visibility="@{viewModel.started ? View.INVISIBLE : View.VISIBLE}"
+            android:visibility="@{(!viewModel.started &amp;&amp; viewModel.gameReady)? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,6 +41,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            app:currentPlayer="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.25"
@@ -67,6 +67,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:rotation="-90"
+            app:currentPlayer="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

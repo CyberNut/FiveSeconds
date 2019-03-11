@@ -28,7 +28,7 @@
             android:layout_marginBottom="8dp"
             android:background="@null"
             android:onClick="@{viewModel::onNextTurn}"
-            android:visibility="@{viewModel.gameReady ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="@{(!viewModel.started &amp;&amp; viewModel.gameReady)? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

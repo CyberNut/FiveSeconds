@@ -24,7 +24,6 @@
             android:layout_alignParentTop="true"
             android:layout_alignBottom="@+id/player_card"
             android:layout_alignEnd="@+id/player_card"
-            app:progress="50"
             />
         <FrameLayout
             android:id="@+id/player_card"

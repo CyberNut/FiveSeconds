@@ -61,6 +61,10 @@ public class RoundedSquareProgressView extends View {
         this.canvas = canvas;
         super.onDraw(canvas);
 
+        if (progress == 0) {
+            return;
+        }
+
         strokewidth = CalculationUtil.convertDpToPx(widthInDp, getContext());
         int cW = canvas.getWidth();
         int cH = canvas.getHeight();
