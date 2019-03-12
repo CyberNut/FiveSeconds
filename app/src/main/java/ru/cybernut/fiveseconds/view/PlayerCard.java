@@ -17,6 +17,15 @@ public class PlayerCard extends RelativeLayout {
     private NewPlayerCardBinding binding;
     private boolean isCurrentPlayer;
     private double progress;
+    private String test;
+
+    public String getTest() {
+        return test;
+    }
+
+    public void setTest(String text) {
+        binding.setTest(text);
+    }
 
     public PlayerCard(Context context) {
         super(context);
@@ -48,7 +57,6 @@ public class PlayerCard extends RelativeLayout {
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.PlayerCard, defStyleAttr, 0);
         isCurrentPlayer = a.getBoolean(R.styleable.PlayerCard_currentPlayer, false);
-        progress = a.getFloat(R.styleable.PlayerCard_progress, 0);
         a.recycle();
     }
 

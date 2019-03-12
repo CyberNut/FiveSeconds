@@ -154,6 +154,14 @@ public class GameViewModel extends BaseObservable implements Game.Initializable 
         }
     }
 
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
     @Override
     public void initDone() {
         currentQuestion = game.getCurrentQuestion();

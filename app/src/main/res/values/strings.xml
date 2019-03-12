@@ -21,6 +21,11 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-
+    <string name="game_type_label">Game type</string>
+    <string-array name="game_type_list">
+        <item>Auto play sound</item>
+        <item>Add time for reading</item>
+        <item>Manual start</item>
+    </string-array>
 
 </resources>

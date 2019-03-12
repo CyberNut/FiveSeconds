@@ -21,13 +21,15 @@ public class GameActivity extends AppCompatActivity {
     private static final String TAG = "GameActivity";
     private static final String NUMBER_OF_QUESTIONS_KEY = "NUMBER_OF_QUESTIONS_KEY";
     private static final String QUESTION_SET_IDS_KEY = "QUESTION_SET_IDS_KEY";
+    private static final String GAME_TYPE_KEY = "GAME_TYPE_KEY";
 
     private GameViewModel viewModel;
     private int numberOfPlayers;
 
-    public static Intent newIntent(Context context, int numberOfQuestions, ArrayList<Integer> setsIds) {
+    public static Intent newIntent(Context context, int numberOfQuestions, ArrayList<Integer> setsIds, String gameType) {
         Intent intent = new Intent(context, GameActivity.class);
         intent.putExtra(NUMBER_OF_QUESTIONS_KEY, numberOfQuestions);
+        intent.putExtra(GAME_TYPE_KEY, gameType);
         intent.putIntegerArrayListExtra(QUESTION_SET_IDS_KEY, setsIds);
         return intent;
     }
@@ -35,6 +37,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int numberOfQuestions = getIntent().getExtras().getInt(NUMBER_OF_QUESTIONS_KEY);
+        String gameType = getIntent().getExtras().getString(GAME_TYPE_KEY);
         ArrayList<Integer> setIds = getIntent().getExtras().getIntegerArrayList(QUESTION_SET_IDS_KEY);
         super.onCreate(savedInstanceState);
 

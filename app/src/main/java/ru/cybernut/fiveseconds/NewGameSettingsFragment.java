@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ public class NewGameSettingsFragment extends Fragment {
     private QuestionSetAdapter questionSetAdapter;
     private ArrayList<Integer> setIds = new ArrayList<>();
     private DownloadTask downloadTask;
+    private Spinner gameTypeSpinner;
 
     // declare the dialog as a member field of your activity
     ProgressDialog mProgressDialog;
@@ -78,6 +80,9 @@ public class NewGameSettingsFragment extends Fragment {
         numberOfQuestionsTextView = (TextView)v.findViewById(R.id.numberOfQuestions);
         numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
 
+        gameTypeSpinner = (Spinner) v.findViewById(R.id.game_type_spinner);
+        ;
+
         startNewGameButton = (ImageButton)v.findViewById(R.id.startNewGameButton);
         startNewGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +91,7 @@ public class NewGameSettingsFragment extends Fragment {
                 if (numberOfQuestions <= MIN_QUANTITY_OF_QUESTIONS || numberOfPlayers < 2) {
                     Toast.makeText(getActivity(), R.string.incorrect_number_of_questions, Toast.LENGTH_SHORT).show();
                 } else {
-                    onGamePreparedListener.onGamePrepared(numberOfQuestions,  setIds);
+                    onGamePreparedListener.onGamePrepared(numberOfQuestions,  setIds, gameTypeSpinner.getSelectedItem().toString());
                 }
             }
         });
@@ -140,7 +145,7 @@ public class NewGameSettingsFragment extends Fragment {
     }
 
     public interface OnGamePreparedListener {
-        public void onGamePrepared(int numberOfQuestions, ArrayList<Integer> setIds);
+        public void onGamePrepared(int numberOfQuestions, ArrayList<Integer> setIds, String gameType);
     }
 
 

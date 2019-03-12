@@ -1,6 +1,5 @@
 <resources>
     <declare-styleable name="PlayerCard">
         <attr name="currentPlayer" format="boolean" />
-        <attr name="progress" format="float" />
     </declare-styleable>
 </resources>

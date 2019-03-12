@@ -3,13 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="android.view.View" />
-
         <variable
             name="player"
             type="ru.cybernut.fiveseconds.model.Player" />
         <variable
-            name="progress"
-            type="Float" />
+            name="test"
+            type="String" />
     </data>
 
     <RelativeLayout
@@ -19,7 +18,6 @@
         android:visibility="@{player == null ? View.INVISIBLE : View.VISIBLE}" >
 
         <ru.cybernut.fiveseconds.view.RoundedSquareProgressView
-
             android:id="@+id/rounded_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +25,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignBottom="@+id/player_card"
             android:layout_alignEnd="@+id/player_card"
-            app:progress="@{progress}"
+
             />
         <FrameLayout
             android:id="@+id/player_card"
@@ -58,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
-                android:text="@{player.name}" />
+                android:text="@{test}" />
 
             <ImageView
                 android:id="@+id/is_current_image_view"
