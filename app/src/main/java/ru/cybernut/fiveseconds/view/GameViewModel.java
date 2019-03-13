@@ -3,82 +3,73 @@ package ru.cybernut.fiveseconds.view;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ru.cybernut.fiveseconds.BR;
-import ru.cybernut.fiveseconds.model.Game;
+import ru.cybernut.fiveseconds.model.GameEngine;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
-import ru.cybernut.fiveseconds.model.Question;
 
-public class GameViewModel extends BaseObservable implements Game.Initializable {
+public class GameViewModel extends BaseObservable implements GameEngine.Updatable {
 
     private static final String TAG = "GameViewModel";
     
     private boolean isStarted = false;
     private boolean isGameReady = false;
-    private Game game;
+    private GameEngine game;
     private String currentQuestionText;
-    private PlayersList playersList;
     private ArrayList<Integer> setIds;
-    private Question currentQuestion;
-    private Question nextQuestion;
-    private Player currentPlayer;
     private CountDownTimer gameTimer;
+    private ArrayList<PlayerModel> players;
 
     public GameViewModel(Context appContext, int numberOfQuestions, ArrayList<Integer> setIds) {
-        playersList = PlayersList.getInstance();
-        this.currentPlayer = playersList.getPlayer(0);
         this.setIds = setIds;
-        game = new Game(appContext, this, Game.GameType.AUTO_PLAY_SOUND, numberOfQuestions);
+        game = new GameEngine(appContext, this, 0, numberOfQuestions);
+        initPlayers();
+    }
+
+    private void initPlayers() {
+        players = new ArrayList<>();
+        List<Player> list = PlayersList.getInstance().getList();
+        for (Player player : list) {
+            players.add(new PlayerModel(player));
+        }
+        players.get(0).setCurrentPlayer(true);
     }
 
     public void initialize() {
-        new GameInitTask().execute();
-//        gameTimer = new CountDownTimer(5000, 100) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//                if(!isPaused) {
-//                    playerCardFragment = playerCardFragmentMap.get(playersList.getId(game.getCurrentPlayer()));
-//                    playerCardFragment.setProgress(playerCardFragment.getProgress() + 2);
-//                }
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//                playerCardFragment.setProgress(100);
-//                alertDialogBuilder.show();
-//            }
-//        };
-
-
+        game.initialize(setIds);
     }
 
-    public Player getPlayer(int index) {
-        if (index <= (playersList.getNumberOfPlayers() - 1)) {
-            return playersList.getPlayer(index);
+    public PlayerModel getPlayer(int index) {
+        if (index <= (players.size() - 1)) {
+            return players.get(index);
         } else {
             return null;
         }
     }
 
     public int getNumberOfPlayers() {
-        return PlayersList.getInstance().getNumberOfPlayers();
+        return players.size();
     }
 
     private void nextPlayer() {
-        int currentPlayerId = playersList.getId(currentPlayer);
-        currentPlayerId++;
-        if (currentPlayerId > (playersList.getNumberOfPlayers() - 1)) {
-            currentPlayer = playersList.getPlayer(0);
-        } else {
-            currentPlayer = playersList.getPlayer(currentPlayerId);
+        for (int i = 0; i < players.size(); i++) {
+            PlayerModel tempPlayer = players.get(i);
+            if (tempPlayer.isCurrentPlayer()) {
+                tempPlayer.setCurrentPlayer(false);
+                if ((i + 1) == players.size()) {
+                    players.get(0).setCurrentPlayer(true);
+                } else {
+                    players.get(i + 1).setCurrentPlayer(true);
+                }
+            }
         }
     }
 
@@ -94,7 +85,7 @@ public class GameViewModel extends BaseObservable implements Game.Initializable 
     }
 
     @Bindable
-    public boolean isStarted() {
+    public boolean getStarted() {
         return isStarted;
     }
 
@@ -113,59 +104,29 @@ public class GameViewModel extends BaseObservable implements Game.Initializable 
         notifyPropertyChanged(BR.currentQuestionText);
     }
 
-    @Bindable
-    public Question getCurrentQuestion() {
-        return currentQuestion;
-    }
-
     public void onNextTurn(View v) {
-
-        currentQuestion = game.getCurrentQuestion();
         setStarted(true);
-        new GameInitTask().execute();
+        notifyPropertyChanged(BR.started);
+        setCurrentQuestionText(game.getCurrentQuestionText());
+        notifyPropertyChanged(BR.currentQuestionText);
         game.playCurrentSound();
         Log.i(TAG, "onNextTurn: " + currentQuestionText);
-        notifyPropertyChanged(BR.currentQuestion);
-        notifyPropertyChanged(BR.started);
+        game.nextTurn();
     }
     
-    private class GameInitTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            game.init(setIds);
-            Log.i(TAG, "doInBackground: ");
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                Log.e(TAG, "doInBackground: ", e);
-            }
-            return null;
-        }
-    }
-
-    private class GameTurnTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            currentQuestion = nextQuestion;
-            nextQuestion = game.getNextQuestion();
-            return null;
-        }
-    }
-
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
+    @Override
+    public void initDone() {
+        setGameReady(true);
     }
 
     @Override
-    public void initDone() {
-        currentQuestion = game.getCurrentQuestion();
-        setGameReady(true);
-        setCurrentQuestionText(game.getCurrentQuestion().getText());
+    public void gameOver() {
+        Log.i(TAG, "gameOver: ");
+    }
+
+    @Override
+    public void progressUpdate() {
+        Log.i(TAG, "progressUpdate: ");
+
     }
 }

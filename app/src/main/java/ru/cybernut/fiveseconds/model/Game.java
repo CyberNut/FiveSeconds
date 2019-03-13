@@ -16,6 +16,10 @@ public class Game implements SoundPool.OnLoadCompleteListener {
 
     public enum GameType {AUTO_PLAY_SOUND, ADDITION_TIME_FOR_READING, MANUAL}
 
+    public static int GAME_TYPE_AUTO_PLAY_SOUND = 0;
+    public static int GAME_TYPE_ADDITION_TIME_FOR_READING = 1;
+    public static int GAME_TYPE_MANUAL = 2;
+
     private static final String TAG = "Game";
     public static final int MAX_PLAYERS = 6;
     private static final int MAX_SOUND = 5;
@@ -48,7 +52,7 @@ public class Game implements SoundPool.OnLoadCompleteListener {
         soundPool.setOnLoadCompleteListener(this);
     }
 
-    public boolean init(ArrayList<Integer> setIds) {
+    public void init(ArrayList<Integer> setIds) {
         playerList = PlayersList.getInstance();
         numberOfPlayers = playerList.getNumberOfPlayers();
         uuidList = QuestionList.getInstance(context).getRandomIdList(numberOfQuestions, setIds);
@@ -69,7 +73,6 @@ public class Game implements SoundPool.OnLoadCompleteListener {
             viewModel.initDone();
         }
 
-        return isGameReady;
     }
 
     public boolean isGameReady() {

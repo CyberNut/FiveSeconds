@@ -13,25 +13,14 @@ import ru.cybernut.fiveseconds.model.Player;
 
 public class PlayerCard extends RelativeLayout {
 
-    private Player player;
+    private PlayerModel player;
     private NewPlayerCardBinding binding;
-    private boolean isCurrentPlayer;
-    private double progress;
-    private String test;
-
-    public String getTest() {
-        return test;
-    }
-
-    public void setTest(String text) {
-        binding.setTest(text);
-    }
 
     public PlayerCard(Context context) {
         super(context);
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        init(null, 0);
+        //init(null, 0);
         binding = DataBindingUtil.inflate(mInflater, R.layout.new_player_card, this, true);
 
     }
@@ -40,7 +29,7 @@ public class PlayerCard extends RelativeLayout {
         super(context, attrs);
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        init(attrs, 0);
+        //init(attrs, 0);
         binding = DataBindingUtil.inflate(mInflater, R.layout.new_player_card, this, true);
     }
 
@@ -48,31 +37,31 @@ public class PlayerCard extends RelativeLayout {
         super(context, attrs, defStyleAttr);
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        init(attrs, defStyleAttr);
+        //init(attrs, defStyleAttr);
         binding = DataBindingUtil.inflate(mInflater, R.layout.new_player_card, this, true);
     }
 
-    public void init(AttributeSet attrs, int defStyleAttr) {
-        // Load attributes
-        final TypedArray a = getContext().obtainStyledAttributes(
-                attrs, R.styleable.PlayerCard, defStyleAttr, 0);
-        isCurrentPlayer = a.getBoolean(R.styleable.PlayerCard_currentPlayer, false);
-        a.recycle();
-    }
+//    public void init(AttributeSet attrs, int defStyleAttr) {
+//        // Load attributes
+//        final TypedArray a = getContext().obtainStyledAttributes(
+//                attrs, R.styleable.PlayerCard, defStyleAttr, 0);
+//        isCurrentPlayer = a.getBoolean(R.styleable.PlayerCard_currentPlayer, false);
+//        a.recycle();
+//    }
 
     public boolean isCurrentPlayer() {
-        return isCurrentPlayer;
+        return player.isCurrentPlayer();
     }
 
     public void setCurrentPlayer(boolean currentPlayer) {
-        isCurrentPlayer = currentPlayer;
+        player.setCurrentPlayer(currentPlayer);
     }
 
-    public Player getPlayer() {
+    public PlayerModel getPlayer() {
         return player;
     }
 
-    public void setPlayer(Player player) {
+    public void setPlayer(PlayerModel player) {
         this.player = player;
         if (binding != null) {
             binding.setPlayer(player);
@@ -80,11 +69,12 @@ public class PlayerCard extends RelativeLayout {
     }
 
     public void setProgress(double progress) {
-        this.progress = progress;
+        player.setProgressbarValue(progress);
         binding.roundedProgressBar.setProgress(progress);
     }
 
     public double getProgress() {
+
         return binding.roundedProgressBar.getProgress();
     }
 }

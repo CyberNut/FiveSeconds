@@ -5,10 +5,7 @@
         <import type="android.view.View" />
         <variable
             name="player"
-            type="ru.cybernut.fiveseconds.model.Player" />
-        <variable
-            name="test"
-            type="String" />
+            type="ru.cybernut.fiveseconds.view.PlayerModel" />
     </data>
 
     <RelativeLayout
@@ -25,16 +22,15 @@
             android:layout_alignParentTop="true"
             android:layout_alignBottom="@+id/player_card"
             android:layout_alignEnd="@+id/player_card"
-
-            />
+            android:visibility="@{player.currentPlayer ? View.VISIBLE : View.INVISIBLE}"
+            app:progress="@{player.progressbarValue}" />
         <FrameLayout
             android:id="@+id/player_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:padding="4dp"
-            >
+            android:padding="4dp">
 
             <ImageView
                 android:id="@+id/player_card_photo"
@@ -56,12 +52,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
-                android:text="@{test}" />
+                android:text="@{player.name}" />
 
             <ImageView
                 android:id="@+id/is_current_image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="@{player.currentPlayer ? View.VISIBLE : View.INVISIBLE}"
                 app:srcCompat="@android:drawable/btn_star_big_on" />
         </FrameLayout>
     </RelativeLayout>

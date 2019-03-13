@@ -47,24 +47,9 @@ public class GameActivity extends AppCompatActivity {
         if( numberOfPlayers <= 4) {
             GameActivity4playersBinding binding = DataBindingUtil.setContentView(this, R.layout.game_activity_4players);
             binding.setViewModel(viewModel);
-            binding.playerCard0.setPlayer(viewModel.getPlayer(0));
-            binding.playerCard1.setPlayer(viewModel.getPlayer(1));
-            binding.playerCard2.setPlayer(viewModel.getPlayer(2));
-            binding.playerCard3.setPlayer(viewModel.getPlayer(3));
         } else {
             GameActivity6playersBinding binding = DataBindingUtil.setContentView(this, R.layout.game_activity_6players);
             binding.setViewModel(viewModel);
-            binding.playerCard0.setPlayer(viewModel.getPlayer(0));
-            binding.playerCard1.setPlayer(viewModel.getPlayer(1));
-            binding.playerCard2.setPlayer(viewModel.getPlayer(2));
-            binding.playerCard3.setPlayer(viewModel.getPlayer(3));
-            binding.playerCard4.setPlayer(viewModel.getPlayer(4));
-            binding.playerCard5.setPlayer(viewModel.getPlayer(5));
         }
-    }
-
-    public void testButton(View view) {
-        Player p = PlayersList.getInstance().getPlayer(0);
-        p.increaseScore();
     }
 }

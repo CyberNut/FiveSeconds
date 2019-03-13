@@ -89,7 +89,7 @@ public class NewGameSettingsFragment extends Fragment {
             public void onClick(View v) {
                 int numberOfQuestions = MIN_QUANTITY_OF_QUESTIONS * numberOfPlayers + numberOfPlayers * numberOfQuestionsSeekBar.getProgress();
                 if (numberOfQuestions <= MIN_QUANTITY_OF_QUESTIONS || numberOfPlayers < 2) {
-                    Toast.makeText(getActivity(), R.string.incorrect_number_of_questions, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), R.string.incorrect_number_of_questions, Toast.LENGTH_SHORT).show();
                 } else {
                     onGamePreparedListener.onGamePrepared(numberOfQuestions,  setIds, gameTypeSpinner.getSelectedItem().toString());
                 }

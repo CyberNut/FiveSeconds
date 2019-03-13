@@ -1,5 +1,0 @@
-<resources>
-    <declare-styleable name="PlayerCard">
-        <attr name="currentPlayer" format="boolean" />
-    </declare-styleable>
-</resources>

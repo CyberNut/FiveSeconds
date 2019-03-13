@@ -42,8 +42,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            app:currentPlayer="true"
-            app:progress="75"
+            app:player="@{viewModel.getPlayer(0)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.25"
@@ -56,6 +55,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            app:player="@{viewModel.getPlayer(1)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.75"
@@ -69,6 +69,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:rotation="-90"
+            app:player="@{viewModel.getPlayer(2)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -81,6 +82,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:rotation="-180"
+            app:player="@{viewModel.getPlayer(3)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.75"
             app:layout_constraintStart_toStartOf="parent"
@@ -94,6 +96,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:rotation="-180"
+            app:player="@{viewModel.getPlayer(4)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.24"
             app:layout_constraintStart_toStartOf="parent"
@@ -107,6 +110,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:rotation="-270"
+            app:player="@{viewModel.getPlayer(5)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -134,7 +138,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:visibility="@{viewModel.gameReady ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="@{viewModel.started ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -144,7 +148,7 @@
                 android:id="@+id/question_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.currentQuestion.text}" />
+                android:text="@{viewModel.currentQuestionText}" />
         </FrameLayout>
 
         <android.support.design.widget.FloatingActionButton
