@@ -62,4 +62,10 @@ public class PlayerModel extends BaseObservable {
         this.progressbarValue = progressbarValue;
         notifyPropertyChanged(BR.progressbarValue);
     }
+
+    public void increaseProgressbarValue(double addValue) {
+        this.progressbarValue = this.progressbarValue + addValue;
+        notifyPropertyChanged(BR.progressbarValue);
+    }
+
 }

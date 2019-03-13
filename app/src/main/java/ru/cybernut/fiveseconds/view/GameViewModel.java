@@ -3,10 +3,8 @@ package ru.cybernut.fiveseconds.view;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +23,8 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     private GameEngine game;
     private String currentQuestionText;
     private ArrayList<Integer> setIds;
-    private CountDownTimer gameTimer;
     private ArrayList<PlayerModel> players;
+    private PlayerModel currentPlayer;
 
     public GameViewModel(Context appContext, int numberOfQuestions, ArrayList<Integer> setIds) {
         this.setIds = setIds;
@@ -40,7 +38,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         for (Player player : list) {
             players.add(new PlayerModel(player));
         }
-        players.get(0).setCurrentPlayer(true);
+        nextPlayer(); //set a current player
     }
 
     public void initialize() {
@@ -60,17 +58,17 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     }
 
     private void nextPlayer() {
-        for (int i = 0; i < players.size(); i++) {
-            PlayerModel tempPlayer = players.get(i);
-            if (tempPlayer.isCurrentPlayer()) {
-                tempPlayer.setCurrentPlayer(false);
-                if ((i + 1) == players.size()) {
-                    players.get(0).setCurrentPlayer(true);
-                } else {
-                    players.get(i + 1).setCurrentPlayer(true);
-                }
-            }
+        if(currentPlayer != null) {
+            currentPlayer.setProgressbarValue(0);
+            currentPlayer.setCurrentPlayer(false);
         }
+        int currentIndex = players.indexOf(currentPlayer);
+        if ((currentIndex + 1) == players.size()) {
+            currentPlayer = players.get(0);
+        } else {
+            currentPlayer = players.get(currentIndex + 1);
+        }
+        currentPlayer.setCurrentPlayer(true);
     }
 
     @Bindable
@@ -109,7 +107,6 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         notifyPropertyChanged(BR.started);
         setCurrentQuestionText(game.getCurrentQuestionText());
         notifyPropertyChanged(BR.currentQuestionText);
-        game.playCurrentSound();
         Log.i(TAG, "onNextTurn: " + currentQuestionText);
         game.nextTurn();
     }
@@ -127,6 +124,12 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     @Override
     public void progressUpdate() {
         Log.i(TAG, "progressUpdate: ");
+        players.get(0).increaseProgressbarValue(4);
+    }
 
+    @Override
+    public void timerFinished() {
+        players.get(0).setProgressbarValue(100);
+        Log.i(TAG, "timerFinished: ");
     }
 }

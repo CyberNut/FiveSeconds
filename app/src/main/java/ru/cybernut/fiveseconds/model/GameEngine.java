@@ -6,6 +6,7 @@ import android.content.res.AssetManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.util.Log;
 
 import java.io.IOException;
@@ -22,9 +23,9 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener {
     public static final int MAX_PLAYERS = 6;
     private static final String TAG = "GameEngine";
     private static final int MAX_SOUND = 5;
-    private static final int STANDART_ROUND_DURATION = 5000; //ms
-    private static final int ADDITION_TIME_DURATION = 2000; //ms
-    private static final int TICK_DURATION = 200; //ms
+    private static final long STANDART_ROUND_DURATION = 5000; //ms
+    private static final long ADDITION_TIME_DURATION = 2000; //ms
+    private static final long TICK_DURATION = 200; //ms
 
     private Context appContext;
     private int gameType;
@@ -37,7 +38,9 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener {
     private ArrayList<Integer> setIds;
     private boolean isGameOver = false;
     private boolean isGameReady = false;
-    private int roundDuration;
+    private boolean isPaused = false;
+    private long roundDuration;
+    private CountDownTimer gameTimer;
 
     private Updatable viewModel;
 
@@ -49,12 +52,23 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener {
         this.numberOfQuestions = numberOfQuestions;
         this.roundDuration = STANDART_ROUND_DURATION;
         this.soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
-
     }
 
     public void initialize(ArrayList<Integer> setIds) {
         this.setIds = setIds;
         soundPool.setOnLoadCompleteListener(this);
+        gameTimer = new CountDownTimer(roundDuration, TICK_DURATION) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if(!isPaused) {
+                    viewModel.progressUpdate();
+                }
+            }
+            @Override
+            public void onFinish() {
+                viewModel.timerFinished();
+            }
+        };
         new GameInitTask().execute();
     }
 
@@ -102,6 +116,14 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener {
     }
 
     public void nextTurn() {
+        if (gameType == GAME_TYPE_AUTO_PLAY_SOUND) {
+            playCurrentSound();
+        }
+        gameTimer.start();
+        nextTurnTaskStart();
+    }
+
+    public void nextTurnTaskStart() {
         new GameTurnTask().execute();
     }
 
@@ -162,5 +184,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener {
         public void initDone();
         public void gameOver();
         public void progressUpdate();
+        public void timerFinished();
     }
 }
