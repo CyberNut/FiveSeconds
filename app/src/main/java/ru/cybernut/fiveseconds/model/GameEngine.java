@@ -134,7 +134,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener {
 
             try {
                 //TODO: delay imitation
-                Thread.sleep(3000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Log.e(TAG, "doInBackground: ", e);
                 return null;

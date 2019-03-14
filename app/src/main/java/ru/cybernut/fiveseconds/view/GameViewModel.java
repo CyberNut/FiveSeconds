@@ -20,11 +20,15 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     
     private boolean isStarted = false;
     private boolean isGameReady = false;
+    private boolean isNeedShowAnswer = false;
+    private boolean isNeedShowQuestion = false;
     private GameEngine game;
+    private int numberOfPlayers;
     private String currentQuestionText;
     private ArrayList<Integer> setIds;
     private ArrayList<PlayerModel> players;
     private PlayerModel currentPlayer;
+    private int currentRotationValue;
 
     public GameViewModel(Context appContext, int numberOfQuestions, ArrayList<Integer> setIds) {
         this.setIds = setIds;
@@ -35,6 +39,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     private void initPlayers() {
         players = new ArrayList<>();
         List<Player> list = PlayersList.getInstance().getList();
+        numberOfPlayers = list.size();
         for (Player player : list) {
             players.add(new PlayerModel(player));
         }
@@ -69,6 +74,18 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
             currentPlayer = players.get(currentIndex + 1);
         }
         currentPlayer.setCurrentPlayer(true);
+
+        calculateRotation();
+    }
+
+    @Bindable
+    public boolean isNeedShowAnswer() {
+        return isNeedShowAnswer;
+    }
+
+    public void setNeedShowAnswer(boolean needShowAnswer) {
+        isNeedShowAnswer = needShowAnswer;
+        notifyPropertyChanged(BR.needShowAnswer);
     }
 
     @Bindable
@@ -102,6 +119,16 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         notifyPropertyChanged(BR.currentQuestionText);
     }
 
+    public void handleAnswer(boolean isCorrectAnswer) {
+        Log.i(TAG, "handleAnswer: " + isCorrectAnswer);
+        if(isCorrectAnswer) {
+            currentPlayer.setScore();
+        }
+        setNeedShowAnswer(false);
+        nextPlayer();
+        onNextTurn(null);
+    }
+
     public void onNextTurn(View v) {
         setStarted(true);
         notifyPropertyChanged(BR.started);
@@ -110,7 +137,59 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         Log.i(TAG, "onNextTurn: " + currentQuestionText);
         game.nextTurn();
     }
-    
+
+    @Bindable
+    public int getCurrentRotationValue() {
+        return currentRotationValue;
+    }
+
+    public void setCurrentRotationValue(int currentRotationValue) {
+        this.currentRotationValue = currentRotationValue;
+        notifyPropertyChanged(BR.currentRotationValue);
+    }
+
+    public void calculateRotation() {
+        int currentIndex = players.indexOf(currentPlayer);
+        if(numberOfPlayers <= 4) {
+            switch (currentIndex) {
+                case 0:
+                    currentRotationValue = 0;
+                    break;
+                case 1:
+                    currentRotationValue = -90;
+                    break;
+                case 2:
+                    currentRotationValue = -180;
+                    break;
+                case 3:
+                    currentRotationValue = -270;
+                    break;
+            }
+        } else {
+            switch (currentIndex) {
+                case 0:
+                    currentRotationValue = 0;
+                    break;
+                case 1:
+                    currentRotationValue = 0;
+                    break;
+                case 2:
+                    currentRotationValue = -90;
+                    break;
+                case 3:
+                    currentRotationValue = -180;
+                    break;
+                case 4:
+                    currentRotationValue = -180;
+                    break;
+                case 5:
+                    currentRotationValue = -270;
+                    break;
+            }
+        }
+        notifyPropertyChanged(BR.currentRotationValue);
+    }
+
     @Override
     public void initDone() {
         setGameReady(true);
@@ -123,13 +202,14 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
 
     @Override
     public void progressUpdate() {
-        Log.i(TAG, "progressUpdate: ");
-        players.get(0).increaseProgressbarValue(4);
+        currentPlayer.increaseProgressbarValue(5);
     }
 
     @Override
     public void timerFinished() {
-        players.get(0).setProgressbarValue(100);
-        Log.i(TAG, "timerFinished: ");
+        currentPlayer.setProgressbarValue(100);
+        setStarted(false);
+        setGameReady(false);
+        setNeedShowAnswer(true);
     }
 }
