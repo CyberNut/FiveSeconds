@@ -1,6 +1,7 @@
 package ru.cybernut.fiveseconds;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.ImageButton;
 
 import java.util.Locale;
 
+import ru.cybernut.fiveseconds.databinding.StartFragmentBinding;
 import ru.cybernut.fiveseconds.model.Question;
 import ru.cybernut.fiveseconds.model.QuestionList;
 
@@ -18,8 +20,10 @@ public class StartFragment extends Fragment {
 
     private static final String TAG = "StartFragment";
 
+    private StartFragmentBinding binding;
     private ImageButton newGameButton;
     private ImageButton helpButton;
+    private ImageButton settingsButton;
 
     public static StartFragment newInstance() {
         return new StartFragment();
@@ -27,13 +31,14 @@ public class StartFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.start_fragment, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.start_fragment, container, false);
+        View v = binding.getRoot();
         prepareUI(v);
         return v;
     }
 
     private void prepareUI(View view) {
-        newGameButton = (ImageButton) view.findViewById(R.id.new_game_button);
+        newGameButton = binding.newGameButton;
         newGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,12 +48,13 @@ public class StartFragment extends Fragment {
             }
         });
 
-        helpButton = (ImageButton) view.findViewById(R.id.help_button);
+        helpButton = binding.helpButton;
         helpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             }
         });
-    }
 
+        settingsButton = binding.settingsButton;
+    }
 }

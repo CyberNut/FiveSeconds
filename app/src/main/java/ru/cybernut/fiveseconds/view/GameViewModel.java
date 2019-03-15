@@ -208,7 +208,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     @Override
     public void timerFinished() {
         currentPlayer.setProgressbarValue(100);
-        setStarted(false);
+        //setStarted(false);
         setGameReady(false);
         setNeedShowAnswer(true);
     }

@@ -157,7 +157,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:visibility="@{viewModel.gameReady ? View.INVISIBLE : View.VISIBLE}"
+            android:visibility="@{!viewModel.gameReady &amp;&amp; !viewModel.needShowAnswer ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

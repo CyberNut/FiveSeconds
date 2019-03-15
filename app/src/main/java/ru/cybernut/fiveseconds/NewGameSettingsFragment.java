@@ -54,9 +54,7 @@ public class NewGameSettingsFragment extends Fragment {
     private ArrayList<Integer> setIds = new ArrayList<>();
     private DownloadTask downloadTask;
     private Spinner gameTypeSpinner;
-
-    // declare the dialog as a member field of your activity
-    ProgressDialog mProgressDialog;
+    private ProgressDialog mProgressDialog;
 
     public static NewGameSettingsFragment newInstance() {
         return new NewGameSettingsFragment();
@@ -81,7 +79,6 @@ public class NewGameSettingsFragment extends Fragment {
         numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
 
         gameTypeSpinner = (Spinner) v.findViewById(R.id.game_type_spinner);
-        ;
 
         startNewGameButton = (ImageButton)v.findViewById(R.id.startNewGameButton);
         startNewGameButton.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +86,7 @@ public class NewGameSettingsFragment extends Fragment {
             public void onClick(View v) {
                 int numberOfQuestions = MIN_QUANTITY_OF_QUESTIONS * numberOfPlayers + numberOfPlayers * numberOfQuestionsSeekBar.getProgress();
                 if (numberOfQuestions <= MIN_QUANTITY_OF_QUESTIONS || numberOfPlayers < 2) {
-                    //Toast.makeText(getActivity(), R.string.incorrect_number_of_questions, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.incorrect_number_of_questions, Toast.LENGTH_SHORT).show();
                 } else {
                     onGamePreparedListener.onGamePrepared(numberOfQuestions,  setIds, gameTypeSpinner.getSelectedItem().toString());
                 }
@@ -100,7 +97,6 @@ public class NewGameSettingsFragment extends Fragment {
         questionSetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         questionSetAdapter = new QuestionSetAdapter(QuestionSetList.getInstance(getActivity()).getQuestionSets());
         questionSetsRecyclerView.setAdapter(questionSetAdapter);
-
 
         numberOfQuestionsSeekBar = (SeekBar)v.findViewById(R.id.numberOfQuestionsSeekBar);
         numberOfQuestionsSeekBar.setMax(MAX_QUANTITY_OF_QUESTIONS - MIN_QUANTITY_OF_QUESTIONS);
@@ -123,14 +119,12 @@ public class NewGameSettingsFragment extends Fragment {
             }
         });
 
-        // instantiate it within the onCreate method
         mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage("A message");
+        mProgressDialog.setMessage(getResources().getString(R.string.sound_downloading_progressbar_title));
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mProgressDialog.setCancelable(true);
 
-        // execute this when the downloader must be fired
         downloadTask = new DownloadTask(getActivity());
 
         mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -147,7 +141,6 @@ public class NewGameSettingsFragment extends Fragment {
     public interface OnGamePreparedListener {
         public void onGamePrepared(int numberOfQuestions, ArrayList<Integer> setIds, String gameType);
     }
-
 
     private void updateNumberOfQuestionsTextView() {
         numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
@@ -178,7 +171,9 @@ public class NewGameSettingsFragment extends Fragment {
                        if (isChecked) {
                            setIds.add(index + 1);
                        } else {
-                           setIds.remove(index + 1);
+                           if(setIds.size() >= (index + 1)) {
+                               setIds.remove(index + 1);
+                           }
                        }
                    }
                }
@@ -230,7 +225,6 @@ public class NewGameSettingsFragment extends Fragment {
             return questionSetList.size();
         }
     }
-
 
     // usually, subclasses of AsyncTask are declared inside the activity class.
     // that way, you can easily modify the UI thread from here
