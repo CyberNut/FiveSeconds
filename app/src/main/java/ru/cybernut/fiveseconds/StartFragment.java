@@ -19,6 +19,7 @@ import ru.cybernut.fiveseconds.model.QuestionList;
 public class StartFragment extends Fragment {
 
     private static final String TAG = "StartFragment";
+    private static final String MAIN_GAME_SETTINGS_FRAGMENT = "MAIN_GAME_SETTINGS_FRAGMENT";
 
     private StartFragmentBinding binding;
     private ImageButton newGameButton;
@@ -55,6 +56,15 @@ public class StartFragment extends Fragment {
             }
         });
 
-        settingsButton = binding.settingsButton;
+//        settingsButton = binding.settingsButton;
+//        settingsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                StartActivity activity = (StartActivity) getActivity();
+//                if ( activity!= null) {
+//                    activity.replaceFragment(new ru.cybernut.fiveseconds.MainGameSettingsFragment(), MAIN_GAME_SETTINGS_FRAGMENT);
+//                }
+//            }
+//        });
     }
 }

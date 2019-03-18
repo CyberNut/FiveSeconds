@@ -18,6 +18,39 @@
         android:background="@drawable/background_clean"
         tools:context=".GameActivity">
 
+        <LinearLayout
+            android:id="@+id/check_answer_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            android:rotation="@{viewModel.currentRotationValue}"
+            android:visibility="@{viewModel.needShowAnswer ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/answer_ok_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="@{() -> viewModel.handleAnswer(true)}"
+                app:srcCompat="@drawable/answer_ok" />
+
+            <ImageButton
+                android:id="@+id/answer_no_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="@{() -> viewModel.handleAnswer(false)}"
+                app:srcCompat="@drawable/answer_no" />
+        </LinearLayout>
+
         <ImageButton
             android:id="@+id/game_ready_button"
             android:layout_width="wrap_content"
@@ -27,8 +60,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:background="@null"
+            android:text="@string/start_game"
             android:onClick="@{viewModel::onNextTurn}"
-            android:visibility="@{(!viewModel.started &amp;&amp; viewModel.gameReady)? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="@{viewModel.gameReady &amp;&amp; !viewModel.started ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -99,7 +133,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:visibility="@{viewModel.gameReady ? View.INVISIBLE : View.VISIBLE}"
+            android:visibility="@{!viewModel.gameReady ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +147,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:visibility="@{viewModel.gameReady ? View.VISIBLE : View.INVISIBLE}"
+            android:rotation="@{viewModel.currentRotationValue}"
+            android:visibility="@{viewModel.started &amp;&amp; !viewModel.needShowAnswer ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -125,18 +160,6 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.currentQuestionText}" />
         </FrameLayout>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/start_game_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:onClick="@{viewModel::onNextTurn}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@android:drawable/ic_media_play" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

@@ -3,9 +3,19 @@
 
     <ListPreference
         android:key="lang"
-        android:title="@string/LangTitle"
+        android:title="@string/language_title"
         android:summary="@string/LangSummary"
         android:entries="@array/entries_lang"
         android:entryValues="@array/entryvalues_lang"
-        android:dialogTitle="@string/LangDialogTitle" />
+        android:dialogTitle="@string/LangDialogTitle"
+        android:defaultValue="default"/>
+
+    <ListPreference
+        android:key="default_game_type"
+        android:title="@string/default_game_type"
+        android:entries="@array/game_type_list"
+        android:entryValues="@array/game_type_list_values"
+        android:dialogTitle="@string/LangDialogTitle"
+        android:defaultValue="0"/>
+
 </PreferenceScreen>

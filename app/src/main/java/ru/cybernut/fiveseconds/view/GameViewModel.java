@@ -1,27 +1,29 @@
 package ru.cybernut.fiveseconds.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.util.Log;
 import android.view.View;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.cybernut.fiveseconds.BR;
+import ru.cybernut.fiveseconds.GameOverActivity;
 import ru.cybernut.fiveseconds.model.GameEngine;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
 
-public class GameViewModel extends BaseObservable implements GameEngine.Updatable {
+public class GameViewModel extends BaseObservable implements GameEngine.Updatable, Serializable {
 
     private static final String TAG = "GameViewModel";
     
     private boolean isStarted = false;
     private boolean isGameReady = false;
     private boolean isNeedShowAnswer = false;
-    private boolean isNeedShowQuestion = false;
     private GameEngine game;
     private int numberOfPlayers;
     private String currentQuestionText;
@@ -197,7 +199,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
 
     @Override
     public void gameOver() {
-        Log.i(TAG, "gameOver: ");
+        //TODO: call GameActivity's method to start GameOverActivity
     }
 
     @Override
@@ -209,7 +211,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     public void timerFinished() {
         currentPlayer.setProgressbarValue(100);
         //setStarted(false);
-        setGameReady(false);
+        //setGameReady(false);
         setNeedShowAnswer(true);
     }
 }

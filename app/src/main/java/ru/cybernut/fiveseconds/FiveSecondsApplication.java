@@ -12,16 +12,16 @@ public class FiveSecondsApplication extends Application {
     private Locale locale;
     private String lang;
 
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         lang = preferences.getString("lang", "default");
         if (lang.equals("default")) {
-            lang=getResources().getConfiguration().locale.getCountry();
+            lang = getResources().getConfiguration().locale.getCountry();
         }
         locale = new Locale(lang);
         Locale.setDefault(locale);

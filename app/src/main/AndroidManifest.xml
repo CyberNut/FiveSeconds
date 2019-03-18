@@ -7,19 +7,20 @@
 
     <application
         android:allowBackup="true"
+        android:enabled="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".FiveSecondsApplication"
-        android:enabled="true">
-        <activity android:name=".GameActivity"
-            android:configChanges="locale"></activity>
+        android:theme="@style/AppTheme">
+        <activity android:name=".GameOverActivity"></activity>
+        <activity
+            android:name=".GameActivity"
+            android:configChanges="locale" />
         <activity
             android:name=".StartActivity"
-            android:screenOrientation="landscape"
-            android:configChanges="locale">
+            android:configChanges="locale"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,8 +29,8 @@
         </activity>
         <activity
             android:name=".NewGameActivity"
-            android:screenOrientation="landscape"
-            android:configChanges="locale"/>
+            android:configChanges="locale"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

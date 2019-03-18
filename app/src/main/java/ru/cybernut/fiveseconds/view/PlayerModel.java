@@ -3,10 +3,12 @@ package ru.cybernut.fiveseconds.view;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
+import java.io.Serializable;
+
 import ru.cybernut.fiveseconds.BR;
 import ru.cybernut.fiveseconds.model.Player;
 
-public class PlayerModel extends BaseObservable {
+public class PlayerModel extends BaseObservable implements Serializable {
 
     private Player player;
     private boolean isCurrentPlayer;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
@@ -13,12 +14,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameEngine implements SoundPool.OnLoadCompleteListener {
+public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer.OnPreparedListener {
 
     public static int GAME_TYPE_AUTO_PLAY_SOUND = 0;
     public static int GAME_TYPE_ADDITION_TIME_FOR_READING = 1;
     public static int GAME_TYPE_MANUAL = 2;
-
 
     public static final int MAX_PLAYERS = 6;
     private static final String TAG = "GameEngine";
@@ -41,6 +41,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener {
     private boolean isPaused = false;
     private long roundDuration;
     private CountDownTimer gameTimer;
+    private MediaPlayer mediaPlayer;
 
     private Updatable viewModel;
 
@@ -97,9 +98,13 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener {
         final String path = "en/" + uuid + ".mp3";
         AssetFileDescriptor assetFileDescriptor;
         Log.i(TAG, "prepareNextSound: isGameReady = " + isGameReady);
+
         try {
             assetFileDescriptor = assetManager.openFd(path);
             id = soundPool.load(assetFileDescriptor, 1);
+//            mediaPlayer.setDataSource(assetFileDescriptor.getFileDescriptor());
+//            mediaPlayer.prepareAsync();
+            //int duration = mediaPlayer.getDuration();
         } catch (IOException e) {
             Log.e(TAG, "playSound: ", e);
             isGameReady = true;
@@ -125,6 +130,17 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener {
 
     public void nextTurnTaskStart() {
         new GameTurnTask().execute();
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+
+        Log.i(TAG, "onPrepared: duration" + mediaPlayer.getDuration());
+        mediaPlayer.start();
+        if (!isGameReady) {
+            isGameReady = true;
+        }
+        viewModel.initDone();
     }
 
     private class GameInitTask extends AsyncTask<Void, Void, Void> {

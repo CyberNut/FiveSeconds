@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">FiveSeconds</string>
+    <string name="new_game">Новая игра</string>
+    <string name="settings">Настройки</string>
+    <string name="start_game">Старт</string>
+    <string name="number_of_questions">Количество вопросов</string>
+    <string name="number_of_players">Количество игроков</string>
+    <string name="correct">Верно</string>
+    <string name="incorrect">Неверно</string>
+    <string name="add_players_label">Добавить игрока (макс. 6 игроков)</string>
+    <string name="add_player_button">Добавить игрока</string>
+    <string name="enter_player_name">Введите имя игрока</string>
+    <string name="max_player_error">Превышено допустимое количество игроков!</string>
+    <string name="incorrect_number_of_questions">Неверное количество вопросов или игроков!</string>
+    <string name="answer_dialog_title">Ответ</string>
+    <string name="answer_dialog_message">Верно?</string>
+    <string name="sound_downloading_progressbar_title">Загрузка звукового файла</string>
+    <string name="final_scores">ИГРА ОКОНЧЕНА\nИтоговый счёт:</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="choose_question_sets_label_text">Выберите наборы вопросов:</string>
+    <string name="game_type_label">Режим игры</string>
+    <string name="language_title">Язык</string>
+    <string name="LangDialogTitle">Выберите язык:</string>
+    <string name="LangSummary">Язык приложения.\nПосле изменения необходимо перезапустить приложение!</string>
+    <string name="default_game_type">Режим игры по умолчанию:</string>
+    <string name="add_time_value_title">Дополнительное время на прочтение вопроса (сек):</string>
+    <string name="default_number_of_question">Количество вопросов (на каждого игрока):</string>
+    <string-array name="game_type_list">
+        <item>Автовоспроизведение вопроса</item>
+        <item>Дополнительное время для прочтения</item>
+        <item>Вручную</item>
+    </string-array>
+    <string-array name="entries_lang">
+        <item>Язык системы</item>
+        <item>Английский</item>
+        <item>Русский</item>
+    </string-array>
+    <string-array name="entryvalues_lang">
+        <item>default</item>
+        <item>en</item>
+        <item>ru</item>
+    </string-array>
+</resources>
