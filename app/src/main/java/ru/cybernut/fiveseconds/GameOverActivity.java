@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.cybernut.fiveseconds.databinding.GameOverActivityBinding;
+import ru.cybernut.fiveseconds.databinding.PlayersScoresListItemBinding;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
 import ru.cybernut.fiveseconds.view.PlayerModel;
@@ -26,6 +28,7 @@ public class GameOverActivity extends AppCompatActivity {
 
     private static final String TAG = "GameOverActivity";
     private static final String EXTRA_WINNERS_LIST = "EXTRA_WINNERS_LIST";
+    private static final int NUMBER_OF_PLAYERS_LIST_COLUMNS = 2;
 
     private ArrayList<PlayerModel> players;
     private GameOverActivityBinding binding;
@@ -45,65 +48,51 @@ public class GameOverActivity extends AppCompatActivity {
 
         GameOverActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.game_over_activity);
 
+        playersAdapter = new PlayersAdapter(players, this);
         playerRecyclerView = binding.winnersTable;
+        playerRecyclerView.setLayoutManager(new GridLayoutManager(this, NUMBER_OF_PLAYERS_LIST_COLUMNS));
+        playerRecyclerView.setAdapter(playersAdapter);
     }
 
     private class PlayersHolder extends RecyclerView.ViewHolder {
 
-        private Player player;
-        private TextView playerNameTextView;
-        private ImageView playerPhotoImageView;
-        private ImageButton deletePlayerButton;
-        private int index;
+        private PlayersScoresListItemBinding itemBinding;
+        private PlayerModel playerModel;
 
-        public PlayersHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.players_list_item, parent, false));
+        public PlayersHolder(PlayersScoresListItemBinding binding) {
 
-            playerNameTextView = (TextView) itemView.findViewById(R.id.item_name);
-            playerPhotoImageView = (ImageView) itemView.findViewById(R.id.item_photo);
-            deletePlayerButton = (ImageButton) itemView.findViewById(R.id.item_delete_player_button);
-            deletePlayerButton.setOnClickListener(new View.OnClickListener() {
-                                                      @Override
-                                                      public void onClick(View v) {
-                                                          PlayersList.getInstance().deletePlayer(index);
-                                                          playersAdapter.notifyDataSetChanged();
-                                                      }
-                                                  }
-            );
+            super(binding.getRoot());
+            itemBinding = binding;
 
         }
 
-        public void bind(Player player, int index) {
-            this.player = player;
-            this.index = index;
-            playerNameTextView.setText(this.player.getName());
-            //TODO: need store photo
-//            if(this.player.getPhoto() == null) {
-//                playerPhotoImageView.setImageDrawable(this.player.getPhoto());
-//            } else {
-            playerPhotoImageView.setImageResource(R.drawable.player_list_empty_photo);
-//            }
+        public void bind(PlayerModel player) {
+            this.playerModel = player;
+            itemBinding.setPlayerModel(playerModel);
         }
     }
 
     private class PlayersAdapter extends RecyclerView.Adapter<PlayersHolder> {
 
-        private List<Player> playerList;
+        private List<PlayerModel> playerList;
+        private Context context;
 
-        public PlayersAdapter(List<Player> players) {
+        public PlayersAdapter(List<PlayerModel> players, Context context) {
             this.playerList = players;
+            this.context = context;
         }
 
         @Override
-        public NewGameAddPlayersFragment.PlayersHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            return new NewGameAddPlayersFragment.PlayersHolder(inflater, viewGroup);
+        public PlayersHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            PlayersScoresListItemBinding binding = DataBindingUtil.inflate(inflater, R.layout.players_scores_list_item, viewGroup, false);
+            return new PlayersHolder(binding);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull NewGameAddPlayersFragment.PlayersHolder playersHolder, int position) {
-            Player player = PlayersList.getInstance().getPlayer(position);
-            playersHolder.bind(player, position);
+        public void onBindViewHolder(@NonNull PlayersHolder playersHolder, int position) {
+            PlayerModel player = playerList.get(position);
+            playersHolder.bind(player);
         }
 
         @Override
