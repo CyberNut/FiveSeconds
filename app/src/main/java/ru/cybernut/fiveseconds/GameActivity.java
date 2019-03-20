@@ -9,14 +9,16 @@ import android.os.Bundle;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ru.cybernut.fiveseconds.databinding.GameActivity4playersBinding;
 import ru.cybernut.fiveseconds.databinding.GameActivity6playersBinding;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
 import ru.cybernut.fiveseconds.view.GameViewModel;
+import ru.cybernut.fiveseconds.view.PlayerModel;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements GameViewModel.GameOverable {
 
     private static final String TAG = "GameActivity";
     private static final String NUMBER_OF_QUESTIONS_KEY = "NUMBER_OF_QUESTIONS_KEY";
@@ -42,7 +44,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         viewModel = new GameViewModel(getApplicationContext(), numberOfQuestions, setIds);
-        viewModel.initialize();
+        viewModel.initialize(this);
         numberOfPlayers = viewModel.getNumberOfPlayers();
         if( numberOfPlayers <= 4) {
             GameActivity4playersBinding binding = DataBindingUtil.setContentView(this, R.layout.game_activity_4players);
@@ -51,5 +53,11 @@ public class GameActivity extends AppCompatActivity {
             GameActivity6playersBinding binding = DataBindingUtil.setContentView(this, R.layout.game_activity_6players);
             binding.setViewModel(viewModel);
         }
+    }
+
+    @Override
+    public void gameOver(ArrayList<PlayerModel> playerModelList) {
+        Intent intent = GameOverActivity.newIntent(this, playerModelList);
+        startActivity(intent);
     }
 }

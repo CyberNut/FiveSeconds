@@ -1,7 +1,6 @@
 package ru.cybernut.fiveseconds.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.util.Log;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.cybernut.fiveseconds.BR;
-import ru.cybernut.fiveseconds.GameOverActivity;
 import ru.cybernut.fiveseconds.model.GameEngine;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
@@ -31,6 +29,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     private ArrayList<PlayerModel> players;
     private PlayerModel currentPlayer;
     private int currentRotationValue;
+    private GameOverable gameActivity;
 
     public GameViewModel(Context appContext, int numberOfQuestions, ArrayList<Integer> setIds) {
         this.setIds = setIds;
@@ -48,7 +47,8 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         nextPlayer(); //set a current player
     }
 
-    public void initialize() {
+    public void initialize(GameOverable gameActivity) {
+        this.gameActivity = gameActivity;
         game.initialize(setIds);
     }
 
@@ -192,6 +192,10 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         notifyPropertyChanged(BR.currentRotationValue);
     }
 
+    public void testGameOver() {
+        gameActivity.gameOver(players);
+    }
+
     @Override
     public void initDone() {
         setGameReady(true);
@@ -200,6 +204,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     @Override
     public void gameOver() {
         //TODO: call GameActivity's method to start GameOverActivity
+        gameActivity.gameOver(players);
     }
 
     @Override
@@ -213,5 +218,9 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         //setStarted(false);
         //setGameReady(false);
         setNeedShowAnswer(true);
+    }
+
+    public interface GameOverable {
+        public void gameOver(ArrayList<PlayerModel> playerModelList);
     }
 }

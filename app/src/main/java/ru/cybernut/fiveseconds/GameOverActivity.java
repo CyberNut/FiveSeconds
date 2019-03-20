@@ -50,8 +50,8 @@ public class GameOverActivity extends AppCompatActivity {
 
         playersAdapter = new PlayersAdapter(players, this);
         playerRecyclerView = binding.winnersTable;
-        playerRecyclerView.setLayoutManager(new GridLayoutManager(this, NUMBER_OF_PLAYERS_LIST_COLUMNS));
         playerRecyclerView.setAdapter(playersAdapter);
+        playerRecyclerView.setLayoutManager(new GridLayoutManager(this, NUMBER_OF_PLAYERS_LIST_COLUMNS));
     }
 
     private class PlayersHolder extends RecyclerView.ViewHolder {

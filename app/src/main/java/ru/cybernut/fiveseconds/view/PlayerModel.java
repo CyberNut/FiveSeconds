@@ -30,7 +30,6 @@ public class PlayerModel extends BaseObservable implements Serializable {
         return player.getName();
     }
 
-
     public void setScore() {
         player.increaseScore();
         notifyPropertyChanged(BR.score);
@@ -69,5 +68,4 @@ public class PlayerModel extends BaseObservable implements Serializable {
         this.progressbarValue = this.progressbarValue + addValue;
         notifyPropertyChanged(BR.progressbarValue);
     }
-
 }
