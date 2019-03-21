@@ -3,25 +3,21 @@ package ru.cybernut.fiveseconds;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import ru.cybernut.fiveseconds.databinding.GameOverActivityBinding;
 import ru.cybernut.fiveseconds.databinding.PlayersScoresListItemBinding;
-import ru.cybernut.fiveseconds.model.Player;
-import ru.cybernut.fiveseconds.model.PlayersList;
 import ru.cybernut.fiveseconds.view.PlayerModel;
 
 public class GameOverActivity extends AppCompatActivity {
@@ -30,8 +26,6 @@ public class GameOverActivity extends AppCompatActivity {
     private static final String EXTRA_WINNERS_LIST = "EXTRA_WINNERS_LIST";
     private static final int NUMBER_OF_PLAYERS_LIST_COLUMNS = 2;
 
-    private ArrayList<PlayerModel> players;
-    private GameOverActivityBinding binding;
     private RecyclerView playerRecyclerView;
     private PlayersAdapter playersAdapter;
 
@@ -48,10 +42,17 @@ public class GameOverActivity extends AppCompatActivity {
 
         GameOverActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.game_over_activity);
 
+        //sort players list by score desc
+        Collections.sort(players, new Comparator<PlayerModel>() {
+            @Override
+            public int compare(PlayerModel o1, PlayerModel o2) {
+                return Integer.valueOf(o2.getScore()).compareTo(Integer.valueOf(o1.getScore()));
+            }
+        });
         playersAdapter = new PlayersAdapter(players, this);
         playerRecyclerView = binding.winnersTable;
         playerRecyclerView.setAdapter(playersAdapter);
-        playerRecyclerView.setLayoutManager(new GridLayoutManager(this, NUMBER_OF_PLAYERS_LIST_COLUMNS));
+        playerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private class PlayersHolder extends RecyclerView.ViewHolder {
@@ -100,6 +101,4 @@ public class GameOverActivity extends AppCompatActivity {
             return playerList.size();
         }
     }
-
-
 }
