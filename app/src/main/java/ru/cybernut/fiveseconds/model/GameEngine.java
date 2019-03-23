@@ -214,7 +214,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         return new CountDownTimer(duration, TICK_DURATION) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.i(TAG, "onTick: " + millisUntilFinished);
                 if(!isPaused) {
                     if(gameType == GAME_TYPE_AUTO_PLAY_SOUND && millisUntilFinished >= roundDuration) {
                     } else {

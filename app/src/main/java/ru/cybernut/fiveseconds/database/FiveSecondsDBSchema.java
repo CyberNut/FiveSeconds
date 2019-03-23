@@ -6,11 +6,11 @@ public class FiveSecondsDBSchema {
 
     public static final class QuestionsTable {
 
-        public static final String NAME = FiveSecondsApplication.getLanguage() + "_questions";
+        public static final String NAME =  "questions";
 
         public static final class Cols {
             public static final String UUID = "uuid";
-            public static final String QUESTION_TEXT = "text";
+            public static final String QUESTION_TEXT = FiveSecondsApplication.getLanguage() +"_text";
             public static final String SET_ID = "question_set_id";
         }
     }
@@ -20,7 +20,7 @@ public class FiveSecondsDBSchema {
         public static final String NAME = "question_sets";
 
         public static final class Cols {
-            public static final String NAME = "name";
+            public static final String NAME = FiveSecondsApplication.getLanguage() +"_name";
             public static final String TYPE = "type";
         }
     }
