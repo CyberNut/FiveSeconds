@@ -32,8 +32,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -267,9 +265,8 @@ public class NewGameSettingsFragment extends Fragment {
 
                 // download the file
                 input = connection.getInputStream();
-                //String filePath = context.getExternalFilesDir(null) + PATH + currentLocale + "/";
                 String filePath = FiveSecondsApplication.getSoundFolderPath();
-                String fileName = "test1.zip";
+                String fileName = "FiveSeconds_sounds.zip";
                 Log.i(TAG, "doInBackground: file path:" + filePath);
                 File file = new File(filePath);
                 if(!file.exists()) {
@@ -308,9 +305,7 @@ public class NewGameSettingsFragment extends Fragment {
                     fileOutputStream.close();
                 }
                 zipInputStream.close();
-                if (!file.delete()) {
-                    Toast.makeText(getActivity(), "Delete error", Toast.LENGTH_SHORT).show();
-                }
+                file.delete();
             } catch (Exception e) {
                 return e.toString();
             } finally {

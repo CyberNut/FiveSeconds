@@ -1,8 +1,6 @@
 package ru.cybernut.fiveseconds.model;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -10,8 +8,6 @@ import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.util.Log;
 
-import java.io.FileDescriptor;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,9 +35,11 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     private List<String> uuidList;
     private SoundPool soundPool;
     private ArrayList<Integer> setIds;
-    private boolean isGameOver = false;
-    private boolean isGameReady = false;
-    private boolean isPaused = false;
+    private volatile boolean isGameOver = false;
+    private volatile boolean isGameReady = false;
+    private volatile boolean isPaused = false;
+    private boolean isSoundPoolReady = false;
+    private boolean isMediaPlayerReady = false;
     private long roundDuration;
     private CountDownTimer gameTimer;
     private MediaPlayer mediaPlayer;
@@ -87,9 +85,8 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
     private Integer prepareNextSound(String uuid) {
         Integer id = null;
-        //TODO need use language setting
         final String path = FiveSecondsApplication.getSoundFolderPath() + uuid + ".mp3";
-        Log.i(TAG, "prepareNextSound: isGameReady = " + isGameReady);
+        Log.i(TAG, "prepareNextSound: getGameReady = " + isGameReady);
         try {
             id = soundPool.load(path, 1);
             mediaPlayer.setDataSource(path);
@@ -99,7 +96,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
             isGameReady = true;
             viewModel.initDone();
         }
-        Log.i(TAG, "prepareNextSound: EXIT isGameReady = " + isGameReady);
         return id;
     }
 
@@ -122,17 +118,36 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         new GameTurnTask().execute();
     }
 
+    private boolean getGameReady() {
+        return isMediaPlayerReady && isSoundPoolReady;
+    }
+
+    @Override
+    public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+        Log.i(TAG, "onLoadComplete: sampleId =" + sampleId);
+        if (!isSoundPoolReady) {
+            isSoundPoolReady = true;
+        }
+        isGameReady = getGameReady();
+        if(isGameReady) {
+            viewModel.initDone();
+        }
+    }
+
     @Override
     public void onPrepared(MediaPlayer mp) {
 
         currentSoundDuration = mediaPlayer.getDuration();
         mediaPlayer.reset();
-        gameTimer = reinitializeGameTimer();
+        gameTimer = initializeGameTimer();
         Log.i(TAG, "onPrepared: duration" + currentSoundDuration);
-//        if (!isGameReady) {
-//            isGameReady = true;
-//        }
-//        viewModel.initDone();
+        if (!isMediaPlayerReady) {
+            isMediaPlayerReady = true;
+        }
+        isGameReady = getGameReady();
+        if(isGameReady) {
+            viewModel.initDone();
+        }
     }
 
     private class GameInitTask extends AsyncTask<Void, Void, Void> {
@@ -162,6 +177,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
             }
             return null;
         }
+
     }
 
     private class GameTurnTask extends AsyncTask<Void, Void, Void> {
@@ -179,15 +195,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
             }
             return null;
         }
-    }
 
-    @Override
-    public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-        Log.i(TAG, "onLoadComplete: sampleId =" + sampleId);
-        if (!isGameReady) {
-            isGameReady = true;
-        }
-        viewModel.initDone();
     }
 
     public interface Updatable {
@@ -197,7 +205,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         public void timerFinished();
     }
 
-    private CountDownTimer reinitializeGameTimer() {
+    private CountDownTimer initializeGameTimer() {
         long duration = roundDuration;
         if(gameType == GAME_TYPE_AUTO_PLAY_SOUND) {
             duration = duration + currentSoundDuration;
