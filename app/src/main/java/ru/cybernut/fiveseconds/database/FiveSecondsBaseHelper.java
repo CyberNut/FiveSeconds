@@ -76,7 +76,6 @@ public class FiveSecondsBaseHelper extends SQLiteOpenHelper {
 
     private void copyDBFile() throws IOException {
         InputStream mInput = mContext.getAssets().open(DB_NAME);
-        //InputStream mInput = mContext.getResources().openRawResource(R.raw.info);
         OutputStream mOutput = new FileOutputStream(DB_PATH + DB_NAME);
         byte[] mBuffer = new byte[1024];
         int mLength;

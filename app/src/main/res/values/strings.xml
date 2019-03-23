@@ -15,6 +15,7 @@
     <string name="answer_dialog_title">Answer</string>
     <string name="answer_dialog_message">CORRECT ?</string>
     <string name="sound_downloading_progressbar_title">Downloading sounds pack</string>
+    <string name="sound_unpacking_progressbar_title">Unpacking sounds pack</string>
     <string name="final_scores">GAME OVER\nFinal score:</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>

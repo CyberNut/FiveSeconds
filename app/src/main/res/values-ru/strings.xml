@@ -41,4 +41,5 @@
         <item>en</item>
         <item>ru</item>
     </string-array>
+    <string name="sound_unpacking_progressbar_title">Распаковка звуковых файлов</string>
 </resources>

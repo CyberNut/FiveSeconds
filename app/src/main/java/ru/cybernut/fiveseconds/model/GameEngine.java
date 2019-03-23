@@ -10,9 +10,12 @@ import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.util.Log;
 
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import ru.cybernut.fiveseconds.FiveSecondsApplication;
 
 public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer.OnPreparedListener {
 
@@ -32,9 +35,9 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     private int numberOfQuestions;
     private Question currentQuestion;
     private Integer currentSoundId;
+    private int currentSoundDuration = 0;
     private List<String> uuidList;
     private SoundPool soundPool;
-    private AssetManager assetManager;
     private ArrayList<Integer> setIds;
     private boolean isGameOver = false;
     private boolean isGameReady = false;
@@ -49,27 +52,17 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         this.appContext = context;
         this.viewModel = viewModel;
         this.gameType = gameType;
-        this.assetManager = context.getAssets();
         this.numberOfQuestions = numberOfQuestions;
         this.roundDuration = STANDART_ROUND_DURATION;
         this.soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
+        this.mediaPlayer = new MediaPlayer();
+
     }
 
     public void initialize(ArrayList<Integer> setIds) {
         this.setIds = setIds;
         soundPool.setOnLoadCompleteListener(this);
-        gameTimer = new CountDownTimer(roundDuration, TICK_DURATION) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                if(!isPaused) {
-                    viewModel.progressUpdate();
-                }
-            }
-            @Override
-            public void onFinish() {
-                viewModel.timerFinished();
-            }
-        };
+        mediaPlayer.setOnPreparedListener(this);
         new GameInitTask().execute();
     }
 
@@ -95,17 +88,13 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     private Integer prepareNextSound(String uuid) {
         Integer id = null;
         //TODO need use language setting
-        final String path = "en/" + uuid + ".mp3";
-        AssetFileDescriptor assetFileDescriptor;
+        final String path = FiveSecondsApplication.getSoundFolderPath() + uuid + ".mp3";
         Log.i(TAG, "prepareNextSound: isGameReady = " + isGameReady);
-
         try {
-            assetFileDescriptor = assetManager.openFd(path);
-            id = soundPool.load(assetFileDescriptor, 1);
-//            mediaPlayer.setDataSource(assetFileDescriptor.getFileDescriptor());
-//            mediaPlayer.prepareAsync();
-            //int duration = mediaPlayer.getDuration();
-        } catch (IOException e) {
+            id = soundPool.load(path, 1);
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.prepareAsync();
+        } catch (Exception e) {
             Log.e(TAG, "playSound: ", e);
             isGameReady = true;
             viewModel.initDone();
@@ -118,6 +107,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         if (currentSoundId != null) {
             soundPool.play(currentSoundId, 1.0f, 1.0f, 1, 0, 1.0f);
         }
+        //mediaPlayer.start();
     }
 
     public void nextTurn() {
@@ -135,12 +125,14 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     @Override
     public void onPrepared(MediaPlayer mp) {
 
-        Log.i(TAG, "onPrepared: duration" + mediaPlayer.getDuration());
-        mediaPlayer.start();
-        if (!isGameReady) {
-            isGameReady = true;
-        }
-        viewModel.initDone();
+        currentSoundDuration = mediaPlayer.getDuration();
+        mediaPlayer.reset();
+        gameTimer = reinitializeGameTimer();
+        Log.i(TAG, "onPrepared: duration" + currentSoundDuration);
+//        if (!isGameReady) {
+//            isGameReady = true;
+//        }
+//        viewModel.initDone();
     }
 
     private class GameInitTask extends AsyncTask<Void, Void, Void> {
@@ -181,7 +173,9 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
                 viewModel.gameOver();
             }
             if (gameType == GAME_TYPE_AUTO_PLAY_SOUND) {
-                currentSoundId = prepareNextSound(currentQuestion.getId().toString());
+                if(currentQuestion!=null) {
+                    currentSoundId = prepareNextSound(currentQuestion.getId().toString());
+                }
             }
             return null;
         }
@@ -201,5 +195,29 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         public void gameOver();
         public void progressUpdate();
         public void timerFinished();
+    }
+
+    private CountDownTimer reinitializeGameTimer() {
+        long duration = roundDuration;
+        if(gameType == GAME_TYPE_AUTO_PLAY_SOUND) {
+            duration = duration + currentSoundDuration;
+        }
+
+        return new CountDownTimer(duration, TICK_DURATION) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                Log.i(TAG, "onTick: " + millisUntilFinished);
+                if(!isPaused) {
+                    if(gameType == GAME_TYPE_AUTO_PLAY_SOUND && millisUntilFinished >= roundDuration) {
+                    } else {
+                        viewModel.progressUpdate();
+                    }
+                }
+            }
+            @Override
+            public void onFinish() {
+                viewModel.timerFinished();
+            }
+        };
     }
 }

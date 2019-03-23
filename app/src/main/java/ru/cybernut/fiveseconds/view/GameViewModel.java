@@ -22,6 +22,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     private boolean isStarted = false;
     private boolean isGameReady = false;
     private boolean isNeedShowAnswer = false;
+    private boolean isGameOver = false;
     private GameEngine game;
     private int numberOfPlayers;
     private String currentQuestionText;
@@ -122,6 +123,8 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     }
 
     public void handleAnswer(boolean isCorrectAnswer) {
+        if(isGameOver) { return;}
+
         Log.i(TAG, "handleAnswer: " + isCorrectAnswer);
         if(isCorrectAnswer) {
             currentPlayer.setScore();
@@ -132,6 +135,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     }
 
     public void onNextTurn(View v) {
+        if(isGameOver) { return;}
         setStarted(true);
         notifyPropertyChanged(BR.started);
         setCurrentQuestionText(game.getCurrentQuestionText());
@@ -192,10 +196,6 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         notifyPropertyChanged(BR.currentRotationValue);
     }
 
-    public void testGameOver() {
-        gameActivity.gameOver(players);
-    }
-
     @Override
     public void initDone() {
         setGameReady(true);
@@ -204,6 +204,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     @Override
     public void gameOver() {
         //TODO: call GameActivity's method to start GameOverActivity
+        isGameOver = true;
         gameActivity.gameOver(players);
     }
 

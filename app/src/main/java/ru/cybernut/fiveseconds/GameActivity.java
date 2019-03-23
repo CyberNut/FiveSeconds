@@ -3,18 +3,13 @@ package ru.cybernut.fiveseconds;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ru.cybernut.fiveseconds.databinding.GameActivity4playersBinding;
 import ru.cybernut.fiveseconds.databinding.GameActivity6playersBinding;
-import ru.cybernut.fiveseconds.model.Player;
-import ru.cybernut.fiveseconds.model.PlayersList;
 import ru.cybernut.fiveseconds.view.GameViewModel;
 import ru.cybernut.fiveseconds.view.PlayerModel;
 
@@ -53,6 +48,12 @@ public class GameActivity extends AppCompatActivity implements GameViewModel.Gam
             GameActivity6playersBinding binding = DataBindingUtil.setContentView(this, R.layout.game_activity_6players);
             binding.setViewModel(viewModel);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel = null;
     }
 
     @Override

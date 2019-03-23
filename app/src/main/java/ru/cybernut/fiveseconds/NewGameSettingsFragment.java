@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +33,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import ru.cybernut.fiveseconds.model.PlayersList;
 import ru.cybernut.fiveseconds.model.QuestionSet;
@@ -161,7 +165,7 @@ public class NewGameSettingsFragment extends Fragment {
             loadSoundsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    downloadTask.execute("http://mealplans.ru/wp-content/uploads/2019/03/FiveSeconds_Sounds.zip");
+                    downloadTask.execute("http://mealplans.ru/wp-content/uploads/2019/03/FiveSeconds_Sounds-2.zip");
                 }
             });
             questionSetNameCheckBox = (CheckBox) itemView.findViewById(R.id.question_set_name_checkbox);
@@ -235,7 +239,7 @@ public class NewGameSettingsFragment extends Fragment {
         private String currentLocale;
         public DownloadTask(Context context) {
             this.context = context;
-            this.currentLocale = Locale.getDefault().getLanguage();
+            this.currentLocale = FiveSecondsApplication.getLanguage();
         }
 
         @Override
@@ -263,14 +267,15 @@ public class NewGameSettingsFragment extends Fragment {
 
                 // download the file
                 input = connection.getInputStream();
-                String filePath = context.getExternalFilesDir(null) + PATH + currentLocale + "/";
-                String fileName = "test.zip";
+                //String filePath = context.getExternalFilesDir(null) + PATH + currentLocale + "/";
+                String filePath = FiveSecondsApplication.getSoundFolderPath();
+                String fileName = "test1.zip";
                 Log.i(TAG, "doInBackground: file path:" + filePath);
                 File file = new File(filePath);
                 if(!file.exists()) {
                     file.mkdirs();
-                    file = new File(filePath + fileName);
                 }
+                file = new File(filePath + fileName);
                 output = new FileOutputStream(file);
 
                 byte data[] = new byte[4096];
@@ -287,6 +292,24 @@ public class NewGameSettingsFragment extends Fragment {
                     if (fileLength > 0) // only if total length is known
                         publishProgress((int) (total * 100 / fileLength));
                     output.write(data, 0, count);
+                }
+                ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file));
+                ZipEntry zipEntry;
+                mProgressDialog.setMessage(getString(R.string.sound_unpacking_progressbar_title));
+                while ((zipEntry = zipInputStream.getNextEntry())!=null) {
+                    FileOutputStream fileOutputStream = new FileOutputStream(filePath + zipEntry.getName());
+                    final byte[] bytes = new byte[4096];
+                    int length;
+                    while ((length = zipInputStream.read(bytes)) >= 0) {
+                        fileOutputStream.write(bytes, 0, length);
+                    }
+                    fileOutputStream.flush();
+                    zipInputStream.closeEntry();
+                    fileOutputStream.close();
+                }
+                zipInputStream.close();
+                if (!file.delete()) {
+                    Toast.makeText(getActivity(), "Delete error", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 return e.toString();

@@ -5,39 +5,39 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 public class FiveSecondsApplication extends Application {
-    private SharedPreferences preferences;
-    private Locale locale;
-    private String lang;
 
+    private static final String SOUNDS_FOLDER = "/Sounds/";
+    private static final String[] supportLanguages = new String[] {"en", "ru", "es"};
+    private static final String defaultLanguage = "en";
+    private static String language;
+    private static String soundFolderPath;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        lang = preferences.getString("lang", "default");
-        if (lang.equals("default")) {
-            lang = getResources().getConfiguration().locale.getCountry();
-        }
-        locale = new Locale(lang);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config, null);
+        language = getLocale();
+        soundFolderPath = getExternalFilesDir(null) + SOUNDS_FOLDER + language + "/";
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        locale = new Locale(lang);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config, null);
+    public static String getLanguage() {
+        return language;
+    }
 
+    public static String getSoundFolderPath() {
+        return soundFolderPath;
+    }
+
+    private static String getLocale() {
+        String currentLanguage = Locale.getDefault().getLanguage();
+
+        if( Arrays.binarySearch(FiveSecondsApplication.supportLanguages, currentLanguage) > 0) {
+            return currentLanguage;
+        } else {
+            return defaultLanguage;
+        }
     }
 }
