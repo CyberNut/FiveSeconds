@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.cybernut.fiveseconds.FiveSecondsApplication;
 import ru.cybernut.fiveseconds.database.FiveSecondsBaseHelper;
 import ru.cybernut.fiveseconds.database.FiveSecondsCursorWrapper;
 import ru.cybernut.fiveseconds.database.FiveSecondsDBSchema;
@@ -18,9 +19,9 @@ public class QuestionSetList {
     private Context context;
     private SQLiteDatabase database;
 
-    public static QuestionSetList getInstance(Context context) {
+    public static QuestionSetList getInstance() {
         if(questionSetList == null) {
-            questionSetList = new QuestionSetList(context);
+            questionSetList = new QuestionSetList(FiveSecondsApplication.getAppContext());
         }
         return questionSetList;
     }

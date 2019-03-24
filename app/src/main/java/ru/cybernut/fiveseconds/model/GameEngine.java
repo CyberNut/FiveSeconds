@@ -1,6 +1,5 @@
 package ru.cybernut.fiveseconds.model;
 
-import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -8,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +26,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     private static final long ADDITION_TIME_DURATION = 2000; //ms
     private static final long TICK_DURATION = 200; //ms
 
-    private Context appContext;
     private int gameType;
     private int numberOfQuestions;
     private Question currentQuestion;
@@ -46,8 +45,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
     private Updatable viewModel;
 
-    public GameEngine(Context context, Updatable viewModel, int gameType, int numberOfQuestions) {
-        this.appContext = context;
+    public GameEngine(Updatable viewModel, int gameType, int numberOfQuestions) {
         this.viewModel = viewModel;
         this.gameType = gameType;
         this.numberOfQuestions = numberOfQuestions;
@@ -76,7 +74,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         if(uuidList.size() > 0) {
             String uuid = uuidList.get(0);
             uuidList.remove(0);
-            return QuestionList.getInstance(appContext).getQuestion(uuid);
+            return QuestionList.getInstance().getQuestion(uuid);
         } else {
             isGameOver = true;
         }
@@ -85,14 +83,19 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
     private Integer prepareNextSound(String uuid) {
         Integer id = null;
+        isSoundPoolReady = false;
+        isMediaPlayerReady = false;
         final String path = FiveSecondsApplication.getSoundFolderPath() + uuid + ".mp3";
-        Log.i(TAG, "prepareNextSound: getGameReady = " + isGameReady);
         try {
             id = soundPool.load(path, 1);
             mediaPlayer.setDataSource(path);
             mediaPlayer.prepareAsync();
-        } catch (Exception e) {
+        } catch (IOException e) {
             Log.e(TAG, "playSound: ", e);
+            currentSoundDuration = ((int) ADDITION_TIME_DURATION);
+            id = null;
+            isSoundPoolReady = true;
+            isMediaPlayerReady = true;
             isGameReady = true;
             viewModel.initDone();
         }
@@ -109,6 +112,10 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     public void nextTurn() {
         if (gameType == GAME_TYPE_AUTO_PLAY_SOUND) {
             playCurrentSound();
+        }
+        if (gameTimer == null)
+        {
+            initializeGameTimer();
         }
         gameTimer.start();
         nextTurnTaskStart();
@@ -162,7 +169,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
                 Log.e(TAG, "doInBackground: ", e);
                 return null;
             }
-            uuidList = QuestionList.getInstance(appContext).getRandomIdList(numberOfQuestions, setIds);
+            uuidList = QuestionList.getInstance().getRandomIdList(numberOfQuestions, setIds);
             currentQuestion = getNextQuestion();
             if (isGameOver) {
                 viewModel.gameOver();

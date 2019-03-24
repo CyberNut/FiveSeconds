@@ -34,7 +34,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
 
     public GameViewModel(Context appContext, int numberOfQuestions, ArrayList<Integer> setIds) {
         this.setIds = setIds;
-        game = new GameEngine(appContext, this, 0, numberOfQuestions);
+        game = new GameEngine(this, 0, numberOfQuestions);
         initPlayers();
     }
 
@@ -124,8 +124,6 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
 
     public void handleAnswer(boolean isCorrectAnswer) {
         if(isGameOver) { return;}
-
-        Log.i(TAG, "handleAnswer: " + isCorrectAnswer);
         if(isCorrectAnswer) {
             currentPlayer.setScore();
         }
@@ -140,7 +138,6 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         notifyPropertyChanged(BR.started);
         setCurrentQuestionText(game.getCurrentQuestionText());
         notifyPropertyChanged(BR.currentQuestionText);
-        Log.i(TAG, "onNextTurn: " + currentQuestionText);
         game.nextTurn();
     }
 
@@ -203,7 +200,6 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
 
     @Override
     public void gameOver() {
-        //TODO: call GameActivity's method to start GameOverActivity
         isGameOver = true;
         gameActivity.gameOver(players);
     }
@@ -216,12 +212,10 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     @Override
     public void timerFinished() {
         currentPlayer.setProgressbarValue(100);
-        //setStarted(false);
-        //setGameReady(false);
         setNeedShowAnswer(true);
     }
 
     public interface GameOverable {
-        public void gameOver(ArrayList<PlayerModel> playerModelList);
+        void gameOver(ArrayList<PlayerModel> playerModelList);
     }
 }

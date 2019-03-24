@@ -25,7 +25,7 @@ public class PlayersList {
     }
 
     public boolean addPlayer(Player player) {
-        if(list.size() < Game.MAX_PLAYERS) {
+        if(list.size() < GameEngine.MAX_PLAYERS) {
             list.add(player);
             return true;
         }

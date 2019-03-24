@@ -65,7 +65,9 @@ public class PlayerModel extends BaseObservable implements Serializable {
     }
 
     public void increaseProgressbarValue(double addValue) {
-        this.progressbarValue = this.progressbarValue + addValue;
+        if (progressbarValue < 100) {
+            this.progressbarValue = this.progressbarValue + addValue;
+        }
         notifyPropertyChanged(BR.progressbarValue);
     }
 }

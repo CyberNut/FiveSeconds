@@ -97,7 +97,7 @@ public class NewGameSettingsFragment extends Fragment {
 
         questionSetsRecyclerView = v.findViewById(R.id.question_sets_recycler_view);
         questionSetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        questionSetAdapter = new QuestionSetAdapter(QuestionSetList.getInstance(getActivity()).getQuestionSets());
+        questionSetAdapter = new QuestionSetAdapter(QuestionSetList.getInstance().getQuestionSets());
         questionSetsRecyclerView.setAdapter(questionSetAdapter);
 
         numberOfQuestionsSeekBar = (SeekBar)v.findViewById(R.id.numberOfQuestionsSeekBar);

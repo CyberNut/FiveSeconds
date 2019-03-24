@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import ru.cybernut.fiveseconds.FiveSecondsApplication;
 import ru.cybernut.fiveseconds.database.FiveSecondsBaseHelper;
 import ru.cybernut.fiveseconds.database.FiveSecondsCursorWrapper;
 
@@ -20,9 +21,9 @@ public class QuestionList {
     private Context context;
     private SQLiteDatabase database;
 
-    public static QuestionList getInstance(Context context) {
+    public static QuestionList getInstance() {
         if(questionList == null) {
-            questionList = new QuestionList(context);
+            questionList = new QuestionList(FiveSecondsApplication.getAppContext());
         }
         return questionList;
     }

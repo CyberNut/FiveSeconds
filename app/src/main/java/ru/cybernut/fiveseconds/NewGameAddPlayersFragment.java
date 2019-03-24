@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import ru.cybernut.fiveseconds.model.Game;
+import ru.cybernut.fiveseconds.model.GameEngine;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
 
@@ -63,7 +63,7 @@ public class NewGameAddPlayersFragment extends Fragment {
         Context context = getActivity();
         if(context != null && (PlayersList.getInstance().getNumberOfPlayers() == 0)) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            for (int i = 0; i < Game.MAX_PLAYERS; i++) {
+            for (int i = 0; i < GameEngine.MAX_PLAYERS; i++) {
                 if(sharedPreferences.contains(PREFERENCE_USER_NAME + i)) {
                     Player player = new Player(sharedPreferences.getString(PREFERENCE_USER_NAME + i, "Player"));
                     PlayersList.getInstance().putPlayer(player, i);
