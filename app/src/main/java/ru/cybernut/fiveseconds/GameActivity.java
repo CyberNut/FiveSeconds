@@ -1,9 +1,11 @@
 package ru.cybernut.fiveseconds;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -57,8 +59,39 @@ public class GameActivity extends AppCompatActivity implements GameViewModel.Gam
     }
 
     @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        openQuitDialog();
+    }
+
+    @Override
     public void gameOver(ArrayList<PlayerModel> playerModelList) {
         Intent intent = GameOverActivity.newIntent(this, playerModelList);
         startActivity(intent);
+    }
+
+    private void openQuitDialog() {
+        AlertDialog.Builder quitDialog = new AlertDialog.Builder(
+                GameActivity.this);
+        quitDialog.setTitle(R.string.quit_dialog_title);
+
+        quitDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                Intent intent = new Intent(GameActivity.this, StartActivity.class);
+                finish();
+                startActivity(intent);
+            }
+        });
+
+        quitDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+        quitDialog.show();
     }
 }

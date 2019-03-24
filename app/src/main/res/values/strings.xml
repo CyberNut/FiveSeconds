@@ -27,6 +27,8 @@
     <string name="default_game_type">Default Game type:</string>
     <string name="add_time_value_title">Additional time (sec):</string>
     <string name="default_number_of_question">Number of question (per player):</string>
+    <string name="incorrect_questionsets">No one questions set is not choosen!</string>
+    <string name="quit_dialog_title">Exit to main menu?</string>
     <string-array name="game_type_list">
         <item>Auto play sound</item>
         <item>Add time for reading</item>

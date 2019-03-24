@@ -42,4 +42,6 @@
         <item>ru</item>
     </string-array>
     <string name="sound_unpacking_progressbar_title">Распаковка звуковых файлов</string>
+    <string name="incorrect_questionsets">Не выбран ни один набор вопросов!</string>
+    <string name="quit_dialog_title">Прервать игру и выйти в главное меню?</string>
 </resources>

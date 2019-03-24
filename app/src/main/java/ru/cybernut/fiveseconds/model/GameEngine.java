@@ -40,8 +40,9 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     private boolean isSoundPoolReady = false;
     private boolean isMediaPlayerReady = false;
     private long roundDuration;
-    private CountDownTimer gameTimer;
+    //private CountDownTimer gameTimer;
     private MediaPlayer mediaPlayer;
+    private GameTimer gameTimer;
 
     private Updatable viewModel;
 
@@ -160,6 +161,20 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         }
     }
 
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    public void pause() {
+        isPaused = true;
+        gameTimer.pause();
+    }
+
+    public void resume() {
+        isPaused = false;
+        gameTimer.resume();
+    }
+
     private class GameInitTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -215,26 +230,49 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         public void timerFinished();
     }
 
-    private CountDownTimer initializeGameTimer() {
+    private GameTimer initializeGameTimer() {
         long duration = roundDuration;
         if(gameType == GAME_TYPE_AUTO_PLAY_SOUND) {
             duration = duration + currentSoundDuration;
         }
+        return new GameTimer(duration, TICK_DURATION);
+//        return new CountDownTimer(duration, TICK_DURATION) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//                if(!isPaused) {
+//                    if(gameType == GAME_TYPE_AUTO_PLAY_SOUND && millisUntilFinished >= roundDuration) {
+//                    } else {
+//                        viewModel.progressUpdate();
+//                    }
+//                }
+//            }
+//            @Override
+//            public void onFinish() {
+//                viewModel.timerFinished();
+//            }
+//        };
+    }
 
-        return new CountDownTimer(duration, TICK_DURATION) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                if(!isPaused) {
-                    if(gameType == GAME_TYPE_AUTO_PLAY_SOUND && millisUntilFinished >= roundDuration) {
-                    } else {
-                        viewModel.progressUpdate();
-                    }
+    private class GameTimer extends ru.cybernut.fiveseconds.utils.CountDownTimer {
+
+        public GameTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            if(!isPaused) {
+                if (gameType == GAME_TYPE_AUTO_PLAY_SOUND && millisUntilFinished >= roundDuration) {
+                } else {
+                    viewModel.progressUpdate();
                 }
             }
-            @Override
-            public void onFinish() {
-                viewModel.timerFinished();
-            }
-        };
+            Log.i(TAG, "onTick: " + millisUntilFinished + "  isPaused:" + isPaused);
+        }
+
+        @Override
+        public void onFinish() {
+            viewModel.timerFinished();
+        }
     }
 }

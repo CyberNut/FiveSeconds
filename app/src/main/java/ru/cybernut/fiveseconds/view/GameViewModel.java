@@ -220,13 +220,24 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
 
     @Override
     public void progressUpdate() {
-        currentPlayer.increaseProgressbarValue(5);
+        currentPlayer.increaseProgressbarValue(4);
     }
 
     @Override
     public void timerFinished() {
         currentPlayer.setProgressbarValue(100);
         setNeedShowAnswer(true);
+    }
+
+    public void pauseResumeGame() {
+        if(game == null) {return;}
+
+        Log.i(TAG, "pauseResumeGame: isPaused:" + game.isPaused());
+        if(game.isPaused()) {
+            game.resume();
+        } else {
+            game.pause();
+        }
     }
 
     public interface GameOverable {

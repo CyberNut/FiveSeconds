@@ -38,6 +38,7 @@ import java.util.zip.ZipInputStream;
 import ru.cybernut.fiveseconds.model.PlayersList;
 import ru.cybernut.fiveseconds.model.QuestionSet;
 import ru.cybernut.fiveseconds.model.QuestionSetList;
+import ru.cybernut.fiveseconds.view.QuestionSetModel;
 
 
 public class NewGameSettingsFragment extends Fragment {
@@ -53,10 +54,10 @@ public class NewGameSettingsFragment extends Fragment {
     private OnGamePreparedListener onGamePreparedListener;
     private RecyclerView questionSetsRecyclerView;
     private QuestionSetAdapter questionSetAdapter;
-    private ArrayList<Integer> setIds = new ArrayList<>();
     private DownloadTask downloadTask;
     private Spinner gameTypeSpinner;
     private ProgressDialog mProgressDialog;
+    private List<QuestionSetModel> questionSetModelList;
 
     public static NewGameSettingsFragment newInstance() {
         return new NewGameSettingsFragment();
@@ -90,14 +91,21 @@ public class NewGameSettingsFragment extends Fragment {
                 if (numberOfQuestions <= MIN_QUANTITY_OF_QUESTIONS || numberOfPlayers < 2) {
                     Toast.makeText(getActivity(), R.string.incorrect_number_of_questions, Toast.LENGTH_SHORT).show();
                 } else {
-                    onGamePreparedListener.onGamePrepared(numberOfQuestions,  setIds, gameTypeSpinner.getSelectedItemPosition());
+                    ArrayList<Integer> setIds = getChekedSets();
+                    if (setIds.size() > 0) {
+                        onGamePreparedListener.onGamePrepared(numberOfQuestions, setIds, gameTypeSpinner.getSelectedItemPosition());
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.incorrect_questionsets), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
+
         });
 
+        prepareQuestionSetModelList();
         questionSetsRecyclerView = v.findViewById(R.id.question_sets_recycler_view);
         questionSetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        questionSetAdapter = new QuestionSetAdapter(QuestionSetList.getInstance().getQuestionSets());
+        questionSetAdapter = new QuestionSetAdapter();
         questionSetsRecyclerView.setAdapter(questionSetAdapter);
 
         numberOfQuestionsSeekBar = (SeekBar)v.findViewById(R.id.numberOfQuestionsSeekBar);
@@ -140,6 +148,28 @@ public class NewGameSettingsFragment extends Fragment {
         return v;
     }
 
+    //TODO: need change this method on the stream
+    private ArrayList<Integer> getChekedSets() {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 0; i < questionSetModelList.size(); i++) {
+            QuestionSetModel temp = questionSetModelList.get(i);
+            if(temp.isChecked()) {
+                list.add(i + 1);
+            }
+        }
+        return list;
+    }
+
+    private void prepareQuestionSetModelList() {
+        List <QuestionSet> list = QuestionSetList.getInstance().getQuestionSets();
+        questionSetModelList = new ArrayList<>();
+        for (QuestionSet questionSet : list) {
+            questionSetModelList.add(new QuestionSetModel(questionSet));
+        }
+
+    }
+
+
     public interface OnGamePreparedListener {
         public void onGamePrepared(int numberOfQuestions, ArrayList<Integer> setIds, int gameType);
     }
@@ -151,7 +181,7 @@ public class NewGameSettingsFragment extends Fragment {
 
     private class QuestionSetHolder extends RecyclerView.ViewHolder {
 
-        private QuestionSet questionSet;
+        private QuestionSetModel questionSetModel;
         private CheckBox questionSetNameCheckBox;
         private ImageButton loadSoundsButton;
         private int index;
@@ -159,54 +189,34 @@ public class NewGameSettingsFragment extends Fragment {
         public QuestionSetHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.question_set_list_item, parent, false));
 
-            loadSoundsButton = (ImageButton) itemView.findViewById(R.id.load_sounds_button);
+            loadSoundsButton = itemView.findViewById(R.id.load_sounds_button);
             loadSoundsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     downloadTask.execute("http://mealplans.ru/wp-content/uploads/2019/03/FiveSeconds_Sounds-2.zip");
                 }
             });
-            questionSetNameCheckBox = (CheckBox) itemView.findViewById(R.id.question_set_name_checkbox);
+            questionSetNameCheckBox = itemView.findViewById(R.id.question_set_name_checkbox);
             questionSetNameCheckBox.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
                    @Override
                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                       if (isChecked) {
-                           setIds.add(index + 1);
-                       } else {
-                           if(setIds.size() >= (index + 1)) {
-                               setIds.remove(index + 1);
-                           }
-                       }
+                       questionSetModel.setChecked(isChecked);
                    }
                }
             );
         }
 
-        public void bind(QuestionSet questionSet, int index) {
-            this.questionSet = questionSet;
+        public void bind(QuestionSetModel questionSetModel, int index) {
+            this.questionSetModel = questionSetModel;
             this.index = index;
-            if(this.questionSet!= null) {
-                questionSetNameCheckBox.setText(this.questionSet.getName());
+            if(this.questionSetModel!= null) {
+                questionSetNameCheckBox.setText(this.questionSetModel.getName());
+                questionSetNameCheckBox.setChecked(questionSetModel.isChecked());
             }
         }
     }
 
     private class QuestionSetAdapter extends RecyclerView.Adapter<QuestionSetHolder> {
-
-        private List<QuestionSet> questionSetList;
-
-        public QuestionSetAdapter(List<QuestionSet> questionSetList) {
-            this.questionSetList = questionSetList;
-        }
-
-//        protected List<String> getSelectedQuestionSets() {
-//            String[] stringNames;
-//            for (QuestionSet questionSet : questionSetList) {
-//
-//
-//            }
-//
-//        }
 
         @Override
         public QuestionSetHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
@@ -216,15 +226,15 @@ public class NewGameSettingsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull QuestionSetHolder questionSetHolder, int position) {
-            QuestionSet questionSet = questionSetList.get(position);
-            if(questionSet!= null) {
-                questionSetHolder.bind(questionSet, position);
+            QuestionSetModel questionSetModel = questionSetModelList.get(position);
+            if(questionSetModel!= null) {
+                questionSetHolder.bind(questionSetModel, position);
             }
         }
 
         @Override
         public int getItemCount() {
-            return questionSetList.size();
+            return questionSetModelList.size();
         }
     }
 

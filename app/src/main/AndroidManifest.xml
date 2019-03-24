@@ -21,7 +21,8 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".StartActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
