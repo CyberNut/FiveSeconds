@@ -23,7 +23,7 @@ public class GameActivity extends AppCompatActivity implements GameViewModel.Gam
     private GameViewModel viewModel;
     private int numberOfPlayers;
 
-    public static Intent newIntent(Context context, int numberOfQuestions, ArrayList<Integer> setsIds, String gameType) {
+    public static Intent newIntent(Context context, int numberOfQuestions, ArrayList<Integer> setsIds, int gameType) {
         Intent intent = new Intent(context, GameActivity.class);
         intent.putExtra(NUMBER_OF_QUESTIONS_KEY, numberOfQuestions);
         intent.putExtra(GAME_TYPE_KEY, gameType);
@@ -34,11 +34,11 @@ public class GameActivity extends AppCompatActivity implements GameViewModel.Gam
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int numberOfQuestions = getIntent().getExtras().getInt(NUMBER_OF_QUESTIONS_KEY);
-        String gameType = getIntent().getExtras().getString(GAME_TYPE_KEY);
+        int gameType = getIntent().getExtras().getInt(GAME_TYPE_KEY);
         ArrayList<Integer> setIds = getIntent().getExtras().getIntegerArrayList(QUESTION_SET_IDS_KEY);
         super.onCreate(savedInstanceState);
 
-        viewModel = new GameViewModel(getApplicationContext(), numberOfQuestions, setIds);
+        viewModel = new GameViewModel(gameType, numberOfQuestions, setIds);
         viewModel.initialize(this);
         numberOfPlayers = viewModel.getNumberOfPlayers();
         if( numberOfPlayers <= 4) {

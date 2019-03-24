@@ -60,6 +60,9 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         soundPool.setOnLoadCompleteListener(this);
         mediaPlayer.setOnPreparedListener(this);
         new GameInitTask().execute();
+        if (gameType != GAME_TYPE_AUTO_PLAY_SOUND) {
+            gameTimer = initializeGameTimer();
+        }
     }
 
     public String getCurrentQuestionText() {
@@ -79,6 +82,10 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
             isGameOver = true;
         }
         return null;
+    }
+
+    public int getGameType() {
+        return gameType;
     }
 
     private Integer prepareNextSound(String uuid) {
@@ -112,10 +119,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     public void nextTurn() {
         if (gameType == GAME_TYPE_AUTO_PLAY_SOUND) {
             playCurrentSound();
-        }
-        if (gameTimer == null)
-        {
-            initializeGameTimer();
         }
         gameTimer.start();
         nextTurnTaskStart();

@@ -1,6 +1,5 @@
 package ru.cybernut.fiveseconds.view;
 
-import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.util.Log;
@@ -23,6 +22,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     private boolean isGameReady = false;
     private boolean isNeedShowAnswer = false;
     private boolean isGameOver = false;
+    private boolean isManualStartTimer = false;
     private GameEngine game;
     private int numberOfPlayers;
     private String currentQuestionText;
@@ -32,9 +32,12 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     private int currentRotationValue;
     private GameOverable gameActivity;
 
-    public GameViewModel(Context appContext, int numberOfQuestions, ArrayList<Integer> setIds) {
+    public GameViewModel(int gameType, int numberOfQuestions, ArrayList<Integer> setIds) {
         this.setIds = setIds;
-        game = new GameEngine(this, 0, numberOfQuestions);
+        if (gameType == GameEngine.GAME_TYPE_MANUAL) {
+            isManualStartTimer = true;
+        }
+        game = new GameEngine(this, gameType, numberOfQuestions);
         initPlayers();
     }
 
@@ -79,6 +82,11 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         currentPlayer.setCurrentPlayer(true);
 
         calculateRotation();
+    }
+
+    @Bindable
+    public boolean isManualStartTimer() {
+        return isManualStartTimer;
     }
 
     @Bindable
@@ -138,6 +146,12 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         notifyPropertyChanged(BR.started);
         setCurrentQuestionText(game.getCurrentQuestionText());
         notifyPropertyChanged(BR.currentQuestionText);
+        if (!isManualStartTimer) {
+            game.nextTurn();
+        }
+    }
+
+    public void manualStartTimer() {
         game.nextTurn();
     }
 

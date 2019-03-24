@@ -51,7 +51,7 @@
                 app:srcCompat="@drawable/answer_no" />
         </LinearLayout>
 
-        <ImageButton
+        <Button
             android:id="@+id/game_ready_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,13 +61,13 @@
             android:layout_marginBottom="8dp"
             android:background="@null"
             android:text="@string/start_game"
+            android:drawableLeft="@drawable/ready_game"
             android:onClick="@{viewModel::onNextTurn}"
             android:visibility="@{viewModel.gameReady &amp;&amp; !viewModel.started ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ready_game" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ru.cybernut.fiveseconds.view.PlayerCard
             android:id="@+id/player_card_0"
@@ -159,6 +159,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.currentQuestionText}" />
+
+            <Button
+                android:id="@+id/manual_start_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="32dp"
+                android:visibility="@{viewModel.manualStartTimer ? View.VISIBLE : View.GONE}"
+                android:gravity="center"
+                android:text="@string/start_game"
+                android:onClick="@{() -> viewModel.manualStartTimer()}"/>
         </FrameLayout>
 
     </android.support.constraint.ConstraintLayout>

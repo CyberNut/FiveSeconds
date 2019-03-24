@@ -90,7 +90,7 @@ public class NewGameSettingsFragment extends Fragment {
                 if (numberOfQuestions <= MIN_QUANTITY_OF_QUESTIONS || numberOfPlayers < 2) {
                     Toast.makeText(getActivity(), R.string.incorrect_number_of_questions, Toast.LENGTH_SHORT).show();
                 } else {
-                    onGamePreparedListener.onGamePrepared(numberOfQuestions,  setIds, gameTypeSpinner.getSelectedItem().toString());
+                    onGamePreparedListener.onGamePrepared(numberOfQuestions,  setIds, gameTypeSpinner.getSelectedItemPosition());
                 }
             }
         });
@@ -141,7 +141,7 @@ public class NewGameSettingsFragment extends Fragment {
     }
 
     public interface OnGamePreparedListener {
-        public void onGamePrepared(int numberOfQuestions, ArrayList<Integer> setIds, String gameType);
+        public void onGamePrepared(int numberOfQuestions, ArrayList<Integer> setIds, int gameType);
     }
 
     private void updateNumberOfQuestionsTextView() {
