@@ -60,8 +60,16 @@ public class GameActivity extends AppCompatActivity implements GameViewModel.Gam
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
+        viewModel.pauseGame();
         openQuitDialog();
+    }
+
+    @Override
+    protected void onUserLeaveHint() {
+        viewModel.pauseGame();
+        if (!viewModel.isGameOver()) {
+            openQuitDialog();
+        }
     }
 
     @Override
@@ -88,7 +96,7 @@ public class GameActivity extends AppCompatActivity implements GameViewModel.Gam
         quitDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
+                viewModel.resumeGame();
             }
         });
 

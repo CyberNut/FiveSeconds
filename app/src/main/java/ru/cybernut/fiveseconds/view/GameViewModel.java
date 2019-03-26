@@ -120,6 +120,10 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         notifyPropertyChanged(BR.started);
     }
 
+    public boolean isGameOver() {
+        return isGameOver;
+    }
+
     @Bindable
     public String getCurrentQuestionText() {
         return currentQuestionText;
@@ -219,8 +223,8 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     }
 
     @Override
-    public void progressUpdate() {
-        currentPlayer.increaseProgressbarValue(4);
+    public void progressUpdate(long value) {
+        currentPlayer.setProgressbarValue(value);
     }
 
     @Override
@@ -229,14 +233,19 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         setNeedShowAnswer(true);
     }
 
-    public void pauseResumeGame() {
+    public void pauseGame() {
         if(game == null) {return;}
 
-        Log.i(TAG, "pauseResumeGame: isPaused:" + game.isPaused());
+        if(!game.isPaused()) {
+            game.pause();
+        }
+    }
+
+    public void resumeGame() {
+        if(game == null) {return;}
+
         if(game.isPaused()) {
             game.resume();
-        } else {
-            game.pause();
         }
     }
 

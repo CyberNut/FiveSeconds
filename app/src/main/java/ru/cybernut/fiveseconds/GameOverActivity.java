@@ -55,6 +55,13 @@ public class GameOverActivity extends AppCompatActivity {
         playerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent intent = new Intent(GameOverActivity.this, StartActivity.class);
+        startActivity(intent);
+    }
+
     private class PlayersHolder extends RecyclerView.ViewHolder {
 
         private PlayersScoresListItemBinding itemBinding;

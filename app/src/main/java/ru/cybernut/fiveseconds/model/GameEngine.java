@@ -4,7 +4,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.AsyncTask;
-import android.os.CountDownTimer;
 import android.util.Log;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     private static final int MAX_SOUND = 5;
     private static final long STANDART_ROUND_DURATION = 5000; //ms
     private static final long ADDITION_TIME_DURATION = 2000; //ms
-    private static final long TICK_DURATION = 200; //ms
+    private static final long TICK_DURATION = 100; //ms
 
     private int gameType;
     private int numberOfQuestions;
@@ -40,7 +39,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     private boolean isSoundPoolReady = false;
     private boolean isMediaPlayerReady = false;
     private long roundDuration;
-    //private CountDownTimer gameTimer;
     private MediaPlayer mediaPlayer;
     private GameTimer gameTimer;
 
@@ -114,13 +112,13 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         if (currentSoundId != null) {
             soundPool.play(currentSoundId, 1.0f, 1.0f, 1, 0, 1.0f);
         }
-        //mediaPlayer.start();
     }
 
     public void nextTurn() {
         if (gameType == GAME_TYPE_AUTO_PLAY_SOUND) {
             playCurrentSound();
         }
+        gameTimer = initializeGameTimer();
         gameTimer.start();
         nextTurnTaskStart();
     }
@@ -147,10 +145,9 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-
         currentSoundDuration = mediaPlayer.getDuration();
         mediaPlayer.reset();
-        gameTimer = initializeGameTimer();
+
         Log.i(TAG, "onPrepared: duration" + currentSoundDuration);
         if (!isMediaPlayerReady) {
             isMediaPlayerReady = true;
@@ -167,11 +164,13 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
     public void pause() {
         isPaused = true;
+        Log.i(TAG, "pause: ");
         gameTimer.pause();
     }
 
     public void resume() {
         isPaused = false;
+        Log.i(TAG, "resume: ");
         gameTimer.resume();
     }
 
@@ -220,13 +219,12 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
             }
             return null;
         }
-
     }
 
     public interface Updatable {
         public void initDone();
         public void gameOver();
-        public void progressUpdate();
+        public void progressUpdate(long value);
         public void timerFinished();
     }
 
@@ -235,22 +233,8 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         if(gameType == GAME_TYPE_AUTO_PLAY_SOUND) {
             duration = duration + currentSoundDuration;
         }
+        Log.i(TAG, "initializeGameTimer: ");
         return new GameTimer(duration, TICK_DURATION);
-//        return new CountDownTimer(duration, TICK_DURATION) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//                if(!isPaused) {
-//                    if(gameType == GAME_TYPE_AUTO_PLAY_SOUND && millisUntilFinished >= roundDuration) {
-//                    } else {
-//                        viewModel.progressUpdate();
-//                    }
-//                }
-//            }
-//            @Override
-//            public void onFinish() {
-//                viewModel.timerFinished();
-//            }
-//        };
     }
 
     private class GameTimer extends ru.cybernut.fiveseconds.utils.CountDownTimer {
@@ -261,17 +245,19 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
         @Override
         public void onTick(long millisUntilFinished) {
+            Log.i(TAG, "onTick: " + millisUntilFinished);
             if(!isPaused) {
                 if (gameType == GAME_TYPE_AUTO_PLAY_SOUND && millisUntilFinished >= roundDuration) {
                 } else {
-                    viewModel.progressUpdate();
+                    Log.i(TAG, "onTick:=> " + millisUntilFinished + "    procent: " + (100 - ((millisUntilFinished * 100 /roundDuration) )));
+                    viewModel.progressUpdate( 100 - ((millisUntilFinished * 100 /roundDuration)));
                 }
             }
-            Log.i(TAG, "onTick: " + millisUntilFinished + "  isPaused:" + isPaused);
         }
 
         @Override
         public void onFinish() {
+            Log.i(TAG, "onFinish: ");
             viewModel.timerFinished();
         }
     }

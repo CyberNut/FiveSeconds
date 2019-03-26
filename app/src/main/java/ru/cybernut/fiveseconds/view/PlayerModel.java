@@ -2,6 +2,7 @@ package ru.cybernut.fiveseconds.view;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.util.Log;
 
 import java.io.Serializable;
 
@@ -9,6 +10,7 @@ import ru.cybernut.fiveseconds.BR;
 import ru.cybernut.fiveseconds.model.Player;
 
 public class PlayerModel extends BaseObservable implements Serializable {
+    private static String TAG = "PlayerModel";
 
     private Player player;
     private boolean isCurrentPlayer;
@@ -65,9 +67,7 @@ public class PlayerModel extends BaseObservable implements Serializable {
     }
 
     public void increaseProgressbarValue(double addValue) {
-        if (progressbarValue < 100) {
-            this.progressbarValue = this.progressbarValue + addValue;
-        }
+        this.progressbarValue = this.progressbarValue + addValue;
         notifyPropertyChanged(BR.progressbarValue);
     }
 }

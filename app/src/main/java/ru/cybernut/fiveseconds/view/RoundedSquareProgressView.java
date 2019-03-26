@@ -7,12 +7,15 @@ import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import ru.cybernut.fiveseconds.R;
 import ru.cybernut.fiveseconds.utils.CalculationUtil;
 
 public class RoundedSquareProgressView extends View {
+
+    private static String TAG = "RoundedSquareProgressView";
 
     private double progress = 0.01;
     private Paint progressBarPaint;
@@ -35,8 +38,6 @@ public class RoundedSquareProgressView extends View {
     public RoundedSquareProgressView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initializePaints(context, attrs, defStyleAttr);
-
-
     }
 
     private void initializePaints(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -191,5 +192,4 @@ public class RoundedSquareProgressView extends View {
     public enum Place {
         TOP, RIGHT, BOTTOM, LEFT
     }
-
 }

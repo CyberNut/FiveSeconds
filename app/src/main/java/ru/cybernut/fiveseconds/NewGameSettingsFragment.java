@@ -302,7 +302,7 @@ public class NewGameSettingsFragment extends Fragment {
                 }
                 ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file));
                 ZipEntry zipEntry;
-                mProgressDialog.setMessage(getString(R.string.sound_unpacking_progressbar_title));
+                //mProgressDialog.setMessage(getString(R.string.sound_unpacking_progressbar_title));
                 while ((zipEntry = zipInputStream.getNextEntry())!=null) {
                     FileOutputStream fileOutputStream = new FileOutputStream(filePath + zipEntry.getName());
                     final byte[] bytes = new byte[4096];
