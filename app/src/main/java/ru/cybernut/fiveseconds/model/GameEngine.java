@@ -88,7 +88,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     }
 
     private Integer prepareNextSound(String uuid) {
-        Integer id = null;
+        Integer id;
         isSoundPoolReady = false;
         isMediaPlayerReady = false;
         final String path = FiveSecondsApplication.getSoundFolderPath() + uuid + ".mp3";
@@ -108,7 +108,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         return id;
     }
 
-    public void playCurrentSound() {
+    private void playCurrentSound() {
         if (currentSoundId != null) {
             soundPool.play(currentSoundId, 1.0f, 1.0f, 1, 0, 1.0f);
         }
@@ -123,7 +123,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         nextTurnTaskStart();
     }
 
-    public void nextTurnTaskStart() {
+    private void nextTurnTaskStart() {
         new GameTurnTask().execute();
     }
 
@@ -179,13 +179,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         @Override
         protected Void doInBackground(Void... voids) {
 
-            try {
-                //TODO: delay imitation
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                Log.e(TAG, "doInBackground: ", e);
-                return null;
-            }
             uuidList = QuestionList.getInstance().getRandomIdList(numberOfQuestions, setIds);
             currentQuestion = getNextQuestion();
             if (isGameOver) {
@@ -201,7 +194,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
             }
             return null;
         }
-
     }
 
     private class GameTurnTask extends AsyncTask<Void, Void, Void> {
@@ -222,10 +214,10 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     }
 
     public interface Updatable {
-        public void initDone();
-        public void gameOver();
-        public void progressUpdate(long value);
-        public void timerFinished();
+        void initDone();
+        void gameOver();
+        void progressUpdate(long value);
+        void timerFinished();
     }
 
     private GameTimer initializeGameTimer() {

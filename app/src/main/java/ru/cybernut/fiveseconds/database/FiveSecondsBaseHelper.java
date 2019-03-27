@@ -3,9 +3,7 @@ package ru.cybernut.fiveseconds.database;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,14 +11,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static ru.cybernut.fiveseconds.database.FiveSecondsDBSchema.*;
+import ru.cybernut.fiveseconds.FiveSecondsApplication;
 
 public class FiveSecondsBaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "FiveSecondsBaseHelper";
     private static String DB_PATH;
     private static FiveSecondsBaseHelper instance;
-    private Context context;
     private static final int VERSION = 1;
     private static final String DB_NAME = "five_seconds.db";
 
@@ -28,9 +25,9 @@ public class FiveSecondsBaseHelper extends SQLiteOpenHelper {
     private final Context mContext;
     private boolean mNeedUpdate = false;
 
-    public static FiveSecondsBaseHelper getInstance(Context context) {
+    public static FiveSecondsBaseHelper getInstance() {
         if(instance == null) {
-            instance = new FiveSecondsBaseHelper(context);
+            instance = new FiveSecondsBaseHelper(FiveSecondsApplication.getAppContext());
         }
         return instance;
     }

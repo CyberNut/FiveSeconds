@@ -1,7 +1,5 @@
 package ru.cybernut.fiveseconds.view;
 
-import android.text.TextUtils;
-
 import ru.cybernut.fiveseconds.model.QuestionSet;
 
 public class QuestionSetModel {
@@ -12,7 +10,7 @@ public class QuestionSetModel {
 
     public QuestionSetModel(QuestionSet questionSet) {
         this.questionSet = questionSet;
-        this.isAvailable = questionSet.getType().toLowerCase().equals(QuestionSet.QuestionSetType.free.toString().toLowerCase()) ? true : false;
+        this.isAvailable = questionSet.getType().equalsIgnoreCase(QuestionSet.QuestionSetType.free.toString()) ? true : false;
         this.isChecked = isAvailable;
     }
 

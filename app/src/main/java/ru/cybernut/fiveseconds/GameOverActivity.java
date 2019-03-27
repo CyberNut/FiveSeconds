@@ -46,7 +46,7 @@ public class GameOverActivity extends AppCompatActivity {
         Collections.sort(players, new Comparator<PlayerModel>() {
             @Override
             public int compare(PlayerModel o1, PlayerModel o2) {
-                return Integer.valueOf(o2.getScore()).compareTo(Integer.valueOf(o1.getScore()));
+                return Integer.compare(o2.getScore(), o1.getScore());
             }
         });
         playersAdapter = new PlayersAdapter(players, this);

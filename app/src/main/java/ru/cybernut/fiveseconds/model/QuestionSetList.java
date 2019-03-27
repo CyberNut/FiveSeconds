@@ -1,14 +1,12 @@
 package ru.cybernut.fiveseconds.model;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.cybernut.fiveseconds.FiveSecondsApplication;
 import ru.cybernut.fiveseconds.database.FiveSecondsBaseHelper;
 import ru.cybernut.fiveseconds.database.FiveSecondsCursorWrapper;
 import ru.cybernut.fiveseconds.database.FiveSecondsDBSchema;
@@ -16,19 +14,17 @@ import ru.cybernut.fiveseconds.database.FiveSecondsDBSchema;
 public class QuestionSetList {
 
     private static QuestionSetList questionSetList;
-    private Context context;
     private SQLiteDatabase database;
 
     public static QuestionSetList getInstance() {
         if(questionSetList == null) {
-            questionSetList = new QuestionSetList(FiveSecondsApplication.getAppContext());
+            questionSetList = new QuestionSetList();
         }
         return questionSetList;
     }
 
-    private QuestionSetList(Context context) {
-        this.context = context;
-        this.database = FiveSecondsBaseHelper.getInstance(this.context).getWritableDatabase();
+    private QuestionSetList() {
+        this.database = FiveSecondsBaseHelper.getInstance().getWritableDatabase();
     }
 
     private static ContentValues getContentValues(QuestionSet questionSet) {
@@ -54,30 +50,23 @@ public class QuestionSetList {
     public List<QuestionSet> getQuestionSets() {
         List<QuestionSet> sets = new ArrayList<>();
 
-        FiveSecondsCursorWrapper cursorWrapper = queryQuestionSets(null, null);
-        try {
+        try (FiveSecondsCursorWrapper cursorWrapper = queryQuestionSets(null, null)) {
             cursorWrapper.moveToFirst();
             while (!cursorWrapper.isAfterLast()) {
                 sets.add(cursorWrapper.getQuestionSet());
                 cursorWrapper.moveToNext();
             }
-        } finally {
-            cursorWrapper.close();
         }
         return sets;
     }
 
     public QuestionSet getQuestionSet(int id) {
-        FiveSecondsCursorWrapper cursor = queryQuestionSets("_id = ?", new String[] {String.valueOf(id)});
-        try {
-            if(cursor.getCount() == 0) {
+        try (FiveSecondsCursorWrapper cursor = queryQuestionSets("_id = ?", new String[]{String.valueOf(id)})) {
+            if (cursor.getCount() == 0) {
                 return null;
             }
             cursor.moveToFirst();
             return cursor.getQuestionSet();
-        } finally {
-            cursor.close();
         }
     }
-
 }

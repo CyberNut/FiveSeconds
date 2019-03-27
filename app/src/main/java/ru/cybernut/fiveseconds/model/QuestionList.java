@@ -1,7 +1,6 @@
 package ru.cybernut.fiveseconds.model;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -9,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import ru.cybernut.fiveseconds.FiveSecondsApplication;
 import ru.cybernut.fiveseconds.database.FiveSecondsBaseHelper;
 import ru.cybernut.fiveseconds.database.FiveSecondsCursorWrapper;
 
@@ -18,19 +16,17 @@ import static ru.cybernut.fiveseconds.database.FiveSecondsDBSchema.QuestionsTabl
 public class QuestionList {
 
     private static QuestionList questionList;
-    private Context context;
     private SQLiteDatabase database;
 
     public static QuestionList getInstance() {
         if(questionList == null) {
-            questionList = new QuestionList(FiveSecondsApplication.getAppContext());
+            questionList = new QuestionList();
         }
         return questionList;
     }
 
-    private QuestionList(Context context) {
-        this.context = context;
-        this.database = FiveSecondsBaseHelper.getInstance(this.context).getWritableDatabase();
+    private QuestionList() {
+        this.database = FiveSecondsBaseHelper.getInstance().getWritableDatabase();
     }
 
     private static ContentValues getContentValues(Question question) {
@@ -55,7 +51,7 @@ public class QuestionList {
 
     public List<String> getRandomIdList(int numberOfQuestions, ArrayList<Integer> questionSetIdList) {
         int recievedQuestion = 0;
-        int count = 0;
+        int count;
         ArrayList<Integer> fullIDList = new ArrayList<>();
         ArrayList<String> randomIDList = new ArrayList<>();
         Random random = new Random();
@@ -102,15 +98,12 @@ public class QuestionList {
     public List<Question> getQuestions() {
         List<Question> questions = new ArrayList<>();
 
-        FiveSecondsCursorWrapper cursorWrapper = queryQuestions(null, null);
-        try {
+        try (FiveSecondsCursorWrapper cursorWrapper = queryQuestions(null, null)) {
             cursorWrapper.moveToFirst();
             while (!cursorWrapper.isAfterLast()) {
                 questions.add(cursorWrapper.getQuestion());
                 cursorWrapper.moveToNext();
             }
-        } finally {
-            cursorWrapper.close();
         }
         return questions;
     }
@@ -132,15 +125,12 @@ public class QuestionList {
     }
 
     public Question getQuestion(String id){
-        FiveSecondsCursorWrapper cursor = queryQuestions(QuestionsTable.Cols.UUID + " = ?", new String[] {id});
-        try {
-            if(cursor.getCount() == 0) {
+        try (FiveSecondsCursorWrapper cursor = queryQuestions(QuestionsTable.Cols.UUID + " = ?", new String[]{id})) {
+            if (cursor.getCount() == 0) {
                 return null;
             }
             cursor.moveToFirst();
             return cursor.getQuestion();
-        } finally {
-            cursor.close();
         }
     }
 }

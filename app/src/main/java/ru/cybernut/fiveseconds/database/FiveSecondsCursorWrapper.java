@@ -30,8 +30,7 @@ public class FiveSecondsCursorWrapper extends CursorWrapper {
         String name = getString(getColumnIndex(QuestionSetsTable.Cols.NAME));
         String type = getString(getColumnIndex(QuestionSetsTable.Cols.TYPE));
 
-        QuestionSet questionSet = new QuestionSet(name, type);
-        return questionSet;
+        return new QuestionSet(name, type);
     }
 
     public Sound getSound() {

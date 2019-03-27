@@ -2,7 +2,7 @@ package ru.cybernut.fiveseconds.model;
 
 public class QuestionSet {
 
-    public enum QuestionSetType {free, paid};
+    public enum QuestionSetType {free, paid}
 
     private String name;
     private String type;

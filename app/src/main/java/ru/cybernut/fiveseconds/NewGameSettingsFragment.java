@@ -78,12 +78,12 @@ public class NewGameSettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.new_game_settings_fragment, container, false);
 
-        numberOfQuestionsTextView = (TextView)v.findViewById(R.id.numberOfQuestions);
+        numberOfQuestionsTextView = v.findViewById(R.id.numberOfQuestions);
         numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
 
-        gameTypeSpinner = (Spinner) v.findViewById(R.id.game_type_spinner);
+        gameTypeSpinner = v.findViewById(R.id.game_type_spinner);
 
-        startNewGameButton = (ImageButton)v.findViewById(R.id.startNewGameButton);
+        startNewGameButton = v.findViewById(R.id.startNewGameButton);
         startNewGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +108,7 @@ public class NewGameSettingsFragment extends Fragment {
         questionSetAdapter = new QuestionSetAdapter();
         questionSetsRecyclerView.setAdapter(questionSetAdapter);
 
-        numberOfQuestionsSeekBar = (SeekBar)v.findViewById(R.id.numberOfQuestionsSeekBar);
+        numberOfQuestionsSeekBar = v.findViewById(R.id.numberOfQuestionsSeekBar);
         numberOfQuestionsSeekBar.setMax(MAX_QUANTITY_OF_QUESTIONS - MIN_QUANTITY_OF_QUESTIONS);
         numberOfQuestionsSeekBar.setProgress(numberOfPlayers);
         updateNumberOfQuestionsTextView();
@@ -171,7 +171,7 @@ public class NewGameSettingsFragment extends Fragment {
 
 
     public interface OnGamePreparedListener {
-        public void onGamePrepared(int numberOfQuestions, ArrayList<Integer> setIds, int gameType);
+        void onGamePrepared(int numberOfQuestions, ArrayList<Integer> setIds, int gameType);
     }
 
     private void updateNumberOfQuestionsTextView() {

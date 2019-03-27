@@ -23,7 +23,6 @@ public class GameActivity extends AppCompatActivity implements GameViewModel.Gam
     private static final String GAME_TYPE_KEY = "GAME_TYPE_KEY";
 
     private GameViewModel viewModel;
-    private int numberOfPlayers;
 
     public static Intent newIntent(Context context, int numberOfQuestions, ArrayList<Integer> setsIds, int gameType) {
         Intent intent = new Intent(context, GameActivity.class);
@@ -42,7 +41,7 @@ public class GameActivity extends AppCompatActivity implements GameViewModel.Gam
 
         viewModel = new GameViewModel(gameType, numberOfQuestions, setIds);
         viewModel.initialize(this);
-        numberOfPlayers = viewModel.getNumberOfPlayers();
+        int numberOfPlayers = viewModel.getNumberOfPlayers();
         if( numberOfPlayers <= 4) {
             GameActivity4playersBinding binding = DataBindingUtil.setContentView(this, R.layout.game_activity_4players);
             binding.setViewModel(viewModel);

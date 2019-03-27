@@ -1,9 +1,7 @@
 package ru.cybernut.fiveseconds;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,9 +18,9 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import ru.cybernut.fiveseconds.model.GameEngine;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
+import ru.cybernut.fiveseconds.utils.SharedPreferencesHelper;
 
 public class NewGameAddPlayersFragment extends Fragment {
 
@@ -33,6 +31,7 @@ public class NewGameAddPlayersFragment extends Fragment {
     private EditText playerName;
     private RecyclerView playerRecyclerView;
     private PlayersAdapter playersAdapter;
+    private SharedPreferencesHelper sharedPreferencesHelper;
 
     public static NewGameAddPlayersFragment newInstance() {
         return new NewGameAddPlayersFragment();
@@ -41,6 +40,7 @@ public class NewGameAddPlayersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.new_game_players_fragment, container, false);
+        sharedPreferencesHelper = new SharedPreferencesHelper(FiveSecondsApplication.getAppContext());
         loadSettings();
         prepareUI(v);
         return v;
@@ -49,25 +49,17 @@ public class NewGameAddPlayersFragment extends Fragment {
     public void saveSettings() {
         Context context = getActivity();
         if(context != null ) {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            for (int i = 0; i < PlayersList.getInstance().getNumberOfPlayers(); i++) {
-                Player player = PlayersList.getInstance().getPlayer(i);
-                sharedPreferences.edit()
-                        .putString(PREFERENCE_USER_NAME + i, player.getName())
-                        .apply();
-            }
+            sharedPreferencesHelper.savePlayers(PlayersList.getInstance().getList());
         }
     }
 
     private void loadSettings() {
         Context context = getActivity();
-        if(context != null && (PlayersList.getInstance().getNumberOfPlayers() == 0)) {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            for (int i = 0; i < GameEngine.MAX_PLAYERS; i++) {
-                if(sharedPreferences.contains(PREFERENCE_USER_NAME + i)) {
-                    Player player = new Player(sharedPreferences.getString(PREFERENCE_USER_NAME + i, "Player"));
-                    PlayersList.getInstance().putPlayer(player, i);
-                }
+        PlayersList playersList = PlayersList.getInstance();
+        if(context != null && (playersList.getNumberOfPlayers() == 0)) {
+            List<Player> tempList = sharedPreferencesHelper.getPlayers();
+            for (Player player : tempList) {
+                playersList.addPlayer(player);
             }
         }
 
@@ -85,7 +77,7 @@ public class NewGameAddPlayersFragment extends Fragment {
     private void addPlayer() {
         if(!playerName.getText().toString().isEmpty()) {
             Player player = new Player(playerName.getText().toString());
-            if(PlayersList.getInstance().addPlayer(player) == false) {
+            if(!PlayersList.getInstance().addPlayer(player)) {
                 Toast.makeText(getActivity(), R.string.max_player_error, Toast.LENGTH_SHORT).show();
             } else {
                 playersAdapter.notifyDataSetChanged();
@@ -96,7 +88,7 @@ public class NewGameAddPlayersFragment extends Fragment {
 
     private void prepareUI(View view) {
 
-        playerName = (EditText) view.findViewById(R.id.player_name);
+        playerName = view.findViewById(R.id.player_name);
         playerName.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event)
             {
@@ -108,13 +100,13 @@ public class NewGameAddPlayersFragment extends Fragment {
             }
         });
 
-        playerRecyclerView = (RecyclerView) view.findViewById(R.id.players_recycler_view);
+        playerRecyclerView = view.findViewById(R.id.players_recycler_view);
         playerRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), NUMBER_OF_PLAYERS_LIST_COLUMNS));
 
         playersAdapter = new PlayersAdapter(PlayersList.getInstance().getList());
         playerRecyclerView.setAdapter(playersAdapter);
 
-        addPlayerButton = (ImageButton) view.findViewById(R.id.add_player_button);
+        addPlayerButton = view.findViewById(R.id.add_player_button);
         addPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,9 +127,9 @@ public class NewGameAddPlayersFragment extends Fragment {
         public PlayersHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.players_list_item, parent, false));
 
-            playerNameTextView = (TextView) itemView.findViewById(R.id.item_name);
-            playerPhotoImageView = (ImageView) itemView.findViewById(R.id.item_photo);
-            deletePlayerButton = (ImageButton) itemView.findViewById(R.id.item_delete_player_button);
+            playerNameTextView = itemView.findViewById(R.id.item_name);
+            playerPhotoImageView = itemView.findViewById(R.id.item_photo);
+            deletePlayerButton = itemView.findViewById(R.id.item_delete_player_button);
             deletePlayerButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -165,7 +157,6 @@ public class NewGameAddPlayersFragment extends Fragment {
     private class PlayersAdapter extends RecyclerView.Adapter<PlayersHolder> {
 
         private List<Player> playerList;
-
         public PlayersAdapter(List<Player> players) {
             this.playerList = players;
         }
@@ -187,6 +178,4 @@ public class NewGameAddPlayersFragment extends Fragment {
             return playerList.size();
         }
     }
-
-
 }

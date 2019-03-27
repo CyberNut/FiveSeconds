@@ -2,7 +2,6 @@ package ru.cybernut.fiveseconds.view;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.util.Log;
 
 import java.io.Serializable;
 

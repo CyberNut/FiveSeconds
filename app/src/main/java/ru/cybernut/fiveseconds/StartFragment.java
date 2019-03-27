@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import java.util.Locale;
 
 import ru.cybernut.fiveseconds.databinding.StartFragmentBinding;
-import ru.cybernut.fiveseconds.model.Question;
 import ru.cybernut.fiveseconds.model.QuestionList;
 
 public class StartFragment extends Fragment {
