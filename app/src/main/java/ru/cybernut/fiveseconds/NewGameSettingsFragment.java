@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import ru.cybernut.fiveseconds.model.GameEngine;
 import ru.cybernut.fiveseconds.model.PlayersList;
 import ru.cybernut.fiveseconds.model.QuestionSet;
 import ru.cybernut.fiveseconds.model.QuestionSetList;
@@ -93,6 +94,10 @@ public class NewGameSettingsFragment extends Fragment {
                 } else {
                     ArrayList<Integer> setIds = getChekedSets();
                     if (setIds.size() > 0) {
+                        if (gameTypeSpinner.getSelectedItemPosition() == GameEngine.GAME_TYPE_AUTO_PLAY_SOUND && !checkAvailabilitySounds()) {
+                            Toast.makeText(getActivity(), getString(R.string.sound_pack_is_not_available), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         onGamePreparedListener.onGamePrepared(numberOfQuestions, setIds, gameTypeSpinner.getSelectedItemPosition());
                     } else {
                         Toast.makeText(getActivity(), getString(R.string.incorrect_questionsets), Toast.LENGTH_SHORT).show();
@@ -146,6 +151,16 @@ public class NewGameSettingsFragment extends Fragment {
         });
 
         return v;
+    }
+
+    private boolean checkAvailabilitySounds() {
+        //TODO: need good check
+        File soundsDirectory = new File(FiveSecondsApplication.getSoundFolderPath());
+        if (!soundsDirectory.exists()) {
+            return false;
+        }
+        File[] soundFiles = soundsDirectory.listFiles();
+        return soundFiles != null && soundFiles.length > 0;
     }
 
     //TODO: need change this method on the stream
