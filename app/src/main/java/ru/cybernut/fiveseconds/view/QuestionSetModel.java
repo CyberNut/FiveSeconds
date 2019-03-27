@@ -10,7 +10,7 @@ public class QuestionSetModel {
 
     public QuestionSetModel(QuestionSet questionSet) {
         this.questionSet = questionSet;
-        this.isAvailable = questionSet.getType().equalsIgnoreCase(QuestionSet.QuestionSetType.free.toString()) ? true : false;
+        this.isAvailable = questionSet.getType().equalsIgnoreCase(QuestionSet.QuestionSetType.free.toString());
         this.isChecked = isAvailable;
     }
 

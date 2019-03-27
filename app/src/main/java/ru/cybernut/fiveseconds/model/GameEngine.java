@@ -1,5 +1,6 @@
 package ru.cybernut.fiveseconds.model;
 
+import android.annotation.SuppressLint;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -174,6 +175,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         gameTimer.resume();
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class GameInitTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -196,6 +198,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class GameTurnTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -231,7 +234,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
     private class GameTimer extends ru.cybernut.fiveseconds.utils.CountDownTimer {
 
-        public GameTimer(long millisInFuture, long countDownInterval) {
+        GameTimer(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
         }
 

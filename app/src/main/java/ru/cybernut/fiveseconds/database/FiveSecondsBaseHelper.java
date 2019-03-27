@@ -22,7 +22,6 @@ public class FiveSecondsBaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "five_seconds.db";
 
     private SQLiteDatabase mDataBase;
-    private final Context mContext;
     private boolean mNeedUpdate = false;
 
     public static FiveSecondsBaseHelper getInstance() {
@@ -34,7 +33,6 @@ public class FiveSecondsBaseHelper extends SQLiteOpenHelper {
 
     private FiveSecondsBaseHelper(Context context) {
         super(context, DB_NAME, null, VERSION);
-        this.mContext = context;
         DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
 
         copyDataBase();
@@ -42,7 +40,7 @@ public class FiveSecondsBaseHelper extends SQLiteOpenHelper {
         this.getReadableDatabase();
     }
 
-    public void updateDataBase() throws IOException {
+    public void updateDataBase() {
         if (mNeedUpdate) {
             File dbFile = new File(DB_PATH + DB_NAME);
             if (dbFile.exists())
@@ -72,9 +70,9 @@ public class FiveSecondsBaseHelper extends SQLiteOpenHelper {
     }
 
     private void copyDBFile() throws IOException {
-        InputStream mInput = mContext.getAssets().open(DB_NAME);
+        InputStream mInput = FiveSecondsApplication.getAppContext().getAssets().open(DB_NAME);
         OutputStream mOutput = new FileOutputStream(DB_PATH + DB_NAME);
-        byte[] mBuffer = new byte[1024];
+        byte[] mBuffer = new byte[4096];
         int mLength;
         while ((mLength = mInput.read(mBuffer)) > 0)
             mOutput.write(mBuffer, 0, mLength);

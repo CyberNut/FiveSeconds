@@ -20,7 +20,6 @@ public class Sound {
         this.questionUUID = questionUUID;
     }
 
-
     public String getPath() {
         return path;
     }
