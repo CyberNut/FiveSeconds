@@ -44,5 +44,6 @@
     <string name="sound_unpacking_progressbar_title">Распаковка звуковых файлов</string>
     <string name="incorrect_questionsets">Не выбран ни один набор вопросов!</string>
     <string name="quit_dialog_title">Прервать игру и выйти в главное меню?</string>
-    <string name="sound_pack_is_not_available">нет звуков. Загрузите звуковой набор.</string>
+    <string name="sound_pack_is_not_available">Звуковой файл для набора %s не загружен.</string>
+    <string name="mobile_network_using_dialog_title">Использование мобильного интернета.</string>
 </resources>

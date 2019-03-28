@@ -30,6 +30,7 @@
     <string name="incorrect_questionsets">No one questions set is not chosen!</string>
     <string name="quit_dialog_title">Exit to main menu?</string>
     <string name="sound_pack_is_not_available">Sounds pack for %s is not downloaded!</string>
+    <string name="mobile_network_using_dialog_title">Confirm using mobile network.</string>
     <string-array name="game_type_list">
         <item>Auto play sound</item>
         <item>Add time for reading</item>

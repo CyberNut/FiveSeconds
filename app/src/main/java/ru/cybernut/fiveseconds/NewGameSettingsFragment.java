@@ -3,10 +3,13 @@ package ru.cybernut.fiveseconds;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -58,6 +61,7 @@ public class NewGameSettingsFragment extends Fragment {
     private Spinner gameTypeSpinner;
     private ProgressDialog mProgressDialog;
     private List<QuestionSetModel> questionSetModelList;
+    private boolean isMobileNetworkApproved = false;
 
     public static NewGameSettingsFragment newInstance() {
         return new NewGameSettingsFragment();
@@ -91,7 +95,7 @@ public class NewGameSettingsFragment extends Fragment {
                 if (numberOfQuestions <= MIN_QUANTITY_OF_QUESTIONS || numberOfPlayers < 2) {
                     Toast.makeText(getActivity(), R.string.incorrect_number_of_questions, Toast.LENGTH_SHORT).show();
                 } else {
-                    ArrayList<Integer> setIds = getChekedSets();
+                    ArrayList<Integer> setIds = getCheckedSets();
                     if (setIds.size() > 0) {
                         if (gameTypeSpinner.getSelectedItemPosition() == GameEngine.GAME_TYPE_AUTO_PLAY_SOUND && !checkAvailabilitySounds()) {
                             return;
@@ -161,7 +165,7 @@ public class NewGameSettingsFragment extends Fragment {
     }
 
     //TODO: need change this method on the stream
-    private ArrayList<Integer> getChekedSets() {
+    private ArrayList<Integer> getCheckedSets() {
         ArrayList<Integer> list = new ArrayList<>();
         for (int i = 0; i < questionSetModelList.size(); i++) {
             QuestionSetModel temp = questionSetModelList.get(i);
@@ -204,10 +208,13 @@ public class NewGameSettingsFragment extends Fragment {
             loadSoundsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    downloadTask = new DownloadTask(getActivity());
-                    downloadTask.execute(questionSetModel.getSoundsLink());
-                    questionSetModel.markAsDownloaded();
-                    QuestionSetList.getInstance().updateQuestionSet(questionSetModel.getQuestionSet());
+                    if(checkNetworkConnection()) {
+                        downloadTask = new DownloadTask(getActivity());
+                        downloadTask.execute(questionSetModel.getSoundsLink());
+                        //TODO: need real downloading check
+                        questionSetModel.markAsDownloaded();
+                        QuestionSetList.getInstance().updateQuestionSet(questionSetModel.getQuestionSet());
+                    }
                 }
             });
             questionSetNameCheckBox = itemView.findViewById(R.id.question_set_name_checkbox);
@@ -227,6 +234,26 @@ public class NewGameSettingsFragment extends Fragment {
                 questionSetNameCheckBox.setChecked(questionSetModel.isChecked());
             }
         }
+    }
+
+    private boolean checkNetworkConnection() {
+
+        isMobileNetworkApproved = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            if(networkInfo.getType() == connectivityManager.TYPE_WIFI) {
+                return true;
+            } else if(networkInfo.getType() == connectivityManager.TYPE_MOBILE) {
+                openConfirmUsingMobileNetworkDialog();
+                if (isMobileNetworkApproved) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
     private class QuestionSetAdapter extends RecyclerView.Adapter<QuestionSetHolder> {
@@ -370,4 +397,27 @@ public class NewGameSettingsFragment extends Fragment {
                 Toast.makeText(context,"File downloaded", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void openConfirmUsingMobileNetworkDialog() {
+        AlertDialog.Builder confirmMobileNetworkDialog = new AlertDialog.Builder(
+               getActivity());
+        confirmMobileNetworkDialog.setTitle(R.string.mobile_network_using_dialog_title);
+
+        confirmMobileNetworkDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                isMobileNetworkApproved = true;
+            }
+        });
+
+        confirmMobileNetworkDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                isMobileNetworkApproved = false;
+            }
+        });
+
+        confirmMobileNetworkDialog.show();
+    }
+
 }
