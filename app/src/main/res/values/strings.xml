@@ -29,7 +29,7 @@
     <string name="default_number_of_question">Number of question (per player):</string>
     <string name="incorrect_questionsets">No one questions set is not chosen!</string>
     <string name="quit_dialog_title">Exit to main menu?</string>
-    <string name="sound_pack_is_not_available">No sounds. Download sounds pack.</string>
+    <string name="sound_pack_is_not_available">Sounds pack for %s is not downloaded!</string>
     <string-array name="game_type_list">
         <item>Auto play sound</item>
         <item>Add time for reading</item>

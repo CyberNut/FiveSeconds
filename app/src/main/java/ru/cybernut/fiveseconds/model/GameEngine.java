@@ -98,7 +98,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
             mediaPlayer.setDataSource(path);
             mediaPlayer.prepareAsync();
         } catch (IOException e) {
-            Log.e(TAG, "playSound: ", e);
             currentSoundDuration = ((int) ADDITION_TIME_DURATION);
             id = null;
             isSoundPoolReady = true;
@@ -134,7 +133,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
     @Override
     public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-        Log.i(TAG, "onLoadComplete: sampleId =" + sampleId);
         if (!isSoundPoolReady) {
             isSoundPoolReady = true;
         }
@@ -149,7 +147,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         currentSoundDuration = mediaPlayer.getDuration();
         mediaPlayer.reset();
 
-        Log.i(TAG, "onPrepared: duration" + currentSoundDuration);
         if (!isMediaPlayerReady) {
             isMediaPlayerReady = true;
         }
@@ -165,13 +162,11 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
     public void pause() {
         isPaused = true;
-        Log.i(TAG, "pause: ");
         gameTimer.pause();
     }
 
     public void resume() {
         isPaused = false;
-        Log.i(TAG, "resume: ");
         gameTimer.resume();
     }
 
@@ -228,7 +223,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         if(gameType == GAME_TYPE_AUTO_PLAY_SOUND) {
             duration = duration + currentSoundDuration;
         }
-        Log.i(TAG, "initializeGameTimer: ");
         return new GameTimer(duration, TICK_DURATION);
     }
 
@@ -240,11 +234,9 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
         @Override
         public void onTick(long millisUntilFinished) {
-            Log.i(TAG, "onTick: " + millisUntilFinished);
             if(!isPaused) {
                 if (gameType == GAME_TYPE_AUTO_PLAY_SOUND && millisUntilFinished >= roundDuration) {
                 } else {
-                    Log.i(TAG, "onTick:=> " + millisUntilFinished + "    procent: " + (100 - ((millisUntilFinished * 100 /roundDuration) )));
                     viewModel.progressUpdate( 100 - ((millisUntilFinished * 100 /roundDuration)));
                 }
             }
@@ -252,7 +244,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
         @Override
         public void onFinish() {
-            Log.i(TAG, "onFinish: ");
             viewModel.timerFinished();
         }
     }

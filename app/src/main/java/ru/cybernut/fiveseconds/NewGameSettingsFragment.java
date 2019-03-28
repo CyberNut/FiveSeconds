@@ -1,6 +1,5 @@
 package ru.cybernut.fiveseconds;
 
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -95,7 +94,6 @@ public class NewGameSettingsFragment extends Fragment {
                     ArrayList<Integer> setIds = getChekedSets();
                     if (setIds.size() > 0) {
                         if (gameTypeSpinner.getSelectedItemPosition() == GameEngine.GAME_TYPE_AUTO_PLAY_SOUND && !checkAvailabilitySounds()) {
-                            Toast.makeText(getActivity(), getString(R.string.sound_pack_is_not_available), Toast.LENGTH_SHORT).show();
                             return;
                         }
                         onGamePreparedListener.onGamePrepared(numberOfQuestions, setIds, gameTypeSpinner.getSelectedItemPosition());
@@ -140,8 +138,6 @@ public class NewGameSettingsFragment extends Fragment {
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mProgressDialog.setCancelable(true);
 
-        downloadTask = new DownloadTask(getActivity());
-
         mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
             @Override
@@ -155,12 +151,13 @@ public class NewGameSettingsFragment extends Fragment {
 
     private boolean checkAvailabilitySounds() {
         //TODO: need good check
-        File soundsDirectory = new File(FiveSecondsApplication.getSoundFolderPath());
-        if (!soundsDirectory.exists()) {
-            return false;
+        for (QuestionSetModel questionSetModel : questionSetModelList) {
+            if (questionSetModel.isChecked() && !questionSetModel.isSoundsAvailable()) {
+                Toast.makeText(getActivity(), String.format(getString(R.string.sound_pack_is_not_available).toString(), questionSetModel.getName()), Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
-        File[] soundFiles = soundsDirectory.listFiles();
-        return soundFiles != null && soundFiles.length > 0;
+        return true;
     }
 
     //TODO: need change this method on the stream
@@ -199,7 +196,6 @@ public class NewGameSettingsFragment extends Fragment {
         private QuestionSetModel questionSetModel;
         private CheckBox questionSetNameCheckBox;
         private ImageButton loadSoundsButton;
-        private int index;
 
         public QuestionSetHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.question_set_list_item, parent, false));
@@ -208,7 +204,10 @@ public class NewGameSettingsFragment extends Fragment {
             loadSoundsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    downloadTask.execute("http://mealplans.ru/wp-content/uploads/2019/03/FiveSeconds_Sounds-2.zip");
+                    downloadTask = new DownloadTask(getActivity());
+                    downloadTask.execute(questionSetModel.getSoundsLink());
+                    questionSetModel.markAsDownloaded();
+                    QuestionSetList.getInstance().updateQuestionSet(questionSetModel.getQuestionSet());
                 }
             });
             questionSetNameCheckBox = itemView.findViewById(R.id.question_set_name_checkbox);
@@ -221,9 +220,8 @@ public class NewGameSettingsFragment extends Fragment {
             );
         }
 
-        public void bind(QuestionSetModel questionSetModel, int index) {
+        public void bind(QuestionSetModel questionSetModel) {
             this.questionSetModel = questionSetModel;
-            this.index = index;
             if(this.questionSetModel!= null) {
                 questionSetNameCheckBox.setText(this.questionSetModel.getName());
                 questionSetNameCheckBox.setChecked(questionSetModel.isChecked());
@@ -243,7 +241,7 @@ public class NewGameSettingsFragment extends Fragment {
         public void onBindViewHolder(@NonNull QuestionSetHolder questionSetHolder, int position) {
             QuestionSetModel questionSetModel = questionSetModelList.get(position);
             if(questionSetModel!= null) {
-                questionSetHolder.bind(questionSetModel, position);
+                questionSetHolder.bind(questionSetModel);
             }
         }
 

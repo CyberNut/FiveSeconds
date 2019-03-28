@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -19,10 +20,11 @@ public class SharedPreferencesHelper {
     public static final Type PLAYERS_TYPE = new TypeToken<List<Player>>() {}.getType();
 
     private SharedPreferences sharedPreferences;
-    private Gson gson = new Gson();
+    private Gson gson;
 
     public SharedPreferencesHelper(Context context) {
         sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     }
 
     public List<Player> getPlayers() {

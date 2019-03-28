@@ -6,10 +6,23 @@ public class QuestionSet {
 
     private String name;
     private String type;
+    private String soundsLink;
+    private boolean soundsLoaded;
+
 
     public QuestionSet(String name, String type) {
+        this(name, type, false);
+    }
+
+    public QuestionSet(String name, String type, boolean soundLoaded) {
         this.name = name;
         this.type = type;
+        this.soundsLoaded = soundLoaded;
+    }
+
+    public QuestionSet(String name, String type, String soundsLink, boolean soundsLoaded) {
+        this(name, type, soundsLoaded);
+        this.soundsLink = soundsLink;
     }
 
     public String getName() {
@@ -26,5 +39,21 @@ public class QuestionSet {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSoundsLink() {
+        return soundsLink;
+    }
+
+    public void setSoundsLink(String soundsLink) {
+        this.soundsLink = soundsLink;
+    }
+
+    public boolean isSoundsLoaded() {
+        return soundsLoaded;
+    }
+
+    public void setSoundsLoaded(boolean soundsLoaded) {
+        this.soundsLoaded = soundsLoaded;
     }
 }

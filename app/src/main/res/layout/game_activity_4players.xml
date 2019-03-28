@@ -143,10 +143,10 @@
             android:id="@+id/question_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginBottom="64dp"
             android:rotation="@{viewModel.currentRotationValue}"
             android:visibility="@{viewModel.started &amp;&amp; !viewModel.needShowAnswer ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -166,10 +166,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="32dp"
-                android:visibility="@{viewModel.manualStartTimer ? View.VISIBLE : View.GONE}"
                 android:gravity="center"
+                android:onClick="@{() -> viewModel.manualStartTimer()}"
                 android:text="@string/start_game"
-                android:onClick="@{() -> viewModel.manualStartTimer()}"/>
+                android:visibility="@{viewModel.manualStartTimer ? View.VISIBLE : View.GONE}" />
         </FrameLayout>
 
     </android.support.constraint.ConstraintLayout>

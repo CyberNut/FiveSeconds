@@ -22,6 +22,8 @@ public class FiveSecondsDBSchema {
         public static final class Cols {
             public static final String NAME = FiveSecondsApplication.getLanguage() +"_name";
             public static final String TYPE = "type";
+            public static final String SOUNDS_LINK = FiveSecondsApplication.getLanguage() +"_sounds_link";
+            public static final String SOUNDS_LOADED = FiveSecondsApplication.getLanguage() +"_sounds_loaded";
         }
     }
 

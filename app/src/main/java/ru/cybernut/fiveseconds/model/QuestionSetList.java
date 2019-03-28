@@ -31,6 +31,8 @@ public class QuestionSetList {
         ContentValues values = new ContentValues();
         values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.NAME, questionSet.getName());
         values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.TYPE, questionSet.getType());
+        values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.SOUNDS_LINK, questionSet.getSoundsLink());
+        values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.SOUNDS_LOADED, questionSet.isSoundsLoaded());
         return values;
     }
 
@@ -68,5 +70,11 @@ public class QuestionSetList {
             cursor.moveToFirst();
             return cursor.getQuestionSet();
         }
+    }
+
+    public void updateQuestionSet(QuestionSet questionSet) {
+        String name = questionSet.getName();
+        ContentValues contentValues = QuestionSetList.getContentValues(questionSet);
+        database.update(FiveSecondsDBSchema.QuestionSetsTable.NAME, contentValues, FiveSecondsDBSchema.QuestionSetsTable.Cols.NAME + " = ?", new String[] {name});
     }
 }

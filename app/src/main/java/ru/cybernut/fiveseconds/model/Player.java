@@ -4,15 +4,21 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.graphics.drawable.Drawable;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 
 import ru.cybernut.fiveseconds.BR;
 
 public class Player extends BaseObservable implements Serializable {
 
+    @Expose
     private String name;
+    @Expose(serialize = false)
     private Drawable photo;
+    @Expose
     private boolean isGameMaster;
+    @Expose(serialize = false)
     private int score;
 
     public Player(String name) {
