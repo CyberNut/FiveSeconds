@@ -135,13 +135,15 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     }
 
     public void handleAnswer(boolean isCorrectAnswer) {
-        if(isGameOver) { return;}
-        if(isCorrectAnswer) {
-            currentPlayer.setScore();
+        if (isGameOver) { return;}
+        if (isNeedShowAnswer) {
+            if (isCorrectAnswer) {
+                currentPlayer.setScore();
+            }
+            setNeedShowAnswer(false);
+            nextPlayer();
+            onNextTurn(null);
         }
-        setNeedShowAnswer(false);
-        nextPlayer();
-        onNextTurn(null);
     }
 
     public void onNextTurn(View v) {

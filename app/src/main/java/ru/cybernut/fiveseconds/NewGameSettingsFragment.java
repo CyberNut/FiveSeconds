@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +42,7 @@ import ru.cybernut.fiveseconds.model.GameEngine;
 import ru.cybernut.fiveseconds.model.PlayersList;
 import ru.cybernut.fiveseconds.model.QuestionSet;
 import ru.cybernut.fiveseconds.model.QuestionSetList;
+import ru.cybernut.fiveseconds.view.AlertDialogFragment;
 import ru.cybernut.fiveseconds.view.QuestionSetModel;
 
 
@@ -49,6 +51,10 @@ public class NewGameSettingsFragment extends Fragment {
     private static final String TAG = "NewGameSettingsFragment";
     private static final int MAX_QUANTITY_OF_QUESTIONS = 20;
     private static final int MIN_QUANTITY_OF_QUESTIONS = 3;
+
+    private static final int NETWORK_STATE_NONE = 0;
+    private static final int NETWORK_STATE_WIFI = 1;
+    private static final int NETWORK_STATE_MOBILE = 2;
 
     private int numberOfPlayers = 2;
     private SeekBar numberOfQuestionsSeekBar;
@@ -182,9 +188,7 @@ public class NewGameSettingsFragment extends Fragment {
         for (QuestionSet questionSet : list) {
             questionSetModelList.add(new QuestionSetModel(questionSet));
         }
-
     }
-
 
     public interface OnGamePreparedListener {
         void onGamePrepared(int numberOfQuestions, ArrayList<Integer> setIds, int gameType);
@@ -193,6 +197,49 @@ public class NewGameSettingsFragment extends Fragment {
     private void updateNumberOfQuestionsTextView() {
         numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
         numberOfQuestionsTextView.setText(String.valueOf(MIN_QUANTITY_OF_QUESTIONS * numberOfPlayers +  numberOfPlayers * numberOfQuestionsSeekBar.getProgress()));
+    }
+
+    public void downloadSounds(QuestionSetModel questionSetModel) {
+        downloadTask = new DownloadTask(getActivity());
+        downloadTask.execute(questionSetModel.getSoundsLink());
+        //TODO: need real downloading check
+        questionSetModel.markAsDownloaded();
+        QuestionSetList.getInstance().updateQuestionSet(questionSetModel.getQuestionSet());
+    }
+
+    private int checkNetworkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            if(networkInfo.getType() == connectivityManager.TYPE_WIFI) {
+                return NETWORK_STATE_WIFI;
+            } else if(networkInfo.getType() == connectivityManager.TYPE_MOBILE) {
+                return NETWORK_STATE_MOBILE;
+            }
+        }
+        return NETWORK_STATE_NONE;
+    }
+
+    private void openConfirmUsingMobileNetworkDialog(final QuestionSetModel questionSetModelForLoading) {
+
+        AlertDialog.Builder confirmMobileNetworkDialog = new AlertDialog.Builder(
+                getActivity());
+        confirmMobileNetworkDialog.setTitle(R.string.mobile_network_using_dialog_title);
+
+        confirmMobileNetworkDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                downloadSounds(questionSetModelForLoading);
+            }
+        });
+
+        confirmMobileNetworkDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        confirmMobileNetworkDialog.show();
     }
 
     private class QuestionSetHolder extends RecyclerView.ViewHolder {
@@ -208,22 +255,27 @@ public class NewGameSettingsFragment extends Fragment {
             loadSoundsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(checkNetworkConnection()) {
-                        downloadTask = new DownloadTask(getActivity());
-                        downloadTask.execute(questionSetModel.getSoundsLink());
-                        //TODO: need real downloading check
-                        questionSetModel.markAsDownloaded();
-                        QuestionSetList.getInstance().updateQuestionSet(questionSetModel.getQuestionSet());
+                    int networkType = checkNetworkConnection();
+                    switch (networkType) {
+                        case NETWORK_STATE_NONE:
+                            Toast.makeText(getActivity(), R.string.internet_is_not_available, Toast.LENGTH_LONG).show();
+                            break;
+                        case NETWORK_STATE_WIFI:
+                            downloadSounds(questionSetModel);
+                            break;
+                        case NETWORK_STATE_MOBILE:
+                            openConfirmUsingMobileNetworkDialog(questionSetModel);
+                            break;
                     }
                 }
             });
             questionSetNameCheckBox = itemView.findViewById(R.id.question_set_name_checkbox);
             questionSetNameCheckBox.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-                   @Override
-                   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                       questionSetModel.setChecked(isChecked);
-                   }
-               }
+                                                                   @Override
+                                                                   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                                                       questionSetModel.setChecked(isChecked);
+                                                                   }
+                                                               }
             );
         }
 
@@ -234,26 +286,6 @@ public class NewGameSettingsFragment extends Fragment {
                 questionSetNameCheckBox.setChecked(questionSetModel.isChecked());
             }
         }
-    }
-
-    private boolean checkNetworkConnection() {
-
-        isMobileNetworkApproved = false;
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            if(networkInfo.getType() == connectivityManager.TYPE_WIFI) {
-                return true;
-            } else if(networkInfo.getType() == connectivityManager.TYPE_MOBILE) {
-                openConfirmUsingMobileNetworkDialog();
-                if (isMobileNetworkApproved) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        return false;
     }
 
     private class QuestionSetAdapter extends RecyclerView.Adapter<QuestionSetHolder> {
@@ -396,28 +428,6 @@ public class NewGameSettingsFragment extends Fragment {
             else
                 Toast.makeText(context,"File downloaded", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void openConfirmUsingMobileNetworkDialog() {
-        AlertDialog.Builder confirmMobileNetworkDialog = new AlertDialog.Builder(
-               getActivity());
-        confirmMobileNetworkDialog.setTitle(R.string.mobile_network_using_dialog_title);
-
-        confirmMobileNetworkDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                isMobileNetworkApproved = true;
-            }
-        });
-
-        confirmMobileNetworkDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                isMobileNetworkApproved = false;
-            }
-        });
-
-        confirmMobileNetworkDialog.show();
     }
 
 }
