@@ -32,6 +32,7 @@
     <string name="sound_pack_is_not_available">Sounds pack for %s is not downloaded!</string>
     <string name="mobile_network_using_dialog_title">Confirm using mobile network.</string>
     <string name="internet_is_not_available">Internet isn\'t available</string>
+    <string name="change_settings_notice_label">For the changes to take effect, you must restart the application.</string>
     <string-array name="game_type_list">
         <item>Auto play sound</item>
         <item>Add time for reading</item>

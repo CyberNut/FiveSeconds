@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
+        <variable
+            name="noticeVisibility"
+            type="Boolean" />
 
     </data>
 
@@ -93,6 +96,13 @@
                 android:inputType="numberDecimal" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/notice_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="invisible"
+            android:text="@string/change_settings_notice_label" />
 
     </LinearLayout>
 </layout>

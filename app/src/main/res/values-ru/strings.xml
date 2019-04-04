@@ -47,4 +47,5 @@
     <string name="sound_pack_is_not_available">Звуковой файл для набора %s не загружен.</string>
     <string name="mobile_network_using_dialog_title">Использование мобильного интернета.</string>
     <string name="internet_is_not_available">Интернет не доступен!</string>
+    <string name="change_settings_notice_label">Чтобы изменения вступили в силу, необходимо перезапустить приложение.</string>
 </resources>
