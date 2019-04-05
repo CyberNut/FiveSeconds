@@ -96,13 +96,20 @@
                 android:inputType="numberDecimal" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/delete_sounds_files_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/delete_sounds_files" />
+
         <TextView
             android:id="@+id/notice_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:visibility="invisible"
-            android:text="@string/change_settings_notice_label" />
+            android:text="@string/change_settings_notice_label"
+            android:textColor="@android:color/holo_red_light"
+            android:visibility="invisible" />
 
     </LinearLayout>
 </layout>

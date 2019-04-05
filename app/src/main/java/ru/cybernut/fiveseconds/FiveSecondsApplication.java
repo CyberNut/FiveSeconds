@@ -15,6 +15,9 @@ public class FiveSecondsApplication extends Application {
     public static final String PREF_DEFAULT_GAME_TYPE = "default_game_type";
     public static final String PREF_ADD_TIME_VALUE = "additional_time_value";
     public static final String PREF_DEFAULT_NUMBER_OF_QUESTIONS = "default_number_of_questions";
+    public static final int DEFAULT_ADDITIONAL_TIME_VALUE = 2;
+    public static final int DEFAULT_NUMBER_OF_QUESTIONS = 5;
+
 
     private static final String SOUNDS_FOLDER = "/Sounds/";
     private static final String[] supportLanguages = new String[] {"en", "ru", "es"};
@@ -30,6 +33,7 @@ public class FiveSecondsApplication extends Application {
         appContext = getApplicationContext();
         externalFilesDirPath = getExternalFilesDir(null).toString() ;
         loadLocaleSetting();
+
     }
 
     private static void updateLocaleSettings() {
@@ -52,7 +56,7 @@ public class FiveSecondsApplication extends Application {
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.locale = locale;
-        appContext.getApplicationContext().getResources().updateConfiguration(config, null);
+        getBaseContext().getResources().updateConfiguration(config, null);
         updateLanguage();
     }
 
@@ -77,9 +81,7 @@ public class FiveSecondsApplication extends Application {
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.locale = locale;
-        appContext.get
         getBaseContext().getResources().updateConfiguration(config, null);
-
     }
 
     public static void updateLanguage() {

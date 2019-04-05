@@ -3,10 +3,12 @@ package ru.cybernut.fiveseconds;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -34,6 +36,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -68,6 +71,7 @@ public class NewGameSettingsFragment extends Fragment {
     private ProgressDialog mProgressDialog;
     private List<QuestionSetModel> questionSetModelList;
     private boolean isMobileNetworkApproved = false;
+    private TextView addTimeValueTextView;
 
     public static NewGameSettingsFragment newInstance() {
         return new NewGameSettingsFragment();
@@ -92,6 +96,7 @@ public class NewGameSettingsFragment extends Fragment {
         numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
 
         gameTypeSpinner = v.findViewById(R.id.game_type_spinner);
+
 
         startNewGameButton = v.findViewById(R.id.startNewGameButton);
         startNewGameButton.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +161,31 @@ public class NewGameSettingsFragment extends Fragment {
             }
         });
 
+        addTimeValueTextView = v.findViewById(R.id.additional_time_value_textview);
+
+        initializeSettings();
+
         return v;
+    }
+
+    private void initializeSettings() {
+        Context context = getActivity();
+        if (context != null) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            //Default game type
+            String gameType = sharedPreferences.getString(FiveSecondsApplication.PREF_DEFAULT_GAME_TYPE, null);
+            if (gameType != null) {
+                String[] gameTypes = getResources().getStringArray(R.array.game_type_list);
+                int searchResult = Arrays.binarySearch(gameTypes, gameType);
+                gameTypeSpinner.setSelection(searchResult);
+            }
+            //additional time
+            int addTime = sharedPreferences.getInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, FiveSecondsApplication.DEFAULT_ADDITIONAL_TIME_VALUE);
+            addTimeValueTextView.setText(String.valueOf(addTime) + " " + getResources().getString(R.string.seconds));
+            //default number of questions
+            int numberOfQuestions = sharedPreferences.getInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_QUESTIONS, FiveSecondsApplication.DEFAULT_NUMBER_OF_QUESTIONS);
+            numberOfQuestionsSeekBar.setProgress(numberOfQuestions);
+        }
     }
 
     private boolean checkAvailabilitySounds() {
@@ -315,11 +344,8 @@ public class NewGameSettingsFragment extends Fragment {
     private class DownloadTask extends AsyncTask<String, Integer, String> {
 
         private Context context;
-        private static final String PATH  = "/Sounds/";
-        private String currentLocale;
         public DownloadTask(Context context) {
             this.context = context;
-            this.currentLocale = FiveSecondsApplication.getLanguage();
         }
 
         @Override

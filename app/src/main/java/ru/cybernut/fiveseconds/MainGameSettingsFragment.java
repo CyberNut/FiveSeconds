@@ -1,34 +1,45 @@
 package ru.cybernut.fiveseconds;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import ru.cybernut.fiveseconds.databinding.MainSettingsFragmentBinding;
+import ru.cybernut.fiveseconds.model.QuestionSet;
+import ru.cybernut.fiveseconds.model.QuestionSetList;
 
 public class MainGameSettingsFragment extends Fragment {
 
-    protected static final String TAG = "MainGameSettingsFragment";
-    private final int DEFAULT_ADDITIONAL_TIME_VALUE = 2;
-    private final int DEFAULT_NUMBER_OF_QUESTIONS = 5;
+    protected static final String TAG = "MainGameSettFragment";
 
     private MainSettingsFragmentBinding binding;
     private Locale locale;
@@ -39,6 +50,10 @@ public class MainGameSettingsFragment extends Fragment {
     private Boolean isNeedToShowNotice;
     private int languagePosition;
     private EditText numberOfQuestionEdittext;
+    private int languagePositionFromPref;
+    private Button deleteSoundsFilesButton;
+    private ProgressDialog progressDialog;
+    private DeleteSoundFilesTask deleteSoundFilesTask;
 
     public static MainGameSettingsFragment newInstance() {
         return new MainGameSettingsFragment();
@@ -51,6 +66,8 @@ public class MainGameSettingsFragment extends Fragment {
         binding.setNoticeVisibility(isNeedToShowNotice);
         prepareUI(v);
         loadSettings();
+        //save language from preferences
+        languagePositionFromPref = languageSpinner.getSelectedItemPosition();
         return v;
     }
 
@@ -61,6 +78,11 @@ public class MainGameSettingsFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.i("MainGameSettings", "onItemClick: position = " + position + "  id = " + id);
                 languagePosition = position;
+                if (languagePositionFromPref != position) {
+                    binding.noticeLabel.setVisibility(View.VISIBLE);
+                } else {
+                    binding.noticeLabel.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
@@ -71,6 +93,26 @@ public class MainGameSettingsFragment extends Fragment {
         gameTypeSpinner = binding.defaultGameTypeSpinner;
         addTimeEditText = binding.addTimeValueEdittext;
         numberOfQuestionEdittext = binding.numberOfQuestionEdittext;
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getResources().getString(R.string.deleting_sounds_dialog_title));
+        progressDialog.setIndeterminate(true);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setCancelable(true);
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+            @Override
+            public void onCancel(DialogInterface dialog) {
+            deleteSoundFilesTask.cancel(true); //cancel the task
+            }
+        });
+
+        deleteSoundsFilesButton = binding.deleteSoundsFilesButton;
+        deleteSoundsFilesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDeleteSoundsFilesDialog();
+            }
+        });
     }
 
     public Boolean getNeedToShowNotice() {
@@ -85,6 +127,9 @@ public class MainGameSettingsFragment extends Fragment {
     public void onStop() {
         super.onStop();
         saveSettings();
+        if (languageSpinner.getSelectedItemPosition() != languagePositionFromPref) {
+            openQuitDialog();
+        }
     }
 
     private void loadSettings() {
@@ -106,10 +151,10 @@ public class MainGameSettingsFragment extends Fragment {
                 gameTypeSpinner.setSelection(searchResult);
             }
             //additional time
-            int addTime = sharedPreferences.getInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, DEFAULT_ADDITIONAL_TIME_VALUE);
+            int addTime = sharedPreferences.getInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, FiveSecondsApplication.DEFAULT_ADDITIONAL_TIME_VALUE);
             addTimeEditText.setText(String.valueOf(addTime));
             //default number of questions
-            int numberOfQuestions = sharedPreferences.getInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_QUESTIONS, DEFAULT_NUMBER_OF_QUESTIONS);
+            int numberOfQuestions = sharedPreferences.getInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_QUESTIONS, FiveSecondsApplication.DEFAULT_NUMBER_OF_QUESTIONS);
             numberOfQuestionEdittext.setText(String.valueOf(numberOfQuestions));
         }
     }
@@ -139,6 +184,111 @@ public class MainGameSettingsFragment extends Fragment {
             sharedPreferences.edit().putInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, Integer.valueOf(addTimeEditText.getText().toString()));
             //default number of questions
             sharedPreferences.edit().putInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_QUESTIONS, Integer.valueOf(numberOfQuestionEdittext.getText().toString()));
+        }
+    }
+
+    private void openQuitDialog() {
+        AlertDialog.Builder quitDialog = new AlertDialog.Builder(
+                getActivity());
+        quitDialog.setTitle(R.string.change_language_dialog_title);
+
+        quitDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                System.exit(0);
+            }
+        });
+
+        quitDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        quitDialog.show();
+    }
+
+    private void openDeleteSoundsFilesDialog() {
+        AlertDialog.Builder deleteSoundFilesDialog = new AlertDialog.Builder(
+                getActivity());
+        deleteSoundFilesDialog.setTitle(getString(R.string.delete_sounds_files) + "?");
+
+        deleteSoundFilesDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            // TODO Auto-generated method stub
+            new DeleteSoundFilesTask(getActivity()).execute();
+            }
+        });
+
+        deleteSoundFilesDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        deleteSoundFilesDialog.show();
+    }
+
+    private class DeleteSoundFilesTask extends AsyncTask<Void, Void, Void> {
+
+        private WeakReference<Context> contextRef;
+
+        public DeleteSoundFilesTask(Context context) {
+            this.contextRef = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            String filePath = FiveSecondsApplication.getSoundFolderPath();
+            File file = new File(filePath);
+            if (!isCancelled()) {
+                if (file.exists()) {
+                    File[] files = file.listFiles();
+                    for (File currentFile : files) {
+                        deleteFile(currentFile);
+                    }
+                }
+
+                QuestionSetList questionSetList = QuestionSetList.getInstance();
+                List<QuestionSet> list = questionSetList.getQuestionSets();
+                for (QuestionSet questionSet : list) {
+                    questionSet.setSoundsLoaded(false);
+                    questionSetList.updateQuestionSet(questionSet);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (contextRef.get() != null) {
+                progressDialog.show();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (contextRef.get() != null) {
+                progressDialog.dismiss();
+            }
+        }
+
+        private void deleteFile(File file) {
+            if (!file.exists()) {
+                return;
+            }
+            if (file.isDirectory()) {
+                for (File temp : file.listFiles()) {
+                    deleteFile(temp);
+                }
+                file.delete();
+            } else {
+                file.delete();
+            }
         }
     }
 }

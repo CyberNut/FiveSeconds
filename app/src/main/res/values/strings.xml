@@ -33,6 +33,10 @@
     <string name="mobile_network_using_dialog_title">Confirm using mobile network.</string>
     <string name="internet_is_not_available">Internet isn\'t available</string>
     <string name="change_settings_notice_label">For the changes to take effect, you must restart the application.</string>
+    <string name="change_language_dialog_title">Language was changed, you must restart the application. Do close the app?</string>
+    <string name="seconds">sec</string>
+    <string name="delete_sounds_files">Delete all sounds files</string>
+    <string name="deleting_sounds_dialog_title">Deleting sound files</string>
     <string-array name="game_type_list">
         <item>Auto play sound</item>
         <item>Add time for reading</item>
