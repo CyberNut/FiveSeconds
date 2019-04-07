@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,7 +44,6 @@ import ru.cybernut.fiveseconds.model.GameEngine;
 import ru.cybernut.fiveseconds.model.PlayersList;
 import ru.cybernut.fiveseconds.model.QuestionSet;
 import ru.cybernut.fiveseconds.model.QuestionSetList;
-import ru.cybernut.fiveseconds.view.AlertDialogFragment;
 import ru.cybernut.fiveseconds.view.QuestionSetModel;
 
 
@@ -70,7 +68,6 @@ public class NewGameSettingsFragment extends Fragment {
     private Spinner gameTypeSpinner;
     private ProgressDialog mProgressDialog;
     private List<QuestionSetModel> questionSetModelList;
-    private boolean isMobileNetworkApproved = false;
     private TextView addTimeValueTextView;
 
     public static NewGameSettingsFragment newInstance() {

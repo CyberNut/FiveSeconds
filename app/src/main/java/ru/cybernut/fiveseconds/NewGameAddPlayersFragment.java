@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -24,7 +23,6 @@ import ru.cybernut.fiveseconds.utils.SharedPreferencesHelper;
 
 public class NewGameAddPlayersFragment extends Fragment {
 
-    private static final String PREFERENCE_USER_NAME = "PREFERENCE_USER_NAME";
     private static final int NUMBER_OF_PLAYERS_LIST_COLUMNS = 2;
 
     private ImageButton addPlayerButton;
@@ -105,6 +103,7 @@ public class NewGameAddPlayersFragment extends Fragment {
 
         playersAdapter = new PlayersAdapter(PlayersList.getInstance().getList());
         playerRecyclerView.setAdapter(playersAdapter);
+        addDefaultPlayersIfNecessery();
 
         addPlayerButton = view.findViewById(R.id.add_player_button);
         addPlayerButton.setOnClickListener(new View.OnClickListener() {
@@ -116,10 +115,20 @@ public class NewGameAddPlayersFragment extends Fragment {
 
     }
 
+    private void addDefaultPlayersIfNecessery() {
+        PlayersList playersList = PlayersList.getInstance();
+        if (playersList.getNumberOfPlayers() == 0) {
+            Player tempPlayer = new Player("Player1");
+            playersList.addPlayer(tempPlayer);
+            tempPlayer = new Player("Player2");
+            playersList.addPlayer(tempPlayer);
+        }
+    }
+
     private class PlayersHolder extends RecyclerView.ViewHolder {
 
         private Player player;
-        private TextView playerNameTextView;
+        private EditText playerNameEditText;
         private ImageView playerPhotoImageView;
         private ImageButton deletePlayerButton;
         private int index;
@@ -127,7 +136,18 @@ public class NewGameAddPlayersFragment extends Fragment {
         public PlayersHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.players_list_item, parent, false));
 
-            playerNameTextView = itemView.findViewById(R.id.item_name);
+            playerNameEditText = itemView.findViewById(R.id.item_name);
+            playerNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        String newPlayerName = playerNameEditText.getText().toString();
+                        if (!"".equals(newPlayerName)) {
+                            player.setName(newPlayerName);
+                        }
+                    }
+                }
+            });
             playerPhotoImageView = itemView.findViewById(R.id.item_photo);
             deletePlayerButton = itemView.findViewById(R.id.item_delete_player_button);
             deletePlayerButton.setOnClickListener(new View.OnClickListener() {
@@ -144,7 +164,7 @@ public class NewGameAddPlayersFragment extends Fragment {
         public void bind(Player player, int index) {
             this.player = player;
             this.index = index;
-            playerNameTextView.setText(this.player.getName());
+            playerNameEditText.setText(this.player.getName());
             //TODO: need store photo
 //            if(this.player.getPhoto() == null) {
 //                playerPhotoImageView.setImageDrawable(this.player.getPhoto());

@@ -16,12 +16,15 @@
         android:theme="@style/AppTheme"
         android:name=".FiveSecondsApplication">
         <activity android:name=".GameOverActivity"
+            android:configChanges="locale"
             android:screenOrientation="landscape" />
         <activity
             android:name=".GameActivity"
+            android:configChanges="locale"
             android:screenOrientation="landscape" />
         <activity
             android:name=".StartActivity"
+            android:configChanges="locale"
             android:screenOrientation="landscape"
             android:launchMode="singleTask">
             <intent-filter>
@@ -31,7 +34,8 @@
         </activity>
         <activity
             android:name=".NewGameActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:configChanges="locale" />
     </application>
 
 </manifest>

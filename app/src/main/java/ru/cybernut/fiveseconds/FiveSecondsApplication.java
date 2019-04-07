@@ -33,7 +33,6 @@ public class FiveSecondsApplication extends Application {
         appContext = getApplicationContext();
         externalFilesDirPath = getExternalFilesDir(null).toString() ;
         loadLocaleSetting();
-
     }
 
     private static void updateLocaleSettings() {
@@ -56,22 +55,17 @@ public class FiveSecondsApplication extends Application {
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config, null);
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
         updateLanguage();
     }
 
     private static String getLocale() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext);
-        String currentLanguage = sharedPreferences.getString(PREF_LANGUAGE, null);
-        if(currentLanguage == null) {
-            currentLanguage = Locale.getDefault().getLanguage();
+        String lang = sharedPreferences.getString(PREF_LANGUAGE, "default");
+        if (lang.equals("default")) {
+            lang = appContext.getResources().getConfiguration().locale.getLanguage();
         }
-
-        if( Arrays.binarySearch(FiveSecondsApplication.supportLanguages, currentLanguage) > 0) {
-            return currentLanguage;
-        } else {
-            return defaultLanguage;
-        }
+        return lang;
     }
 
     @Override
@@ -81,7 +75,7 @@ public class FiveSecondsApplication extends Application {
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config, null);
+        getBaseContext().getResources().updateConfiguration(config, appContext.getResources().getDisplayMetrics());
     }
 
     public static void updateLanguage() {
