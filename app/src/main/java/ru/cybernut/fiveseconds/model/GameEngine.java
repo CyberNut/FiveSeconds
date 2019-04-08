@@ -1,10 +1,12 @@
 package ru.cybernut.fiveseconds.model;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.IOException;
@@ -23,7 +25,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     private static final String TAG = "GameEngine";
     private static final int MAX_SOUND = 5;
     private static final long STANDART_ROUND_DURATION = 5000; //ms
-    private static final long ADDITION_TIME_DURATION = 2000; //ms
     private static final long TICK_DURATION = 100; //ms
 
     private int gameType;
@@ -40,6 +41,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     private boolean isSoundPoolReady = false;
     private boolean isMediaPlayerReady = false;
     private long roundDuration;
+    private long additionalTime;
     private MediaPlayer mediaPlayer;
     private GameTimer gameTimer;
 
@@ -62,6 +64,11 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         new GameInitTask().execute();
         if (gameType != GAME_TYPE_AUTO_PLAY_SOUND) {
             gameTimer = initializeGameTimer();
+        }
+        if (gameType == GAME_TYPE_ADDITION_TIME_FOR_READING) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(FiveSecondsApplication.getAppContext());
+            additionalTime = sharedPreferences.getInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, FiveSecondsApplication.DEFAULT_ADDITIONAL_TIME_VALUE) * 1000;
+            roundDuration = roundDuration + additionalTime;
         }
     }
 
@@ -98,7 +105,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
             mediaPlayer.setDataSource(path);
             mediaPlayer.prepareAsync();
         } catch (IOException e) {
-            currentSoundDuration = ((int) ADDITION_TIME_DURATION);
+            currentSoundDuration = FiveSecondsApplication.DEFAULT_ADDITIONAL_TIME_VALUE;
             id = null;
             isSoundPoolReady = true;
             isMediaPlayerReady = true;
@@ -183,9 +190,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
             }
             if (gameType == GAME_TYPE_AUTO_PLAY_SOUND) {
                 currentSoundId = prepareNextSound(currentQuestion.getId().toString());
-            } else if(gameType == GAME_TYPE_ADDITION_TIME_FOR_READING) {
-                roundDuration = roundDuration + ADDITION_TIME_DURATION;
-                viewModel.initDone();
             } else {
                 viewModel.initDone();
             }

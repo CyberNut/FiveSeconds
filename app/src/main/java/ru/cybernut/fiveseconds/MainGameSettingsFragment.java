@@ -163,6 +163,14 @@ public class MainGameSettingsFragment extends Fragment {
         Context context = getActivity();
         if (context != null) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            sharedPreferences.edit()
+                //Default game type
+                .putString(FiveSecondsApplication.PREF_DEFAULT_GAME_TYPE, gameTypeSpinner.getSelectedItem().toString())
+                //additional time
+                .putInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, Integer.valueOf(addTimeEditText.getText().toString()))
+                //default number of questions
+                .putInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_QUESTIONS, Integer.valueOf(numberOfQuestionEdittext.getText().toString()))
+                .apply();
             //Language
             String[] languages = getResources().getStringArray(R.array.entryvalues_lang);
             if(languages.length >= languagePosition) {
@@ -178,12 +186,6 @@ public class MainGameSettingsFragment extends Fragment {
                 context.getApplicationContext().getResources().updateConfiguration(config, null);
                 FiveSecondsApplication.updateLanguage();
             }
-            //Default game type
-            sharedPreferences.edit().putString(FiveSecondsApplication.PREF_DEFAULT_GAME_TYPE, gameTypeSpinner.getSelectedItem().toString()).apply();
-            //additional time
-            sharedPreferences.edit().putInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, Integer.valueOf(addTimeEditText.getText().toString()));
-            //default number of questions
-            sharedPreferences.edit().putInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_QUESTIONS, Integer.valueOf(numberOfQuestionEdittext.getText().toString()));
         }
     }
 
