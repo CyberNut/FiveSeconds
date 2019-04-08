@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+import ru.cybernut.fiveseconds.databinding.GameActivity2playersBinding;
 import ru.cybernut.fiveseconds.databinding.GameActivity4playersBinding;
 import ru.cybernut.fiveseconds.databinding.GameActivity6playersBinding;
 import ru.cybernut.fiveseconds.view.GameViewModel;
@@ -42,7 +43,11 @@ public class GameActivity extends AppCompatActivity implements GameViewModel.Gam
         viewModel = new GameViewModel(gameType, numberOfQuestions, setIds);
         viewModel.initialize(this);
         int numberOfPlayers = viewModel.getNumberOfPlayers();
-        if( numberOfPlayers <= 4) {
+        if( numberOfPlayers == 2) {
+            GameActivity2playersBinding binding = DataBindingUtil.setContentView(this, R.layout.game_activity_2players);
+            binding.setViewModel(viewModel);
+        }
+        else if( numberOfPlayers <= 4) {
             GameActivity4playersBinding binding = DataBindingUtil.setContentView(this, R.layout.game_activity_4players);
             binding.setViewModel(viewModel);
         } else {

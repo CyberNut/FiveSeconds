@@ -173,7 +173,16 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
 
     public void calculateRotation() {
         int currentIndex = players.indexOf(currentPlayer);
-        if(numberOfPlayers <= 4) {
+        if(numberOfPlayers == 2) {
+            switch (currentIndex) {
+                case 0:
+                    currentRotationValue = 0;
+                    break;
+                case 1:
+                    currentRotationValue = -180;
+                    break;
+            }
+        } else if(numberOfPlayers <= 4) {
             switch (currentIndex) {
                 case 0:
                     currentRotationValue = 0;
