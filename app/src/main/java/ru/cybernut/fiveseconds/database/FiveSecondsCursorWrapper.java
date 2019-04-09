@@ -27,7 +27,7 @@ public class FiveSecondsCursorWrapper extends CursorWrapper {
     }
 
     public QuestionSet getQuestionSet() {
-        String name = getString(getColumnIndex(QuestionSetsTable.Cols.NAME));
+        String name = getString(getColumnIndex(ru.cybernut.fiveseconds.database.FiveSecondsDBSchema.QuestionSetsTable.Cols.NAME));
         String type = getString(getColumnIndex(QuestionSetsTable.Cols.TYPE));
         String link = getString(getColumnIndex(QuestionSetsTable.Cols.SOUNDS_LINK));
         int soundsLoaded = getInt(getColumnIndex(QuestionSetsTable.Cols.SOUNDS_LOADED));

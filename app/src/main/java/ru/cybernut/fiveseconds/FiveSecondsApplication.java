@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
-import java.util.Arrays;
 import java.util.Locale;
 
 public class FiveSecondsApplication extends Application {
+
+    public static String TAG = "FiveSecondsApp";
 
     public static final String PREF_LANGUAGE = "lang";
     public static final String PREF_DEFAULT_GAME_TYPE = "default_game_type";
@@ -29,6 +31,7 @@ public class FiveSecondsApplication extends Application {
 
     @Override
     public void onCreate() {
+        Log.i(TAG, "onCreate: " + language);
         super.onCreate();
         appContext = getApplicationContext();
         externalFilesDirPath = getExternalFilesDir(null).toString() ;
@@ -36,12 +39,13 @@ public class FiveSecondsApplication extends Application {
     }
 
     private static void updateLocaleSettings() {
-
+        Log.i(TAG, "updateLocaleSettings: " + language);
         language = getLocale();
         soundFolderPath = externalFilesDirPath + SOUNDS_FOLDER + language + "/";
     }
 
     public static String getLanguage() {
+        Log.i(TAG, "getLanguage: " + language);
         return language;
     }
 
@@ -50,6 +54,7 @@ public class FiveSecondsApplication extends Application {
     }
 
     private void loadLocaleSetting() {
+        Log.i(TAG, "loadLocaleSetting: " + language);
         language = getLocale();
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
@@ -60,6 +65,7 @@ public class FiveSecondsApplication extends Application {
     }
 
     private static String getLocale() {
+        Log.i(TAG, "getLocale: " + language);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext);
         String lang = sharedPreferences.getString(PREF_LANGUAGE, "default");
         if (lang.equals("default")) {
@@ -70,6 +76,7 @@ public class FiveSecondsApplication extends Application {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+        Log.i(TAG, "onConfigurationChanged: " + language);
         super.onConfigurationChanged(newConfig);
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
@@ -79,10 +86,12 @@ public class FiveSecondsApplication extends Application {
     }
 
     public static void updateLanguage() {
+        Log.i(TAG, "updateLanguage: " + language);
         updateLocaleSettings();
     }
 
     public static Context getAppContext() {
+        Log.i(TAG, "getAppContext: " + language);
         return appContext;
     }
 }

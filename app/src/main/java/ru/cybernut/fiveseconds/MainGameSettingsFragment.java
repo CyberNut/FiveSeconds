@@ -183,7 +183,9 @@ public class MainGameSettingsFragment extends Fragment {
                 Locale.setDefault(locale);
                 Configuration config = new Configuration();
                 config.locale = locale;
+                Log.i(TAG, "saveSettings: before updateConfConfig");
                 context.getApplicationContext().getResources().updateConfiguration(config, null);
+                Log.i(TAG, "saveSettings: before updateLanguage");
                 FiveSecondsApplication.updateLanguage();
             }
         }
