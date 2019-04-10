@@ -9,6 +9,8 @@ import android.util.Log;
 
 import java.util.Locale;
 
+import ru.cybernut.fiveseconds.database.FiveSecondsDBSchema;
+
 public class FiveSecondsApplication extends Application {
 
     public static String TAG = "FiveSecondsApp";
@@ -41,6 +43,9 @@ public class FiveSecondsApplication extends Application {
     private static void updateLocaleSettings() {
         Log.i(TAG, "updateLocaleSettings: " + language);
         language = getLocale();
+        //TODO: this fix for initialize static fields
+        String temp = FiveSecondsDBSchema.QuestionSetsTable.Cols.NAME;
+        temp = FiveSecondsDBSchema.QuestionsTable.Cols.QUESTION_TEXT;
         soundFolderPath = externalFilesDirPath + SOUNDS_FOLDER + language + "/";
     }
 

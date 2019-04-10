@@ -14,16 +14,18 @@ public class PlayerModel extends BaseObservable implements Serializable {
     private Player player;
     private boolean isCurrentPlayer;
     private double progressbarValue;
+    private int score;
 
     public PlayerModel(Player player) {
         this.player = player;
         this.isCurrentPlayer = false;
         this.progressbarValue = 0;
+        this.score = 0;
     }
 
     @Bindable
     public int getScore() {
-        return player.getScore();
+        return score;
     }
 
     @Bindable
@@ -32,8 +34,12 @@ public class PlayerModel extends BaseObservable implements Serializable {
     }
 
     public void setScore() {
-        player.increaseScore();
+        increaseScore();
         notifyPropertyChanged(BR.score);
+    }
+
+    private void increaseScore() {
+        score++;
     }
 
     public Player getPlayer() {

@@ -59,20 +59,20 @@ public class Player extends BaseObservable implements Serializable {
         isGameMaster = gameMaster;
     }
 
-    @Bindable
-    public int getScore() {
-        return score;
-    }
-
-    public void increaseScore() {
-        score++;
-        notifyPropertyChanged(BR.score);
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-        notifyPropertyChanged(BR.score);
-    }
+//    @Bindable
+//    public int getScore() {
+//        return score;
+//    }
+//
+//    public void increaseScore() {
+//        score++;
+//        notifyPropertyChanged(BR.score);
+//    }
+//
+//    public void setScore(int score) {
+//        this.score = score;
+//        notifyPropertyChanged(BR.score);
+//    }
 
     @Override
     public String toString() {

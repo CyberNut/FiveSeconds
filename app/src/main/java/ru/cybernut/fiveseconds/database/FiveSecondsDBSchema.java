@@ -1,18 +1,8 @@
 package ru.cybernut.fiveseconds.database;
 
-import android.util.Log;
-
 import ru.cybernut.fiveseconds.FiveSecondsApplication;
 
-import static ru.cybernut.fiveseconds.FiveSecondsApplication.TAG;
-
 public class FiveSecondsDBSchema {
-
-    private static String language;
-    static {
-        Log.i(TAG, "static initializer: schema");
-         language = FiveSecondsApplication.getLanguage();
-    }
 
     public static final class QuestionsTable {
 
@@ -20,7 +10,7 @@ public class FiveSecondsDBSchema {
 
         public static final class Cols {
             public static final String UUID = "uuid";
-            public static final String QUESTION_TEXT = language +"_text";
+            public static final String QUESTION_TEXT = FiveSecondsApplication.getLanguage() +"_text";
             public static final String SET_ID = "question_set_id";
         }
     }
@@ -30,10 +20,10 @@ public class FiveSecondsDBSchema {
         public static final String NAME = "question_sets";
 
         public static final class Cols {
-            public static final String NAME = language +"_name";
+            public static final String NAME = FiveSecondsApplication.getLanguage() +"_name";
             public static final String TYPE = "type";
-            public static final String SOUNDS_LINK = language +"_sounds_link";
-            public static final String SOUNDS_LOADED = language +"_sounds_loaded";
+            public static final String SOUNDS_LINK = FiveSecondsApplication.getLanguage() +"_sounds_link";
+            public static final String SOUNDS_LOADED = FiveSecondsApplication.getLanguage() +"_sounds_loaded";
         }
     }
 
