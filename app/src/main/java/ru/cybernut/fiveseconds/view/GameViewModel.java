@@ -135,7 +135,9 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     }
 
     public void handleAnswer(boolean isCorrectAnswer) {
-        if (isGameOver) { return;}
+        if (isGameOver) {
+            gameActivity.gameOver(players);
+        }
         if (isNeedShowAnswer) {
             if (isCorrectAnswer) {
                 currentPlayer.setScore();
@@ -230,7 +232,6 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     @Override
     public void gameOver() {
         isGameOver = true;
-        gameActivity.gameOver(players);
     }
 
     @Override
