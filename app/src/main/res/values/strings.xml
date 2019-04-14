@@ -37,6 +37,9 @@
     <string name="seconds">sec</string>
     <string name="delete_sounds_files">Delete all sounds files</string>
     <string name="deleting_sounds_dialog_title">Deleting sound files</string>
+    <string name="back">Back</string>
+    <string name="five_seconds_game_rule">Five seconds game rule</string>
+    <string name="rules_text">Game goal\nGet more score than other players\n\nGame proccess\n1.\n2.\n3.\n</string>
     <string-array name="game_type_list">
         <item>Auto play sound</item>
         <item>Add time for reading</item>

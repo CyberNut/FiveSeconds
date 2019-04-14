@@ -52,4 +52,7 @@
     <string name="seconds">сек.</string>
     <string name="delete_sounds_files">Удалить все звуковые файлы</string>
     <string name="deleting_sounds_dialog_title">Удаление звуковых файлов</string>
+    <string name="five_seconds_game_rule">Five seconds game rule</string>
+    <string name="back">Назад</string>
+    <string name="rules_text">Цель игры\nПолучить к концу игры больше очков чем другие игроки правильно отвечая на вопросы.\n\nПроцесс игры\n</string>
 </resources>

@@ -51,6 +51,8 @@ public class StartFragment extends Fragment {
         helpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = RulesActivity.newIntent(getActivity());
+                startActivity(intent);
             }
         });
 
