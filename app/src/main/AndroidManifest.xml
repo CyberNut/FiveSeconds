@@ -15,7 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RulesActivity"></activity>
+        <activity android:name=".RulesActivity"
+            android:configChanges="locale"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".GameOverActivity"
             android:configChanges="locale"
