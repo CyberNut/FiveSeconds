@@ -24,6 +24,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:textSize="14sp"
+        android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="@+id/item_photo"
         app:layout_constraintEnd_toStartOf="@+id/item_delete_player_button"
         app:layout_constraintStart_toEndOf="@+id/item_photo"
