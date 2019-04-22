@@ -70,21 +70,21 @@
 
         <ru.cybernut.fiveseconds.view.PlayerCard
             android:id="@+id/player_card_0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            app:player="@{viewModel.getPlayer(0)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.25"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:player="@{viewModel.getPlayer(0)}" />
 
         <ru.cybernut.fiveseconds.view.PlayerCard
             android:id="@+id/player_card_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
@@ -96,35 +96,35 @@
 
         <ru.cybernut.fiveseconds.view.PlayerCard
             android:id="@+id/player_card_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:rotation="-90"
-            app:player="@{viewModel.getPlayer(2)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:player="@{viewModel.getPlayer(2)}" />
 
         <ru.cybernut.fiveseconds.view.PlayerCard
             android:id="@+id/player_card_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:rotation="-180"
-            app:player="@{viewModel.getPlayer(3)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.75"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:player="@{viewModel.getPlayer(3)}" />
 
         <ru.cybernut.fiveseconds.view.PlayerCard
             android:id="@+id/player_card_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
@@ -137,16 +137,16 @@
 
         <ru.cybernut.fiveseconds.view.PlayerCard
             android:id="@+id/player_card_5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:rotation="-270"
-            app:player="@{viewModel.getPlayer(5)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:player="@{viewModel.getPlayer(5)}" />
 
         <ProgressBar
             android:id="@+id/init_progressbar"
@@ -165,27 +165,25 @@
 
         <LinearLayout
             android:id="@+id/question_container"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="64dp"
-            android:layout_marginTop="64dp"
-            android:layout_marginEnd="64dp"
-            android:layout_marginBottom="64dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
             android:orientation="vertical"
             android:rotation="@{viewModel.currentRotationValue}"
             android:visibility="@{viewModel.started &amp;&amp; !viewModel.needShowAnswer ? View.VISIBLE : View.INVISIBLE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintBottom_toTopOf="@+id/player_card_0"
+            app:layout_constraintEnd_toStartOf="@+id/player_card_2"
+            app:layout_constraintStart_toEndOf="@+id/player_card_5"
+            app:layout_constraintTop_toBottomOf="@+id/player_card_3">
 
             <TextView
                 android:id="@+id/question_text_view"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/rounded_frame"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:padding="8dp"
                 android:text="@{viewModel.currentQuestionText}"
                 android:textSize="16sp" />

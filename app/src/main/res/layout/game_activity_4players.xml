@@ -76,6 +76,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            tools:text="card0"
             app:player="@{viewModel.getPlayer(0)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -143,17 +144,17 @@
             android:id="@+id/question_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="64dp"
-            android:layout_marginTop="64dp"
-            android:layout_marginEnd="64dp"
-            android:layout_marginBottom="64dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:orientation="vertical"
             android:rotation="@{viewModel.currentRotationValue}"
             android:visibility="@{viewModel.started &amp;&amp; !viewModel.needShowAnswer ? View.VISIBLE : View.INVISIBLE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintBottom_toTopOf="@+id/player_card_0"
+            app:layout_constraintEnd_toStartOf="@+id/player_card_1"
+            app:layout_constraintStart_toEndOf="@+id/player_card_3"
+            app:layout_constraintTop_toBottomOf="@+id/player_card_2">
 
             <TextView
                 android:id="@+id/question_text_view"
