@@ -140,44 +140,55 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+
+        <com.github.rongi.rotate_layout.layout.RotateLayout
             android:id="@+id/question_container"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:orientation="vertical"
-            android:rotation="@{viewModel.currentRotationValue}"
             android:visibility="@{viewModel.started &amp;&amp; !viewModel.needShowAnswer ? View.VISIBLE : View.INVISIBLE}"
-            app:layout_constraintBottom_toTopOf="@+id/player_card_0"
+            app:angle="@{-viewModel.currentRotationValue}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/player_card_1"
             app:layout_constraintStart_toEndOf="@+id/player_card_3"
-            app:layout_constraintTop_toBottomOf="@+id/player_card_2">
+            app:layout_constraintTop_toTopOf="parent" >
 
-            <TextView
-                android:id="@+id/question_text_view"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/rounded_frame"
-                android:inputType="textMultiLine|textNoSuggestions"
-                android:padding="8dp"
-                android:text="@{viewModel.currentQuestionText}"
-                android:textSize="16sp" />
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/manual_start_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="32dp"
-                android:gravity="center"
-                android:onClick="@{() -> viewModel.manualStartTimer()}"
-                android:text="@string/start_game"
-                android:visibility="@{viewModel.manualStartTimer ? View.VISIBLE : View.GONE}" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/question_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/rounded_frame"
+                    android:inputType="textMultiLine|textNoSuggestions"
+                    android:padding="8dp"
+                    android:text="@{viewModel.currentQuestionText}"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/manual_start_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="32dp"
+                    android:gravity="center"
+                    android:onClick="@{() -> viewModel.manualStartTimer()}"
+                    android:text="@string/start_game"
+                    android:visibility="@{viewModel.manualStartTimer ? View.VISIBLE : View.GONE}" />
+            </LinearLayout>
+        </com.github.rongi.rotate_layout.layout.RotateLayout>
 
     </android.support.constraint.ConstraintLayout>
 </layout>

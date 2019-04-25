@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import ru.cybernut.fiveseconds.databinding.GameActivity2playersBinding;
 import ru.cybernut.fiveseconds.databinding.GameActivity4playersBinding;
 import ru.cybernut.fiveseconds.databinding.GameActivity6playersBinding;
-import ru.cybernut.fiveseconds.databinding.TestLayoutBinding;
 import ru.cybernut.fiveseconds.view.GameViewModel;
 import ru.cybernut.fiveseconds.view.PlayerModel;
 
@@ -52,7 +51,6 @@ public class GameActivity extends AppCompatActivity implements GameViewModel.Gam
             GameActivity4playersBinding binding = DataBindingUtil.setContentView(this, R.layout.game_activity_4players);
             binding.setViewModel(viewModel);
         } else {
-            //TestLayoutBinding binding = DataBindingUtil.setContentView(this, R.layout.test_layout);
             GameActivity6playersBinding binding = DataBindingUtil.setContentView(this, R.layout.game_activity_6players);
             binding.setViewModel(viewModel);
         }

@@ -18,7 +18,6 @@ public class PlayerCard extends RelativeLayout {
         super(context);
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //init(null, 0);
         binding = DataBindingUtil.inflate(mInflater, R.layout.new_player_card, this, true);
 
     }
@@ -27,7 +26,6 @@ public class PlayerCard extends RelativeLayout {
         super(context, attrs);
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //init(attrs, 0);
         binding = DataBindingUtil.inflate(mInflater, R.layout.new_player_card, this, true);
     }
 
@@ -35,17 +33,8 @@ public class PlayerCard extends RelativeLayout {
         super(context, attrs, defStyleAttr);
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //init(attrs, defStyleAttr);
         binding = DataBindingUtil.inflate(mInflater, R.layout.new_player_card, this, true);
     }
-
-//    public void init(AttributeSet attrs, int defStyleAttr) {
-//        // Load attributes
-//        final TypedArray a = getContext().obtainStyledAttributes(
-//                attrs, R.styleable.PlayerCard, defStyleAttr, 0);
-//        isCurrentPlayer = a.getBoolean(R.styleable.PlayerCard_currentPlayer, false);
-//        a.recycle();
-//    }
 
     public boolean isCurrentPlayer() {
         return player.isCurrentPlayer();

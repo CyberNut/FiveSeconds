@@ -11,27 +11,26 @@
 
     <RelativeLayout
         android:id="@+id/player_card_container"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:visibility="@{player == null ? View.INVISIBLE : View.VISIBLE}">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="@{player == null ? View.INVISIBLE : View.VISIBLE}" >
 
         <ru.cybernut.fiveseconds.view.RoundedSquareProgressView
             android:id="@+id/rounded_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/player_card"
-            android:layout_alignBottom="@+id/player_card"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/player_card"
+            android:layout_alignEnd="@+id/player_card"
             android:visibility="@{player.currentPlayer ? View.VISIBLE : View.INVISIBLE}"
             app:progress="@{player.progressbarValue}" />
-
         <FrameLayout
             android:id="@+id/player_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
             android:padding="4dp">
 
             <ImageView
@@ -54,8 +53,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
-                android:text="@{player.name}"
-                tools:text="playerName" />
+                tools:text = "playerName"
+                android:text="@{player.name}" />
 
             <ImageView
                 android:id="@+id/is_current_image_view"

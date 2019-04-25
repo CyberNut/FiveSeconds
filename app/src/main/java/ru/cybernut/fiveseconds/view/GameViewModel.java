@@ -221,6 +221,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
                     break;
             }
         }
+
         notifyPropertyChanged(BR.currentRotationValue);
     }
 
