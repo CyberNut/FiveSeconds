@@ -34,11 +34,15 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
 
     public GameViewModel(int gameType, int numberOfQuestions, ArrayList<Integer> setIds) {
         this.setIds = setIds;
-        if (gameType == GameEngine.GAME_TYPE_MANUAL) {
-            isManualStartTimer = true;
-        }
         game = new GameEngine(this, gameType, numberOfQuestions);
+        setManualStartButtonVisible();
         initPlayers();
+    }
+
+    private void setManualStartButtonVisible() {
+        if (game.getGameType() == GameEngine.GAME_TYPE_MANUAL) {
+            setManualStartTimer(true);
+        }
     }
 
     private void initPlayers() {
@@ -87,6 +91,11 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     @Bindable
     public boolean isManualStartTimer() {
         return isManualStartTimer;
+    }
+
+    public void setManualStartTimer(boolean manualStartTimer) {
+        isManualStartTimer = manualStartTimer;
+        notifyPropertyChanged(BR.manualStartTimer);
     }
 
     @Bindable
@@ -151,16 +160,18 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     public void onNextTurn(View v) {
         if(isGameOver) { return;}
         setStarted(true);
-        notifyPropertyChanged(BR.started);
         setCurrentQuestionText(game.getCurrentQuestionText());
-        notifyPropertyChanged(BR.currentQuestionText);
+        setManualStartButtonVisible();
+
         if (!isManualStartTimer) {
             game.nextTurn();
         }
     }
 
     public void manualStartTimer() {
+        setManualStartTimer(false);
         game.nextTurn();
+
     }
 
     @Bindable
