@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,10 +27,12 @@ public class NewGameAddPlayersFragment extends Fragment {
     private static final int NUMBER_OF_PLAYERS_LIST_COLUMNS = 2;
 
     private ImageButton addPlayerButton;
+    private Button nextStepButton;
     private EditText playerName;
     private RecyclerView playerRecyclerView;
     private PlayersAdapter playersAdapter;
     private SharedPreferencesHelper sharedPreferencesHelper;
+    private NewGameAddPlayersFragmentListener mListener;
 
     public static NewGameAddPlayersFragment newInstance() {
         return new NewGameAddPlayersFragment();
@@ -64,6 +67,18 @@ public class NewGameAddPlayersFragment extends Fragment {
         if (playersAdapter != null) {
             playersAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof NewGameAddPlayersFragmentListener) {
+            mListener = (NewGameAddPlayersFragmentListener) context;
+        }
+//        else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement NewGameAddPlayersFragmentListener");
+//        }
     }
 
     @Override
@@ -113,6 +128,16 @@ public class NewGameAddPlayersFragment extends Fragment {
             }
         });
 
+        nextStepButton = view.findViewById(R.id.next_step_button);
+        nextStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mListener != null) {
+                    saveSettings();
+                    mListener.playersAdded();
+                }
+            }
+        });
     }
 
     private void addDefaultPlayersIfNecessery() {
@@ -197,5 +222,9 @@ public class NewGameAddPlayersFragment extends Fragment {
         public int getItemCount() {
             return playerList.size();
         }
+    }
+
+    public interface NewGameAddPlayersFragmentListener {
+        void playersAdded();
     }
 }

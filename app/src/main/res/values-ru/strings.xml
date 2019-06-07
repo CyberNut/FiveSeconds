@@ -55,4 +55,5 @@
     <string name="five_seconds_game_rule">Five seconds game rule</string>
     <string name="back">Назад</string>
     <string name="rules_text">Цель игры\nПолучить к концу игры больше очков чем другие игроки правильно отвечая на вопросы.\n\nПроцесс игры\n</string>
+    <string name="next">Далее</string>
 </resources>
