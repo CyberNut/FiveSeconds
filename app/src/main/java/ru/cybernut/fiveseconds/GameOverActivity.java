@@ -31,7 +31,7 @@ public class GameOverActivity extends SingleFragmentFullScreenActivity {
 
     @Override
     protected Fragment createFragment() {
-        ArrayList<PlayerModel> playerModels = new ArrayList<>();
+        ArrayList<PlayerModel> playerModels = (ArrayList<PlayerModel>) getIntent().getExtras().getSerializable(EXTRA_WINNERS_LIST);
         gameOverFragment = GameOverFragment.newInstance(playerModels);
         return gameOverFragment;
     }
