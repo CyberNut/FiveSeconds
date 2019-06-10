@@ -1,6 +1,7 @@
 package ru.cybernut.fiveseconds;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,9 +20,10 @@ import java.util.List;
 
 import ru.cybernut.fiveseconds.databinding.GameOverActivityBinding;
 import ru.cybernut.fiveseconds.databinding.PlayersScoresListItemBinding;
+import ru.cybernut.fiveseconds.view.OnBackPressedListener;
 import ru.cybernut.fiveseconds.view.PlayerModel;
 
-public class GameOverFragment extends Fragment {
+public class GameOverFragment extends Fragment implements OnBackPressedListener {
 
     public static final String ARGS_PLAYERS_LIST = "ARGS_PLAYERS_LIST";
     private RecyclerView playerRecyclerView;
@@ -59,6 +60,13 @@ public class GameOverFragment extends Fragment {
 
         View v = binding.getRoot();
         return v;
+    }
+
+    @Override
+    public void onBackPressed() {
+        getActivity().finish();
+        Intent intent = new Intent(getActivity(), StartActivity.class);
+        startActivity(intent);
     }
 
     private class PlayersHolder extends RecyclerView.ViewHolder {

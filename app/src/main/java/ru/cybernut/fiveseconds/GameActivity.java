@@ -1,15 +1,15 @@
 package ru.cybernut.fiveseconds;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.app.FragmentManager;
 
 import java.util.ArrayList;
 
 import ru.cybernut.fiveseconds.view.GameViewModel;
+import ru.cybernut.fiveseconds.view.OnBackPressedListener;
 
 public class GameActivity extends SingleFragmentFullScreenActivity {
 
@@ -35,29 +35,6 @@ public class GameActivity extends SingleFragmentFullScreenActivity {
         return gameFragment;
     }
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        int numberOfQuestions = getIntent().getExtras().getInt(NUMBER_OF_QUESTIONS_KEY);
-//        int gameType = getIntent().getExtras().getInt(GAME_TYPE_KEY);
-//        ArrayList<Integer> setIds = getIntent().getExtras().getIntegerArrayList(QUESTION_SET_IDS_KEY);
-//        super.onCreate(savedInstanceState);
-//
-//        viewModel = new GameViewModel(gameType, numberOfQuestions, setIds);
-//        viewModel.initialize(this);
-//        int numberOfPlayers = viewModel.getNumberOfPlayers();
-//        if( numberOfPlayers == 2) {
-//            GameActivity2playersBinding binding = DataBindingUtil.setContentView(this, R.layout.game_activity_2players);
-//            binding.setViewModel(viewModel);
-//        }
-//        else if( numberOfPlayers <= 4) {
-//            GameActivity4playersBinding binding = DataBindingUtil.setContentView(this, R.layout.game_activity_4players);
-//            binding.setViewModel(viewModel);
-//        } else {
-//            GameActivity6playersBinding binding = DataBindingUtil.setContentView(this, R.layout.game_activity_6players);
-//            binding.setViewModel(viewModel);
-//        }
-//    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -66,40 +43,27 @@ public class GameActivity extends SingleFragmentFullScreenActivity {
 
     @Override
     public void onBackPressed() {
-        viewModel.pauseGame();
-        openQuitDialog();
+        handleBackOrLeave();
     }
-
     @Override
     protected void onUserLeaveHint() {
-        viewModel.pauseGame();
-        if (!viewModel.isGameOver()) {
-            openQuitDialog();
-        }
+        handleBackOrLeave();
     }
 
-    private void openQuitDialog() {
-        AlertDialog.Builder quitDialog = new AlertDialog.Builder(
-                GameActivity.this);
-        quitDialog.setTitle(R.string.quit_dialog_title);
-
-        quitDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-                Intent intent = new Intent(GameActivity.this, StartActivity.class);
-                finish();
-                startActivity(intent);
+    private void handleBackOrLeave() {
+        FragmentManager fm = getSupportFragmentManager();
+        OnBackPressedListener backPressedListener = null;
+        for (Fragment fragment: fm.getFragments()) {
+            if (fragment instanceof OnBackPressedListener) {
+                backPressedListener = (OnBackPressedListener) fragment;
+                break;
             }
-        });
+        }
 
-        quitDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                viewModel.resumeGame();
-            }
-        });
-
-        quitDialog.show();
+        if (backPressedListener != null) {
+            backPressedListener.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
