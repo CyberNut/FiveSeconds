@@ -169,7 +169,9 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
     public void pause() {
         isPaused = true;
-        gameTimer.pause();
+        if(gameTimer!= null) {
+            gameTimer.pause();
+        }
     }
 
     public void resume() {
