@@ -3,7 +3,7 @@
     <string name="new_game">NEW GAME</string>
     <string name="settings">SETTINGS</string>
     <string name="start_game">Start</string>
-    <string name="number_of_questions">Number of questions</string>
+    <string name="number_of_rounds">Number of rounds</string>
     <string name="number_of_players">Number of players</string>
     <string name="correct">CORRECT</string>
     <string name="incorrect">INCORRECT</string>
@@ -11,7 +11,7 @@
     <string name="add_player_button">Add Player</string>
     <string name="enter_player_name">Enter player name</string>
     <string name="max_player_error">Max player error!</string>
-    <string name="incorrect_number_of_questions">Incorrect number of questions or players!</string>
+    <string name="incorrect_number_of_rounds">Incorrect number of rounds or players!</string>
     <string name="answer_dialog_title">Answer</string>
     <string name="answer_dialog_message">CORRECT ?</string>
     <string name="sound_downloading_progressbar_title">Downloading sounds pack</string>
@@ -26,7 +26,7 @@
     <string name="LangSummary">Application language.\nIt is necessary to restart application for applying changes!</string>
     <string name="default_game_type">Default Game type:</string>
     <string name="add_time_value_title">Additional time (sec):</string>
-    <string name="default_number_of_question">Number of question (per player):</string>
+    <string name="default_number_of_rounds">Number of rounds:</string>
     <string name="incorrect_questionsets">No one questions set is not chosen!</string>
     <string name="quit_dialog_title">Exit to main menu?</string>
     <string name="sound_pack_is_not_available">Sounds pack for %s is not downloaded!</string>
@@ -46,12 +46,12 @@
         <item>Add time for reading</item>
         <item>Manual start</item>
     </string-array>
-    <string-array name="entries_lang">
+    <string-array name="language_list">
         <item>System language</item>
         <item>English</item>
         <item>Russian</item>
     </string-array>
-    <string-array name="entryvalues_lang">
+    <string-array name="language_list_values">
         <item>default</item>
         <item>en</item>
         <item>ru</item>

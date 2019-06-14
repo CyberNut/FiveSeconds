@@ -3,12 +3,8 @@ package ru.cybernut.fiveseconds;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,10 +21,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -49,7 +42,7 @@ public class MainGameSettingsFragment extends Fragment {
     private EditText addTimeEditText;
     private Boolean isNeedToShowNotice;
     private int languagePosition;
-    private EditText numberOfQuestionEdittext;
+    private EditText numberOfRoundsEdittext;
     private int languagePositionFromPref;
     private Button deleteSoundsFilesButton;
     private ProgressDialog progressDialog;
@@ -92,7 +85,7 @@ public class MainGameSettingsFragment extends Fragment {
         });
         gameTypeSpinner = binding.defaultGameTypeSpinner;
         addTimeEditText = binding.addTimeValueEdittext;
-        numberOfQuestionEdittext = binding.numberOfQuestionEdittext;
+        numberOfRoundsEdittext = binding.numberOfQuestionEdittext;
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getResources().getString(R.string.deleting_sounds_dialog_title));
         progressDialog.setIndeterminate(true);
@@ -139,23 +132,19 @@ public class MainGameSettingsFragment extends Fragment {
             //Language
             String currentLanguage = sharedPreferences.getString(FiveSecondsApplication.PREF_LANGUAGE, null);
             if ( currentLanguage != null) {
-                String[] languages = getResources().getStringArray(R.array.entryvalues_lang);
+                String[] languages = getResources().getStringArray(R.array.language_list_values);
                 int searchResult = Arrays.binarySearch(languages, currentLanguage);
                 languageSpinner.setSelection(searchResult);
             }
             //Default game type
-            String gameType = sharedPreferences.getString(FiveSecondsApplication.PREF_DEFAULT_GAME_TYPE, null);
-            if (gameType != null) {
-                String[] gameTypes = getResources().getStringArray(R.array.game_type_list);
-                int searchResult = Arrays.binarySearch(gameTypes, gameType);
-                gameTypeSpinner.setSelection(searchResult);
-            }
+            int gameType = sharedPreferences.getInt(FiveSecondsApplication.PREF_DEFAULT_GAME_TYPE, 0);
+            gameTypeSpinner.setSelection(gameType);
             //additional time
             int addTime = sharedPreferences.getInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, FiveSecondsApplication.DEFAULT_ADDITIONAL_TIME_VALUE);
             addTimeEditText.setText(String.valueOf(addTime));
             //default number of questions
-            int numberOfQuestions = sharedPreferences.getInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_QUESTIONS, FiveSecondsApplication.DEFAULT_NUMBER_OF_QUESTIONS);
-            numberOfQuestionEdittext.setText(String.valueOf(numberOfQuestions));
+            int numberOfRounds = sharedPreferences.getInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_ROUNDS, FiveSecondsApplication.DEFAULT_NUMBER_OF_ROUNDS);
+            numberOfRoundsEdittext.setText(String.valueOf(numberOfRounds));
         }
     }
 
@@ -163,16 +152,22 @@ public class MainGameSettingsFragment extends Fragment {
         Context context = getActivity();
         if (context != null) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            int numberOfRounds = Integer.valueOf(numberOfRoundsEdittext.getText().toString());
+            if(numberOfRounds < FiveSecondsApplication.MIN_QUANTITY_OF_ROUNDS) {
+                numberOfRounds = FiveSecondsApplication.MIN_QUANTITY_OF_ROUNDS;
+            } else if(numberOfRounds > FiveSecondsApplication.MAX_QUANTITY_OF_ROUNDS) {
+                numberOfRounds = FiveSecondsApplication.MAX_QUANTITY_OF_ROUNDS;
+            }
             sharedPreferences.edit()
                 //Default game type
-                .putString(FiveSecondsApplication.PREF_DEFAULT_GAME_TYPE, gameTypeSpinner.getSelectedItem().toString())
+                .putInt(FiveSecondsApplication.PREF_DEFAULT_GAME_TYPE, gameTypeSpinner.getSelectedItemPosition())
                 //additional time
                 .putInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, Integer.valueOf(addTimeEditText.getText().toString()))
                 //default number of questions
-                .putInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_QUESTIONS, Integer.valueOf(numberOfQuestionEdittext.getText().toString()))
+                .putInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_ROUNDS, numberOfRounds)
                 .apply();
             //Language
-            String[] languages = getResources().getStringArray(R.array.entryvalues_lang);
+            String[] languages = getResources().getStringArray(R.array.language_list_values);
             if(languages.length >= languagePosition) {
                 lang = languages[languagePosition];
                 sharedPreferences.edit().putString(FiveSecondsApplication.PREF_LANGUAGE, lang).apply();

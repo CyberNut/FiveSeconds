@@ -35,7 +35,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -49,16 +48,14 @@ import ru.cybernut.fiveseconds.view.QuestionSetModel;
 public class NewGameSettingsFragment extends Fragment {
 
     private static final String TAG = "NewGameSettingsFragment";
-    private static final int MAX_QUANTITY_OF_QUESTIONS = 20;
-    private static final int MIN_QUANTITY_OF_QUESTIONS = 3;
 
     private static final int NETWORK_STATE_NONE = 0;
     private static final int NETWORK_STATE_WIFI = 1;
     private static final int NETWORK_STATE_MOBILE = 2;
 
     private int numberOfPlayers = 2;
-    private SeekBar numberOfQuestionsSeekBar;
-    private TextView numberOfQuestionsTextView;
+    private SeekBar numberOfRoundsSeekBar;
+    private TextView numberOfRoundsTextView;
     private ImageButton startNewGameButton;
     private OnGamePreparedListener onGamePreparedListener;
     private RecyclerView questionSetsRecyclerView;
@@ -88,7 +85,7 @@ public class NewGameSettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.new_game_settings_fragment, container, false);
 
-        numberOfQuestionsTextView = v.findViewById(R.id.numberOfQuestions);
+        numberOfRoundsTextView = v.findViewById(R.id.numberOfRounds);
         numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
 
         gameTypeSpinner = v.findViewById(R.id.game_type_spinner);
@@ -98,16 +95,16 @@ public class NewGameSettingsFragment extends Fragment {
         startNewGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int numberOfQuestions = MIN_QUANTITY_OF_QUESTIONS * numberOfPlayers + numberOfPlayers * numberOfQuestionsSeekBar.getProgress();
-                if (numberOfQuestions <= MIN_QUANTITY_OF_QUESTIONS || numberOfPlayers < 2) {
-                    Toast.makeText(getActivity(), R.string.incorrect_number_of_questions, Toast.LENGTH_SHORT).show();
+                int numberOfRounds = numberOfRoundsSeekBar.getProgress() + FiveSecondsApplication.MIN_QUANTITY_OF_ROUNDS;
+                if (numberOfPlayers < 2) {
+                    Toast.makeText(getActivity(), R.string.incorrect_number_of_rounds, Toast.LENGTH_SHORT).show();
                 } else {
                     ArrayList<Integer> setIds = getCheckedSets();
                     if (setIds.size() > 0) {
                         if (gameTypeSpinner.getSelectedItemPosition() == GameEngine.GAME_TYPE_AUTO_PLAY_SOUND && !checkAvailabilitySounds()) {
                             return;
                         }
-                        onGamePreparedListener.onGamePrepared(numberOfQuestions, setIds, gameTypeSpinner.getSelectedItemPosition());
+                        onGamePreparedListener.onGamePrepared(numberOfRounds, setIds, gameTypeSpinner.getSelectedItemPosition());
                     } else {
                         Toast.makeText(getActivity(), getString(R.string.incorrect_questionsets), Toast.LENGTH_SHORT).show();
                     }
@@ -122,11 +119,11 @@ public class NewGameSettingsFragment extends Fragment {
         questionSetAdapter = new QuestionSetAdapter();
         questionSetsRecyclerView.setAdapter(questionSetAdapter);
 
-        numberOfQuestionsSeekBar = v.findViewById(R.id.numberOfQuestionsSeekBar);
-        numberOfQuestionsSeekBar.setMax(MAX_QUANTITY_OF_QUESTIONS - MIN_QUANTITY_OF_QUESTIONS);
-        numberOfQuestionsSeekBar.setProgress(numberOfPlayers);
+        numberOfRoundsSeekBar = v.findViewById(R.id.numberOfRoundsSeekBar);
+        numberOfRoundsSeekBar.setMax(FiveSecondsApplication.MAX_QUANTITY_OF_ROUNDS - FiveSecondsApplication.MIN_QUANTITY_OF_ROUNDS);
+        //numberOfRoundsSeekBar.setProgress(numberOfPlayers);
         updateNumberOfQuestionsTextView();
-        numberOfQuestionsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        numberOfRoundsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 updateNumberOfQuestionsTextView();
@@ -169,18 +166,15 @@ public class NewGameSettingsFragment extends Fragment {
         if (context != null) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             //Default game type
-            String gameType = sharedPreferences.getString(FiveSecondsApplication.PREF_DEFAULT_GAME_TYPE, null);
-            if (gameType != null) {
-                String[] gameTypes = getResources().getStringArray(R.array.game_type_list);
-                int searchResult = Arrays.binarySearch(gameTypes, gameType);
-                gameTypeSpinner.setSelection(searchResult);
-            }
+            int gameType = sharedPreferences.getInt(FiveSecondsApplication.PREF_DEFAULT_GAME_TYPE, 0);
+            gameTypeSpinner.setSelection(gameType);
             //additional time
             int addTime = sharedPreferences.getInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, FiveSecondsApplication.DEFAULT_ADDITIONAL_TIME_VALUE);
             addTimeValueTextView.setText(String.valueOf(addTime) + " " + getResources().getString(R.string.seconds));
-            //default number of questions
-            int numberOfQuestions = sharedPreferences.getInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_QUESTIONS, FiveSecondsApplication.DEFAULT_NUMBER_OF_QUESTIONS);
-            numberOfQuestionsSeekBar.setProgress(numberOfQuestions);
+            //default number of rounds
+            int numberOfRounds = sharedPreferences.getInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_ROUNDS, FiveSecondsApplication.DEFAULT_NUMBER_OF_ROUNDS);
+            numberOfRoundsSeekBar.setProgress(numberOfRounds - FiveSecondsApplication.MIN_QUANTITY_OF_ROUNDS);
+            updateNumberOfQuestionsTextView();
         }
     }
 
@@ -216,12 +210,11 @@ public class NewGameSettingsFragment extends Fragment {
     }
 
     public interface OnGamePreparedListener {
-        void onGamePrepared(int numberOfQuestions, ArrayList<Integer> setIds, int gameType);
+        void onGamePrepared(int numberOfRounds, ArrayList<Integer> setIds, int gameType);
     }
 
     private void updateNumberOfQuestionsTextView() {
-        numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
-        numberOfQuestionsTextView.setText(String.valueOf(MIN_QUANTITY_OF_QUESTIONS * numberOfPlayers +  numberOfPlayers * numberOfQuestionsSeekBar.getProgress()));
+        numberOfRoundsTextView.setText(String.valueOf(FiveSecondsApplication.MIN_QUANTITY_OF_ROUNDS + numberOfRoundsSeekBar.getProgress()));
     }
 
     public void downloadSounds(QuestionSetModel questionSetModel) {

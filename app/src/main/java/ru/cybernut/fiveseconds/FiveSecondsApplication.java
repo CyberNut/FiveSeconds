@@ -15,12 +15,14 @@ public class FiveSecondsApplication extends Application {
 
     public static String TAG = "FiveSecondsApp";
 
+    public static final int MAX_QUANTITY_OF_ROUNDS = 20;
+    public static final int MIN_QUANTITY_OF_ROUNDS = 3;
     public static final String PREF_LANGUAGE = "lang";
     public static final String PREF_DEFAULT_GAME_TYPE = "default_game_type";
     public static final String PREF_ADD_TIME_VALUE = "additional_time_value";
-    public static final String PREF_DEFAULT_NUMBER_OF_QUESTIONS = "default_number_of_questions";
+    public static final String PREF_DEFAULT_NUMBER_OF_ROUNDS = "default_number_of_rounds";
     public static final int DEFAULT_ADDITIONAL_TIME_VALUE = 2;
-    public static final int DEFAULT_NUMBER_OF_QUESTIONS = 5;
+    public static final int DEFAULT_NUMBER_OF_ROUNDS = 5;
 
 
     private static final String SOUNDS_FOLDER = "/Sounds/";

@@ -23,17 +23,17 @@ import ru.cybernut.fiveseconds.view.PlayerModel;
 
 public class GameFragment extends Fragment implements GameViewModel.GameOverable, OnBackPressedListener {
 
-    private static final String NUMBER_OF_QUESTIONS_KEY = "NUMBER_OF_QUESTIONS_KEY";
+    private static final String NUMBER_OF_ROUNDS_KEY = "NUMBER_OF_ROUNDS_KEY";
     private static final String QUESTION_SET_IDS_KEY = "QUESTION_SET_IDS_KEY";
     private static final String GAME_TYPE_KEY = "GAME_TYPE_KEY";
 
     private GameViewModel viewModel;
     private boolean isQuitDialogVisible = false;
 
-    public static GameFragment newInstance(int numberOfQuestions, ArrayList<Integer> setsIds, int gameType) {
+    public static GameFragment newInstance(int numberOfRounds, ArrayList<Integer> setsIds, int gameType) {
 
         Bundle args = new Bundle();
-        args.putInt(NUMBER_OF_QUESTIONS_KEY, numberOfQuestions);
+        args.putInt(NUMBER_OF_ROUNDS_KEY, numberOfRounds);
         args.putInt(GAME_TYPE_KEY, gameType);
         args.putIntegerArrayList(QUESTION_SET_IDS_KEY, setsIds);
 
@@ -46,11 +46,11 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        int numberOfQuestions = getArguments().getInt(NUMBER_OF_QUESTIONS_KEY);
+        int numberOfRounds = getArguments().getInt(NUMBER_OF_ROUNDS_KEY);
         int gameType = getArguments().getInt(GAME_TYPE_KEY);
         ArrayList<Integer> setIds = getArguments().getIntegerArrayList(QUESTION_SET_IDS_KEY);
 
-        viewModel = new GameViewModel(gameType, numberOfQuestions, setIds);
+        viewModel = new GameViewModel(gameType, numberOfRounds, setIds);
         int numberOfPlayers = viewModel.getNumberOfPlayers();
         if( numberOfPlayers == 2) {
             GameActivity2playersBinding binding = DataBindingUtil.inflate(inflater, R.layout.game_activity_2players, container, false);

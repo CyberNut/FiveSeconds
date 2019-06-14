@@ -30,38 +30,38 @@
         app:layout_constraintTop_toBottomOf="@+id/question_sets_recycler_view" />
 
     <TextView
-        android:id="@+id/numberOfQuestionLabel"
+        android:id="@+id/numberOfRoundsLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/number_of_questions"
+        android:text="@string/number_of_rounds"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <SeekBar
-        android:id="@+id/numberOfQuestionsSeekBar"
+        android:id="@+id/numberOfRoundsSeekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         style="@style/Widget.AppCompat.SeekBar.Discrete"
-        app:layout_constraintBottom_toBottomOf="@+id/numberOfQuestionLabel"
-        app:layout_constraintEnd_toStartOf="@+id/numberOfQuestions"
-        app:layout_constraintStart_toEndOf="@+id/numberOfQuestionLabel"
-        app:layout_constraintTop_toTopOf="@+id/numberOfQuestionLabel" />
+        app:layout_constraintBottom_toBottomOf="@+id/numberOfRoundsLabel"
+        app:layout_constraintEnd_toStartOf="@+id/numberOfRounds"
+        app:layout_constraintStart_toEndOf="@+id/numberOfRoundsLabel"
+        app:layout_constraintTop_toTopOf="@+id/numberOfRoundsLabel" />
 
     <TextView
-        android:id="@+id/numberOfQuestions"
+        android:id="@+id/numberOfRounds"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text=""
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/numberOfQuestionLabel"
+        app:layout_constraintBottom_toBottomOf="@+id/numberOfRoundsLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -86,7 +86,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/choose_question_sets_label_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/numberOfQuestionLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/numberOfRoundsLabel" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/question_sets_recycler_view"

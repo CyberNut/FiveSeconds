@@ -32,11 +32,11 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     private int currentRotationValue;
     private GameOverable gameActivity;
 
-    public GameViewModel(int gameType, int numberOfQuestions, ArrayList<Integer> setIds) {
+    public GameViewModel(int gameType, int numberOfRounds, ArrayList<Integer> setIds) {
         this.setIds = setIds;
-        game = new GameEngine(this, gameType, numberOfQuestions);
-        setManualStartButtonVisible();
         initPlayers();
+        game = new GameEngine(this, gameType, players.size() * numberOfRounds);
+        setManualStartButtonVisible();
     }
 
     private void setManualStartButtonVisible() {
@@ -144,13 +144,13 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     }
 
     public void handleAnswer(boolean isCorrectAnswer) {
+        if (isCorrectAnswer) {
+            currentPlayer.setScore();
+        }
         if (isGameOver) {
             gameActivity.gameOver(players);
         }
         if (isNeedShowAnswer) {
-            if (isCorrectAnswer) {
-                currentPlayer.setScore();
-            }
             setNeedShowAnswer(false);
             nextPlayer();
             onNextTurn(null);

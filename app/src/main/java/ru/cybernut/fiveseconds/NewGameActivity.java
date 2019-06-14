@@ -25,8 +25,8 @@ public class NewGameActivity extends SingleFragmentFullScreenActivity  implement
     }
 
     @Override
-    public void onGamePrepared(int numberOfQuestions, ArrayList<Integer> sets, int gameType) {
-        Intent intent = GameActivity.newIntent(this, numberOfQuestions, sets, gameType);
+    public void onGamePrepared(int numberOfRounds, ArrayList<Integer> sets, int gameType) {
+        Intent intent = GameActivity.newIntent(this, numberOfRounds, sets, gameType);
         startActivity(intent);
     }
 
