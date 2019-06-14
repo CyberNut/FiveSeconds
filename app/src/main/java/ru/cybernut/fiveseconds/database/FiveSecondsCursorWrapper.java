@@ -1,15 +1,15 @@
 package ru.cybernut.fiveseconds.database;
 
-import android.database.Cursor;
-import android.database.CursorWrapper;
+        import android.database.Cursor;
+        import android.database.CursorWrapper;
 
-import java.util.UUID;
+        import java.util.UUID;
 
-import ru.cybernut.fiveseconds.model.Question;
-import ru.cybernut.fiveseconds.model.QuestionSet;
-import ru.cybernut.fiveseconds.model.Sound;
+        import ru.cybernut.fiveseconds.model.Question;
+        import ru.cybernut.fiveseconds.model.QuestionSet;
+        import ru.cybernut.fiveseconds.model.Sound;
 
-import static ru.cybernut.fiveseconds.database.FiveSecondsDBSchema.*;
+        import static ru.cybernut.fiveseconds.database.FiveSecondsDBSchema.*;
 
 public class FiveSecondsCursorWrapper extends CursorWrapper {
 

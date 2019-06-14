@@ -28,6 +28,7 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
     private static final String GAME_TYPE_KEY = "GAME_TYPE_KEY";
 
     private GameViewModel viewModel;
+    private boolean isQuitDialogVisible = false;
 
     public static GameFragment newInstance(int numberOfQuestions, ArrayList<Integer> setsIds, int gameType) {
 
@@ -88,6 +89,11 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
     }
 
     private void openQuitDialog() {
+
+        if(isQuitDialogVisible) {
+            return;
+        }
+
         AlertDialog.Builder quitDialog = new AlertDialog.Builder(
                 getActivity());
         quitDialog.setTitle(R.string.quit_dialog_title);
@@ -99,6 +105,7 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
                 Intent intent = new Intent(getActivity(), StartActivity.class);
                 getActivity().finish();
                 startActivity(intent);
+                isQuitDialogVisible = false;
             }
         });
 
@@ -106,9 +113,11 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 viewModel.resumeGame();
+                isQuitDialogVisible = false;
             }
         });
 
+        isQuitDialogVisible = true;
         quitDialog.show();
     }
 }

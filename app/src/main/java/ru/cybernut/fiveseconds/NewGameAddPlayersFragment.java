@@ -10,7 +10,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,7 +26,7 @@ public class NewGameAddPlayersFragment extends Fragment {
     private static final int NUMBER_OF_PLAYERS_LIST_COLUMNS = 2;
 
     private ImageButton addPlayerButton;
-    private Button nextStepButton;
+    private ImageButton nextStepButton;
     private EditText playerName;
     private RecyclerView playerRecyclerView;
     private PlayersAdapter playersAdapter;
