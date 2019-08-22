@@ -40,7 +40,7 @@ public class FiveSecondsBaseHelper extends SQLiteOpenHelper {
         this.getReadableDatabase();
     }
 
-    public void updateDataBase() {
+    public void updateDataBase() throws IOException{
         if (mNeedUpdate) {
             File dbFile = new File(DB_PATH + DB_NAME);
             if (dbFile.exists())

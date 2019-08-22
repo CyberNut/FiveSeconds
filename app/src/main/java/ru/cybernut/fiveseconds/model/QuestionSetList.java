@@ -2,8 +2,10 @@ package ru.cybernut.fiveseconds.model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +26,17 @@ public class QuestionSetList {
     }
 
     private QuestionSetList() {
-        this.database = FiveSecondsBaseHelper.getInstance().getWritableDatabase();
+        FiveSecondsBaseHelper fiveSecondsBaseHelper = FiveSecondsBaseHelper.getInstance();
+        try {
+            fiveSecondsBaseHelper.updateDataBase();
+        } catch (IOException mIOException) {
+            throw new Error("UnableToUpdateDatabase");
+        }
+        try {
+            this.database = fiveSecondsBaseHelper.getInstance().getWritableDatabase();
+        } catch (SQLException mSQLException) {
+            throw mSQLException;
+        }
     }
 
     private static ContentValues getContentValues(QuestionSet questionSet) {
