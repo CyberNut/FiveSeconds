@@ -94,8 +94,7 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
             return;
         }
 
-        AlertDialog.Builder quitDialog = new AlertDialog.Builder(
-                getActivity());
+        AlertDialog.Builder quitDialog = new AlertDialog.Builder(getActivity());
         quitDialog.setTitle(R.string.quit_dialog_title);
 
         quitDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -116,8 +115,14 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
                 isQuitDialogVisible = false;
             }
         });
-
         isQuitDialogVisible = true;
+        quitDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                viewModel.resumeGame();
+                isQuitDialogVisible = false;
+            }
+        });
         quitDialog.show();
     }
 }

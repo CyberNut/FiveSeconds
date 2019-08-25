@@ -7,7 +7,6 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     private int gameType;
     private int numberOfQuestions;
     private Question currentQuestion;
+    private Integer playableNowSoundId;
     private Integer currentSoundId;
     private int currentSoundDuration = 0;
     private List<String> uuidList;
@@ -118,6 +118,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     private void playCurrentSound() {
         if (currentSoundId != null) {
             soundPool.play(currentSoundId, 1.0f, 1.0f, 1, 0, 1.0f);
+            playableNowSoundId = currentSoundId;
         }
     }
 
@@ -171,8 +172,8 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         isPaused = true;
         if(gameTimer!= null) {
             gameTimer.pause();
-            if(soundPool!=null) {
-                soundPool.stop(currentSoundId);
+            if(soundPool != null && playableNowSoundId != 0) {
+                soundPool.stop(playableNowSoundId);
             }
         }
     }
@@ -180,6 +181,9 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     public void resume() {
         isPaused = false;
         gameTimer.resume();
+        if(soundPool !=null && playableNowSoundId != 0) {
+            soundPool.resume(playableNowSoundId);
+        }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -246,6 +250,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
             if(!isPaused) {
                 if (gameType == GAME_TYPE_AUTO_PLAY_SOUND && millisUntilFinished >= roundDuration) {
                 } else {
+                    playableNowSoundId = 0;
                     viewModel.progressUpdate( 100 - ((millisUntilFinished * 100 /roundDuration)));
                 }
             }
