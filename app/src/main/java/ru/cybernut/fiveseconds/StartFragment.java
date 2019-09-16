@@ -23,6 +23,7 @@ public class StartFragment extends Fragment {
     private ImageButton newGameButton;
     private ImageButton helpButton;
     private ImageButton settingsButton;
+    private ImageButton shopButton;
 
     public static StartFragment newInstance() {
         return new StartFragment();
@@ -66,5 +67,15 @@ public class StartFragment extends Fragment {
                 }
             }
         });
+
+        shopButton = binding.shopButton;
+        shopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ShopActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }
