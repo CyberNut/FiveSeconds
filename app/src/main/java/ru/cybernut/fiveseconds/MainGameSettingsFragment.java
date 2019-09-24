@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -274,6 +275,7 @@ public class MainGameSettingsFragment extends Fragment {
             if (contextRef.get() != null) {
                 progressDialog.dismiss();
             }
+            Toast.makeText(getActivity(), R.string.sound_files_deleted_successfully, Toast.LENGTH_SHORT).show();
         }
 
         private void deleteFile(File file) {
