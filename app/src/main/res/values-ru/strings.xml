@@ -57,4 +57,5 @@
     <string name="rules_text">Цель игры\nПолучить к концу игры больше очков чем другие игроки правильно отвечая на вопросы.\n\nПроцесс игры\n</string>
     <string name="next">Далее</string>
     <string name="sound_files_deleted_successfully">Звуковые файлы успешно удалены!</string>
+    <string name="buy">Купить</string>
 </resources>
