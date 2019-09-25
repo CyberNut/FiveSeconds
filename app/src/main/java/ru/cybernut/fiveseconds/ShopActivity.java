@@ -45,14 +45,22 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
         shopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> skuList = BillingConstants.getSkuList(BillingClient.SkuType.INAPP);
-                mBillingManager.querySkuDetailsAsync(BillingClient.SkuType.INAPP, skuList, ShopActivity.this);
+                updateItemList();
             }
         });
         shopItemsRecyclerView = findViewById(R.id.shop_item_list);
         shopItemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         shopItemsAdapter = new ShopItemsAdapter();
         shopItemsRecyclerView.setAdapter(shopItemsAdapter);
+        updateItemList();
+    }
+
+    private void updateItemList() {
+        List<String> skuList = BillingConstants.getSkuList(BillingClient.SkuType.INAPP);
+        mBillingManager.querySkuDetailsAsync(BillingClient.SkuType.INAPP, skuList, ShopActivity.this);
+        if(shopItemsAdapter!=null) {
+            shopItemsAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -75,6 +83,7 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
     public void onSkuDetailsResponse(BillingResult billingResult, List<SkuDetails> skuDetailsList) {
         Log.i(TAG, "onSkuDetailsResponse: ");
         shopItemsAdapter.setSkuDetailsList(skuDetailsList);
+        shopItemsAdapter.notifyDataSetChanged();
     }
 
     private class ShopItemHolder extends RecyclerView.ViewHolder {
@@ -139,10 +148,6 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
         public int getItemCount() {
             return skuDetailsList.size();
         }
-    }
-
-    public interface NewGameAddPlayersFragmentListener {
-        void playersAdded();
     }
 
 }
