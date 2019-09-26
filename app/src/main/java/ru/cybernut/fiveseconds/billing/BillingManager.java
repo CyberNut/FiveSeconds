@@ -41,6 +41,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ru.cybernut.fiveseconds.model.QuestionSetList;
+
 /**
  * Handles all the interactions with Play Store (via Billing library), maintains connection to
  * it through BillingClient and caches temporary states/data if needed
@@ -156,6 +158,7 @@ public class BillingManager implements PurchasesUpdatedListener {
                 Log.d(TAG, "Launching in-app purchase flow");
                 BillingFlowParams purchaseParams = BillingFlowParams.newBuilder().setSkuDetails(skuDetails).build();
                 mBillingClient.launchBillingFlow(mActivity, purchaseParams);
+                QuestionSetList.getInstance().setOwned(skuDetails.getSku());
             }
         };
 

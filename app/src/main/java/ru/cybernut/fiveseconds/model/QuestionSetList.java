@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import ru.cybernut.fiveseconds.database.FiveSecondsDBSchema;
 
 public class QuestionSetList {
 
+    private static final String TAG = "QuestionSetList";
     private static QuestionSetList questionSetList;
     private SQLiteDatabase database;
 
@@ -43,6 +45,8 @@ public class QuestionSetList {
         ContentValues values = new ContentValues();
         values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.NAME, questionSet.getName());
         values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.TYPE, questionSet.getType());
+        values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.SHOP_ITEM_ID, questionSet.getShopItemId());
+        values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.OWNED, questionSet.getOwned());
         values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.SOUNDS_LINK, questionSet.getSoundsLink());
         values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.SOUNDS_LOADED, questionSet.isSoundsLoaded());
         return values;
@@ -65,11 +69,14 @@ public class QuestionSetList {
         List<QuestionSet> sets = new ArrayList<>();
 
         try (FiveSecondsCursorWrapper cursorWrapper = queryQuestionSets(null, null)) {
-            cursorWrapper.moveToFirst();
-            while (!cursorWrapper.isAfterLast()) {
-                sets.add(cursorWrapper.getQuestionSet());
-                cursorWrapper.moveToNext();
+            if(cursorWrapper.moveToFirst()) {
+                while (!cursorWrapper.isAfterLast()) {
+                    sets.add(cursorWrapper.getQuestionSet());
+                    cursorWrapper.moveToNext();
+                }
             }
+        } catch (Exception e) {
+            Log.i(TAG, "getQuestionSets: " + e.getMessage());
         }
         return sets;
     }
@@ -81,6 +88,22 @@ public class QuestionSetList {
             }
             cursor.moveToFirst();
             return cursor.getQuestionSet();
+        }
+    }
+
+    public boolean setOwned(String itemId) {
+        try (FiveSecondsCursorWrapper cursorWrapper = queryQuestionSets("shop_item_id = ?", new String[]{String.valueOf(itemId)})) {
+            if(cursorWrapper.moveToFirst()) {
+                while (!cursorWrapper.isAfterLast()) {
+                    QuestionSet temp = cursorWrapper.getQuestionSet();
+                    temp.setOwned(1133);
+                    updateQuestionSet(temp);
+                    cursorWrapper.moveToNext();
+                }
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 

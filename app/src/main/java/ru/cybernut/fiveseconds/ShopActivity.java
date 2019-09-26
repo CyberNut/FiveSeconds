@@ -86,6 +86,7 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
             String sku = purchase.getSku();
             if (skuDataMap.containsKey(sku)) {
                 skuDataMap.get(sku).setOwned(true);
+
             } else {
                 SkuData newSkuData = new SkuData(sku);
                 newSkuData.setOwned(true);

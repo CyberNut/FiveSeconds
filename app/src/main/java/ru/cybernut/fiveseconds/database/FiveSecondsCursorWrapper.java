@@ -29,10 +29,12 @@ public class FiveSecondsCursorWrapper extends CursorWrapper {
     public QuestionSet getQuestionSet() {
         String name = getString(getColumnIndex(ru.cybernut.fiveseconds.database.FiveSecondsDBSchema.QuestionSetsTable.Cols.NAME));
         String type = getString(getColumnIndex(QuestionSetsTable.Cols.TYPE));
+        String shopItemId = getString(getColumnIndex(QuestionSetsTable.Cols.SHOP_ITEM_ID));
+        Integer owned = getInt(getColumnIndex(QuestionSetsTable.Cols.OWNED));
         String link = getString(getColumnIndex(QuestionSetsTable.Cols.SOUNDS_LINK));
         int soundsLoaded = getInt(getColumnIndex(QuestionSetsTable.Cols.SOUNDS_LOADED));
 
-        return new QuestionSet(name, type, link, soundsLoaded > 0 ? true : false);
+        return new QuestionSet(name, type, link, soundsLoaded > 0 ? true : false, shopItemId, owned);
     }
 
     public Sound getSound() {

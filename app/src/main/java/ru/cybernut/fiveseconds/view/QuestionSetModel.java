@@ -7,11 +7,13 @@ public class QuestionSetModel {
     private QuestionSet questionSet;
     private boolean isChecked;
     private boolean isAvailable;
+    private boolean isFree;
     private boolean isSoundsAvailable;
 
     public QuestionSetModel(QuestionSet questionSet) {
         this.questionSet = questionSet;
-        this.isAvailable = questionSet.getType().equalsIgnoreCase(QuestionSet.QuestionSetType.free.toString());
+        this.isFree = questionSet.getType().equalsIgnoreCase(QuestionSet.QuestionSetType.free.toString());
+        this.isAvailable = this.isFree || questionSet.getOwned() >= 500;
         this.isSoundsAvailable = questionSet.isSoundsLoaded();
         this.isChecked = isAvailable;
     }
@@ -49,6 +51,10 @@ public class QuestionSetModel {
             return null;
         }
         return questionSet.getSoundsLink();
+    }
+
+    public boolean isFree() {
+        return isFree;
     }
 
     public boolean isSoundsAvailable() {

@@ -153,17 +153,28 @@ public class MainGameSettingsFragment extends Fragment {
         Context context = getActivity();
         if (context != null) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            int numberOfRounds = Integer.valueOf(numberOfRoundsEdittext.getText().toString());
-            if(numberOfRounds < FiveSecondsApplication.MIN_QUANTITY_OF_ROUNDS) {
+            int numberOfRounds = 0;
+            int addTimeValue = 0;
+            try {
+                numberOfRounds = Integer.valueOf(numberOfRoundsEdittext.getText().toString());
+                if (numberOfRounds < FiveSecondsApplication.MIN_QUANTITY_OF_ROUNDS) {
+                    numberOfRounds = FiveSecondsApplication.MIN_QUANTITY_OF_ROUNDS;
+                } else if(numberOfRounds > FiveSecondsApplication.MAX_QUANTITY_OF_ROUNDS) {
+                    numberOfRounds = FiveSecondsApplication.MAX_QUANTITY_OF_ROUNDS;
+                }
+            } catch (NumberFormatException e) {
                 numberOfRounds = FiveSecondsApplication.MIN_QUANTITY_OF_ROUNDS;
-            } else if(numberOfRounds > FiveSecondsApplication.MAX_QUANTITY_OF_ROUNDS) {
-                numberOfRounds = FiveSecondsApplication.MAX_QUANTITY_OF_ROUNDS;
+            }
+            try {
+                addTimeValue = Integer.valueOf(addTimeEditText.getText().toString());
+            } catch (NumberFormatException e) {
+                addTimeValue = FiveSecondsApplication.DEFAULT_ADDITIONAL_TIME_VALUE;
             }
             sharedPreferences.edit()
                 //Default game type
                 .putInt(FiveSecondsApplication.PREF_DEFAULT_GAME_TYPE, gameTypeSpinner.getSelectedItemPosition())
                 //additional time
-                .putInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, Integer.valueOf(addTimeEditText.getText().toString()))
+                .putInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, addTimeValue)
                 //default number of questions
                 .putInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_ROUNDS, numberOfRounds)
                 .apply();

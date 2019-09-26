@@ -3,6 +3,7 @@ package ru.cybernut.fiveseconds;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -71,6 +72,15 @@ public class NewGameSettingsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        prepareQuestionSetModelList();
+        if (questionSetAdapter != null){
+            questionSetAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
@@ -89,7 +99,6 @@ public class NewGameSettingsFragment extends Fragment {
         numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
 
         gameTypeSpinner = v.findViewById(R.id.game_type_spinner);
-
 
         startNewGameButton = v.findViewById(R.id.startNewGameButton);
         startNewGameButton.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +122,7 @@ public class NewGameSettingsFragment extends Fragment {
 
         });
 
-        prepareQuestionSetModelList();
+
         questionSetsRecyclerView = v.findViewById(R.id.question_sets_recycler_view);
         questionSetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         questionSetAdapter = new QuestionSetAdapter();
@@ -273,6 +282,12 @@ public class NewGameSettingsFragment extends Fragment {
             loadSoundsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(!questionSetModel.isAvailable()) {
+                        Intent intent = new Intent(getContext(), ShopActivity.class);
+                        startActivity(intent);
+                        return;
+                    }
+
                     int networkType = checkNetworkConnection();
                     switch (networkType) {
                         case NETWORK_STATE_NONE:
@@ -289,18 +304,23 @@ public class NewGameSettingsFragment extends Fragment {
             });
             questionSetNameCheckBox = itemView.findViewById(R.id.question_set_name_checkbox);
             questionSetNameCheckBox.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-                                                                   @Override
-                                                                   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                                                       questionSetModel.setChecked(isChecked);
-                                                                   }
-                                                               }
+                   @Override
+                   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        questionSetModel.setChecked(isChecked);
+                   }
+               }
             );
         }
 
         public void bind(QuestionSetModel questionSetModel) {
             this.questionSetModel = questionSetModel;
             if(this.questionSetModel!= null) {
-                questionSetNameCheckBox.setText(this.questionSetModel.getName());
+                questionSetNameCheckBox.setText(this.questionSetModel.getName() + (questionSetModel.isFree() ? "" : " ($)"));
+                if(!questionSetModel.isAvailable()) {
+                    questionSetNameCheckBox.setEnabled(false);
+                } else {
+                    questionSetNameCheckBox.setEnabled(true);
+                }
                 questionSetNameCheckBox.setChecked(questionSetModel.isChecked());
             }
         }

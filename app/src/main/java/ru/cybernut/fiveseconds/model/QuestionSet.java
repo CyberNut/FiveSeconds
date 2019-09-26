@@ -6,6 +6,8 @@ public class QuestionSet {
 
     private String name;
     private String type;
+    private String shopItemId;
+    private Integer owned;
     private String soundsLink;
     private boolean soundsLoaded;
 
@@ -25,6 +27,12 @@ public class QuestionSet {
         this.soundsLink = soundsLink;
     }
 
+    public QuestionSet(String name, String type, String soundsLink, boolean soundsLoaded, String shopItemId, Integer owned) {
+        this(name, type, soundsLink, soundsLoaded);
+        this.shopItemId = shopItemId;
+        this.owned = owned;
+    }
+
     public String getName() {
         return name;
     }
@@ -39,6 +47,22 @@ public class QuestionSet {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getShopItemId() {
+        return shopItemId;
+    }
+
+    public void setShopItemId(String shopItemId) {
+        this.shopItemId = shopItemId;
+    }
+
+    public Integer getOwned() {
+        return owned;
+    }
+
+    public void setOwned(Integer owned) {
+        this.owned = owned;
     }
 
     public String getSoundsLink() {
