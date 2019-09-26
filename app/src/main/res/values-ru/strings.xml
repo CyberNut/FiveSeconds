@@ -58,4 +58,6 @@
     <string name="next">Далее</string>
     <string name="sound_files_deleted_successfully">Звуковые файлы успешно удалены!</string>
     <string name="buy">Купить</string>
+    <string name="bought">Куплено</string>
+    <string name="update">Обновить</string>
 </resources>

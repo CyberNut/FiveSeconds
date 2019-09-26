@@ -377,12 +377,14 @@ public class BillingManager implements PurchasesUpdatedListener {
     private boolean verifyValidSignature(String signedData, String signature) {
         // Some sanity checks to see if the developer (that's you!) really followed the
         // instructions to run this sample (don't put these checks on your app!)
-        try {
-            return Security.verifyPurchase(BASE_64_ENCODED_PUBLIC_KEY, signedData, signature);
-        } catch (IOException e) {
-            Log.e(TAG, "Got an exception trying to validate a purchase: " + e);
-            return false;
-        }
+        //TODO: need realize
+        return true;
+//        try {
+//            return Security.verifyPurchase(BASE_64_ENCODED_PUBLIC_KEY, signedData, signature);
+//        } catch (IOException e) {
+//            Log.e(TAG, "Got an exception trying to validate a purchase: " + e);
+//            return false;
+//        }
     }
 }
 

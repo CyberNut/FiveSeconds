@@ -19,10 +19,14 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import ru.cybernut.fiveseconds.billing.BillingConstants;
 import ru.cybernut.fiveseconds.billing.BillingManager;
+import ru.cybernut.fiveseconds.billing.SkuData;
 
 
 public class ShopActivity extends AppCompatActivity implements BillingManager.BillingUpdatesListener, SkuDetailsResponseListener {
@@ -32,6 +36,7 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
     private Button shopButton;
     private RecyclerView shopItemsRecyclerView;
     private BillingManager mBillingManager;
+    private Map<String, SkuData> skuDataMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +57,6 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
         shopItemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         shopItemsAdapter = new ShopItemsAdapter();
         shopItemsRecyclerView.setAdapter(shopItemsAdapter);
-        updateItemList();
     }
 
     private void updateItemList() {
@@ -66,6 +70,7 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
     @Override
     public void onBillingClientSetupFinished() {
         Log.i(TAG, "onBillingClientSetupFinished: ");
+        updateItemList();
     }
 
     @Override
@@ -77,21 +82,41 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
     public void onPurchasesUpdated(List<Purchase> purchases) {
         Log.i(TAG, "onPurchasesUpdated: ");
         //TODO: Обновить список и отметить приобретенные элементы
+        for (Purchase purchase : purchases) {
+            String sku = purchase.getSku();
+            if (skuDataMap.containsKey(sku)) {
+                skuDataMap.get(sku).setOwned(true);
+            } else {
+                SkuData newSkuData = new SkuData(sku);
+                newSkuData.setOwned(true);
+                skuDataMap.put(sku, newSkuData);
+            }
+        }
+        shopItemsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onSkuDetailsResponse(BillingResult billingResult, List<SkuDetails> skuDetailsList) {
         Log.i(TAG, "onSkuDetailsResponse: ");
-        shopItemsAdapter.setSkuDetailsList(skuDetailsList);
+        for (SkuDetails skuDetails : skuDetailsList) {
+            String sku = skuDetails.getSku();
+            if (skuDataMap.containsKey(sku)) {
+                skuDataMap.get(sku).setSkuDetails(skuDetails);
+            } else {
+                SkuData newSkuData = new SkuData(sku);
+                newSkuData.setSkuDetails(skuDetails);
+                skuDataMap.put(sku, newSkuData);
+            }
+        }
         shopItemsAdapter.notifyDataSetChanged();
     }
 
     private class ShopItemHolder extends RecyclerView.ViewHolder {
 
-        SkuDetails skuDetails;
-        TextView itemName;
-        TextView itemCost;
-        Button buyButton;
+        private SkuData skuData;
+        private TextView itemName;
+        private TextView itemCost;
+        private Button buyButton;
         public ShopItemHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.shop_list_item, parent, false));
             itemName = itemView.findViewById(R.id.shop_item_name);
@@ -100,36 +125,26 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
             buyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(skuDetails != null) {
-                        mBillingManager.initiatePurchaseFlow(skuDetails, BillingClient.SkuType.INAPP);
+                    if(skuData != null) {
+                        mBillingManager.initiatePurchaseFlow(skuData.getSkuDetails(), BillingClient.SkuType.INAPP);
                     }
                 }
             });
         }
 
-        public void bind(SkuDetails skuDetails) {
-            this.skuDetails = skuDetails;
-            itemName.setText(skuDetails.getDescription());
-            itemCost.setText(skuDetails.getPrice());
-
+        public void bind(SkuData skuData) {
+            this.skuData = skuData;
+            if(skuData!=null && skuData.getSkuDetails() != null) {
+                itemName.setText(skuData.getSkuDetails().getDescription());
+                itemCost.setText(skuData.getSkuDetails().getPrice());
+                if (skuData.isOwned()) {
+                    buyButton.setText(R.string.bought);
+                    buyButton.setEnabled(false);
+                }
+            }
         }
     }
     private class ShopItemsAdapter extends RecyclerView.Adapter<ShopItemHolder> {
-
-        private List<SkuDetails> skuDetailsList;
-        public ShopItemsAdapter() {
-
-            skuDetailsList = new ArrayList<>();
-        }
-
-        public List<SkuDetails> getSkuDetailsList() {
-            return skuDetailsList;
-        }
-
-        public void setSkuDetailsList(List<SkuDetails> skuDetailsList) {
-            this.skuDetailsList = skuDetailsList;
-            notifyDataSetChanged();
-        }
 
         @NonNull
         @Override
@@ -140,13 +155,19 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
 
         @Override
         public void onBindViewHolder(@NonNull ShopItemHolder shopItemHolder, int position) {
-            SkuDetails skuDetails = skuDetailsList.get(position);
-            shopItemHolder.bind(skuDetails);
+            String[] skyArray = skuDataMap.keySet().toArray(new String[skuDataMap.size()]);
+            if(position <= skyArray.length) {
+                String sku = skyArray[position];
+                SkuData skuData = skuDataMap.get(sku);
+                if(skuData!=null) {
+                    shopItemHolder.bind(skuData);
+                }
+            }
         }
 
         @Override
         public int getItemCount() {
-            return skuDetailsList.size();
+            return skuDataMap.size();
         }
     }
 
