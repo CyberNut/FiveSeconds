@@ -18,15 +18,14 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import ru.cybernut.fiveseconds.billing.BillingConstants;
 import ru.cybernut.fiveseconds.billing.BillingManager;
 import ru.cybernut.fiveseconds.billing.SkuData;
+import ru.cybernut.fiveseconds.model.QuestionSetList;
 
 
 public class ShopActivity extends AppCompatActivity implements BillingManager.BillingUpdatesListener, SkuDetailsResponseListener {
@@ -86,12 +85,12 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
             String sku = purchase.getSku();
             if (skuDataMap.containsKey(sku)) {
                 skuDataMap.get(sku).setOwned(true);
-
             } else {
                 SkuData newSkuData = new SkuData(sku);
                 newSkuData.setOwned(true);
                 skuDataMap.put(sku, newSkuData);
             }
+            QuestionSetList.getInstance().setOwned(purchase.getSku());
         }
         shopItemsAdapter.notifyDataSetChanged();
     }

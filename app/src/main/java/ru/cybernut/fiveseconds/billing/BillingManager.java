@@ -158,7 +158,6 @@ public class BillingManager implements PurchasesUpdatedListener {
                 Log.d(TAG, "Launching in-app purchase flow");
                 BillingFlowParams purchaseParams = BillingFlowParams.newBuilder().setSkuDetails(skuDetails).build();
                 mBillingClient.launchBillingFlow(mActivity, purchaseParams);
-                QuestionSetList.getInstance().setOwned(skuDetails.getSku());
             }
         };
 
@@ -260,7 +259,6 @@ public class BillingManager implements PurchasesUpdatedListener {
         }
 
         Log.d(TAG, "Got a verified purchase: " + purchase);
-
         mPurchases.add(purchase);
     }
 

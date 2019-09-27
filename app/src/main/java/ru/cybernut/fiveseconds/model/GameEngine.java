@@ -172,7 +172,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         isPaused = true;
         if(gameTimer!= null) {
             gameTimer.pause();
-            if(soundPool != null && playableNowSoundId != 0) {
+            if(soundPool != null && playableNowSoundId != null && playableNowSoundId != 0) {
                 soundPool.stop(playableNowSoundId);
             }
         }
@@ -180,8 +180,10 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
     public void resume() {
         isPaused = false;
-        gameTimer.resume();
-        if(soundPool !=null && playableNowSoundId != 0) {
+        if(gameTimer != null) {
+            gameTimer.resume();
+        }
+        if(soundPool !=null && playableNowSoundId != null && playableNowSoundId != 0) {
             soundPool.resume(playableNowSoundId);
         }
     }
