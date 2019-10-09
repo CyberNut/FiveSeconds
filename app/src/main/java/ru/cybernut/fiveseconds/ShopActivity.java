@@ -82,15 +82,20 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
         Log.i(TAG, "onPurchasesUpdated: ");
         //TODO: Обновить список и отметить приобретенные элементы
         for (Purchase purchase : purchases) {
+
             String sku = purchase.getSku();
+
+            Boolean purchased = purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED;
             if (skuDataMap.containsKey(sku)) {
-                skuDataMap.get(sku).setOwned(true);
+                skuDataMap.get(sku).setOwned(purchased);
             } else {
                 SkuData newSkuData = new SkuData(sku);
-                newSkuData.setOwned(true);
+                newSkuData.setOwned(purchased);
                 skuDataMap.put(sku, newSkuData);
             }
-            QuestionSetList.getInstance().setOwned(purchase.getSku());
+            if(purchased) {
+                QuestionSetList.getInstance().setOwned(purchase.getSku());
+            }
         }
         shopItemsAdapter.notifyDataSetChanged();
     }
