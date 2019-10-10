@@ -30,10 +30,14 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     private ArrayList<PlayerModel> players;
     private PlayerModel currentPlayer;
     private int currentRotationValue;
+    private int numberOfRounds;
+    private int currentRound = 1;
+    private int currentQuestionNumber = 1;
     private GameOverable gameActivity;
 
     public GameViewModel(int gameType, int numberOfRounds, ArrayList<Integer> setIds) {
         this.setIds = setIds;
+        this.numberOfRounds = numberOfRounds;
         initPlayers();
         game = new GameEngine(this, gameType, players.size() * numberOfRounds);
         setManualStartButtonVisible();
@@ -70,6 +74,15 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
 
     public int getNumberOfPlayers() {
         return players.size();
+    }
+
+    public void updateCurrentRound() {
+        if((currentQuestionNumber++ % numberOfPlayers) == 0) {
+            if(currentRound<numberOfRounds) {
+                currentRound++;
+                notifyPropertyChanged(BR.currentRound);
+            }
+        }
     }
 
     private void nextPlayer() {
@@ -138,6 +151,11 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         return currentQuestionText;
     }
 
+    @Bindable
+    public String getCurrentRound() {
+        return String.valueOf(currentRound);
+    }
+
     private void setCurrentQuestionText(String currentQuestionText) {
         this.currentQuestionText = currentQuestionText;
         notifyPropertyChanged(BR.currentQuestionText);
@@ -155,6 +173,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
             nextPlayer();
             onNextTurn(null);
         }
+        updateCurrentRound();
     }
 
     public void onNextTurn(View v) {
