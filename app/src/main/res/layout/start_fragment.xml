@@ -28,7 +28,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.75"
-            app:srcCompat="@drawable/play_button" />
+            app:srcCompat="@drawable/anim_play_button" />
 
         <ImageButton
             android:id="@+id/help_button"
