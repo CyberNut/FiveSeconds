@@ -38,17 +38,21 @@
                 android:id="@+id/answer_ok_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 android:layout_weight="1"
+                android:background="@null"
                 android:onClick="@{() -> viewModel.handleAnswer(true)}"
-                app:srcCompat="@drawable/answer_ok" />
+                app:srcCompat="@drawable/anim_correct_button" />
 
             <ImageButton
                 android:id="@+id/answer_no_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 android:layout_weight="1"
+                android:background="@null"
                 android:onClick="@{() -> viewModel.handleAnswer(false)}"
-                app:srcCompat="@drawable/answer_no" />
+                app:srcCompat="@drawable/anim_incorrect_button" />
         </LinearLayout>
 
         <Button

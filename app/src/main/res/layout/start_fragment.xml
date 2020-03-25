@@ -45,7 +45,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.75"
-            app:srcCompat="@drawable/help_button" />
+            app:srcCompat="@drawable/anim_help_button" />
 
         <ImageButton
             android:id="@+id/settings_button"
