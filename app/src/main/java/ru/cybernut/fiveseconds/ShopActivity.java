@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.billingclient.api.BillingClient;
@@ -35,6 +36,7 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
     private Button shopButton;
     private RecyclerView shopItemsRecyclerView;
     private BillingManager mBillingManager;
+    private ProgressBar progressBar;
     private Map<String, SkuData> skuDataMap = new HashMap<>();
 
     @Override
@@ -45,6 +47,7 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
         // Create and initialize BillingManager which talks to BillingLibrary
         mBillingManager = new BillingManager(this, this);
 
+        progressBar = findViewById(R.id.progressBar);
         shopButton = findViewById(R.id.shop_test_button);
         shopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +59,16 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
         shopItemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         shopItemsAdapter = new ShopItemsAdapter();
         shopItemsRecyclerView.setAdapter(shopItemsAdapter);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LOW_PROFILE
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
     private void updateItemList() {
@@ -70,6 +83,7 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
     public void onBillingClientSetupFinished() {
         Log.i(TAG, "onBillingClientSetupFinished: ");
         updateItemList();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -114,6 +128,7 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
             }
         }
         shopItemsAdapter.notifyDataSetChanged();
+        progressBar.setVisibility(View.GONE);
     }
 
     private class ShopItemHolder extends RecyclerView.ViewHolder {

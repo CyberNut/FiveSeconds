@@ -38,7 +38,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/avatar" />
+                android:background="#2196F3"
+                app:srcCompat="@drawable/avatar_icon" />
 
             <TextView
                 android:id="@+id/player_card_score"
@@ -46,6 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_margin="2dp"
+                android:textColor="@color/colorWhite"
                 android:text="@{String.valueOf(player.score)}" />
 
             <TextView
@@ -53,6 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
+                android:textColor="@color/colorWhite"
                 tools:text = "playerName"
                 android:text="@{player.name}" />
 

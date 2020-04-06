@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import java.util.Locale;
@@ -33,12 +32,11 @@ public class StartFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.start_fragment, container, false);
-        View v = binding.getRoot();
-        prepareUI(v);
-        return v;
+        prepareUI();
+        return binding.getRoot();
     }
 
-    private void prepareUI(View view) {
+    private void prepareUI() {
         newGameButton = binding.newGameButton;
         newGameButton.setOnClickListener(new View.OnClickListener() {
             @Override

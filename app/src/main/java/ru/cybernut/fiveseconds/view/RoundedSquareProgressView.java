@@ -42,7 +42,7 @@ public class RoundedSquareProgressView extends View {
     private void initializePaints(Context context, AttributeSet attrs, int defStyleAttr) {
         progressBarPaint = new Paint();
         progressBarPaint.setColor(context.getResources().getColor(
-                android.R.color.holo_green_dark));
+                android.R.color.holo_green_light));
         progressBarPaint.setStrokeWidth(CalculationUtil.convertDpToPx(
                 widthInDp, getContext()));
         progressBarPaint.setAntiAlias(true);

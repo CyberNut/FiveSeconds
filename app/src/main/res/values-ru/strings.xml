@@ -60,4 +60,6 @@
     <string name="buy">Купить</string>
     <string name="bought">Куплено</string>
     <string name="update">Обновить</string>
+    <string name="round">Раунд</string>
+    <string name="available_question_pack">Доступные наборы вопросов</string>
 </resources>

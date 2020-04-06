@@ -11,7 +11,8 @@
         android:id="@+id/item_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/player_list_empty_photo"
+        android:src="@drawable/avatar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,9 +24,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:textSize="14sp"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="@+id/item_photo"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/item_delete_player_button"
         app:layout_constraintStart_toEndOf="@+id/item_photo"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,8 +35,10 @@
         android:id="@+id/item_delete_player_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:background="@null"
         android:src="@drawable/delete_player"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

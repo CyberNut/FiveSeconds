@@ -193,7 +193,8 @@ public class NewGameAddPlayersFragment extends Fragment {
 //            if(this.player.getPhoto() == null) {
 //                playerPhotoImageView.setImageDrawable(this.player.getPhoto());
 //            } else {
-                playerPhotoImageView.setImageResource(R.drawable.player_list_empty_photo);
+                playerPhotoImageView.setImageResource(R.drawable.avatar_icon_small);
+                playerPhotoImageView.setBackgroundColor(getResources().getColor(R.color.playerCard_background));
 //            }
         }
     }

@@ -156,6 +156,11 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         return String.valueOf(currentRound);
     }
 
+    @Bindable
+    public String getNumberOfRounds() {
+        return String.valueOf(numberOfRounds);
+    }
+
     private void setCurrentQuestionText(String currentQuestionText) {
         this.currentQuestionText = currentQuestionText;
         notifyPropertyChanged(BR.currentQuestionText);
@@ -273,13 +278,15 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     @Override
     public void timerFinished() {
         currentPlayer.setProgressbarValue(100);
-        setNeedShowAnswer(true);
+        if(isStarted) {
+            setNeedShowAnswer(true);
+        }
     }
 
     public void pauseGame() {
         if(game == null) {return;}
 
-        if(!game.isPaused()) {
+        if(isStarted && !game.isPaused()) {
             game.pause();
         }
     }

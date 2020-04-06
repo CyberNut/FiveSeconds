@@ -44,7 +44,9 @@
     <string name="sound_files_deleted_successfully">Sound files deleted successfully!</string>
     <string name="buy">Buy</string>
     <string name="bought">Bought</string>
+    <string name="round">Round</string>
     <string name="update">Update</string>
+    <string name="available_question_pack">Available question pack</string>
     <string-array name="game_type_list">
         <item>Auto play sound</item>
         <item>Add time for reading</item>

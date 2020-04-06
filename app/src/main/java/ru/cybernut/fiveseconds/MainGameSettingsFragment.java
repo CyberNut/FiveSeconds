@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -45,7 +46,7 @@ public class MainGameSettingsFragment extends Fragment {
     private int languagePosition;
     private EditText numberOfRoundsEdittext;
     private int languagePositionFromPref;
-    private Button deleteSoundsFilesButton;
+    private ImageButton deleteSoundsFilesButton;
     private ProgressDialog progressDialog;
     private DeleteSoundFilesTask deleteSoundFilesTask;
 

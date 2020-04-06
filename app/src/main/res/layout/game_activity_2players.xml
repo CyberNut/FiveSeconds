@@ -136,8 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:padding="8dp"
-                android:text="@{viewModel.currentRound}"
+                android:text="@{@string/round + ` ` + viewModel.currentRound + `/` + viewModel.numberOfRounds}"
                 android:textSize="12sp" />
 
             <TextView
@@ -149,6 +148,7 @@
                 android:inputType="textMultiLine|textNoSuggestions"
                 android:padding="8dp"
                 android:text="@{viewModel.currentQuestionText}"
+                android:textColor="@color/colorWhite"
                 android:textSize="16sp" />
 
             <Button

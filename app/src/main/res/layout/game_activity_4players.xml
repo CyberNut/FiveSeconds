@@ -171,6 +171,14 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/round_number_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@{@string/round + ` ` + viewModel.currentRound + `/` + viewModel.numberOfRounds}"
+                    android:textSize="12sp" />
+
+                <TextView
                     android:id="@+id/question_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -179,6 +187,7 @@
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:padding="8dp"
                     android:text="@{viewModel.currentQuestionText}"
+                    android:textColor="@color/colorWhite"
                     android:textSize="16sp" />
 
                 <Button
