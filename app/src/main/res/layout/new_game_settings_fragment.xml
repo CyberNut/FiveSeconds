@@ -15,6 +15,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         android:text="@string/game_type_label"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/game_type_spinner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/question_sets_recycler_view" />
@@ -26,6 +28,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:entries="@array/game_type_list"
+        android:popupBackground="@color/blueLight"
         app:layout_constraintStart_toEndOf="@+id/game_type_label"
         app:layout_constraintTop_toBottomOf="@+id/question_sets_recycler_view" />
 
@@ -37,6 +40,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/number_of_rounds"
         android:textSize="24sp"
+        android:popupBackground="@color/blueLight"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -85,6 +89,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/choose_question_sets_label_text"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/numberOfRoundsLabel" />
 

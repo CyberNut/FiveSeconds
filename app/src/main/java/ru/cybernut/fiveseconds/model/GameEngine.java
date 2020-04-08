@@ -2,17 +2,22 @@ package ru.cybernut.fiveseconds.model;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
+
 import ru.cybernut.fiveseconds.FiveSecondsApplication;
+import ru.cybernut.fiveseconds.R;
 
 public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer.OnPreparedListener {
 
@@ -28,9 +33,11 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
     private int gameType;
     private int numberOfQuestions;
+    private boolean isNeedPlaySound;
     private Question currentQuestion;
     private Integer playableNowSoundId;
     private Integer currentSoundId;
+    private Integer timerFinishedSoundId;
     private int currentSoundDuration = 0;
     private List<String> uuidList;
     private SoundPool soundPool;
@@ -47,14 +54,14 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
 
     private Updatable viewModel;
 
-    public GameEngine(Updatable viewModel, int gameType, int numberOfQuestions) {
+    public GameEngine(Updatable viewModel, int gameType, int numberOfQuestions, boolean isNeedPlaySound) {
         this.viewModel = viewModel;
         this.gameType = gameType;
+        this.isNeedPlaySound = isNeedPlaySound;
         this.numberOfQuestions = numberOfQuestions;
         this.roundDuration = STANDART_ROUND_DURATION;
         this.soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
         this.mediaPlayer = new MediaPlayer();
-
     }
 
     public void initialize(ArrayList<Integer> setIds) {
@@ -70,6 +77,13 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
             additionalTime = sharedPreferences.getInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, FiveSecondsApplication.DEFAULT_ADDITIONAL_TIME_VALUE) * 1000;
             roundDuration = roundDuration + additionalTime;
         }
+    }
+
+    public void destroy() {
+        gameTimer.cancel();
+        soundPool.release();
+        mediaPlayer.release();
+        viewModel = null;
     }
 
     public String getCurrentQuestionText() {
@@ -188,6 +202,26 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         }
     }
 
+    private void initStaticSounds() {
+        if (!isNeedPlaySound) {
+            return;
+        }
+        AssetFileDescriptor fileDescriptor = FiveSecondsApplication.getTimerFinishedAssetFileDescriptor();
+        if (fileDescriptor != null) {
+            try {
+                timerFinishedSoundId = soundPool.load(fileDescriptor, 1);
+            } catch (RuntimeException e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
+    }
+
+    private void playTimerFinishedSound() {
+        if(timerFinishedSoundId != null) {
+            soundPool.play(timerFinishedSoundId, 0.75f, 0.75f, 1, 0, 1.0f);
+        }
+    }
+
     @SuppressLint("StaticFieldLeak")
     private class GameInitTask extends AsyncTask<Void, Void, Void> {
 
@@ -199,6 +233,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
             if (isGameOver) {
                 viewModel.gameOver();
             }
+            initStaticSounds();
             if (gameType == GAME_TYPE_AUTO_PLAY_SOUND) {
                 currentSoundId = prepareNextSound(currentQuestion.getId().toString());
             } else {
@@ -253,14 +288,20 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
                 if (gameType == GAME_TYPE_AUTO_PLAY_SOUND && millisUntilFinished >= roundDuration) {
                 } else {
                     playableNowSoundId = 0;
-                    viewModel.progressUpdate( 100 - ((millisUntilFinished * 100 /roundDuration)));
+                    if(viewModel != null) {
+                        viewModel.progressUpdate(100 - ((millisUntilFinished * 100 / roundDuration)));
+                    }
                 }
             }
         }
 
         @Override
         public void onFinish() {
-            viewModel.timerFinished();
+            if(viewModel != null) {
+                viewModel.timerFinished();
+            }
+            playTimerFinishedSound();
         }
     }
+
 }

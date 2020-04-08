@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,7 @@ public class MainGameSettingsFragment extends Fragment {
     private String lang;
     private Spinner languageSpinner;
     private Spinner gameTypeSpinner;
+    private AppCompatCheckBox isNeedPlaySoundCheckBox;
     private EditText addTimeEditText;
     private Boolean isNeedToShowNotice;
     private int languagePosition;
@@ -108,6 +110,9 @@ public class MainGameSettingsFragment extends Fragment {
                 openDeleteSoundsFilesDialog();
             }
         });
+
+        isNeedPlaySoundCheckBox = binding.playSoundAfterTimeDoneCheckBox;
+
     }
 
     public Boolean getNeedToShowNotice() {
@@ -147,6 +152,7 @@ public class MainGameSettingsFragment extends Fragment {
             //default number of questions
             int numberOfRounds = sharedPreferences.getInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_ROUNDS, FiveSecondsApplication.DEFAULT_NUMBER_OF_ROUNDS);
             numberOfRoundsEdittext.setText(String.valueOf(numberOfRounds));
+            isNeedPlaySoundCheckBox.setChecked(sharedPreferences.getBoolean(FiveSecondsApplication.PREF_PLAY_SOUND_AFTER_TIMER_ENDS, FiveSecondsApplication.DEFAULT_IS_NEED_PLAY_SOUND_AFTER_TIMER_ENDS));
         }
     }
 
@@ -178,6 +184,7 @@ public class MainGameSettingsFragment extends Fragment {
                 .putInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, addTimeValue)
                 //default number of questions
                 .putInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_ROUNDS, numberOfRounds)
+                .putBoolean(FiveSecondsApplication.PREF_PLAY_SOUND_AFTER_TIMER_ENDS, isNeedPlaySoundCheckBox.isChecked())
                 .apply();
             //Language
             String[] languages = getResources().getStringArray(R.array.language_list_values);
@@ -223,7 +230,7 @@ public class MainGameSettingsFragment extends Fragment {
 
     private void openDeleteSoundsFilesDialog() {
         AlertDialog.Builder deleteSoundFilesDialog = new AlertDialog.Builder(
-                getActivity());
+                getActivity(), R.style.DialogTheme);
         deleteSoundFilesDialog.setTitle(getString(R.string.delete_sounds_files) + "?");
 
         deleteSoundFilesDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

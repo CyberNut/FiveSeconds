@@ -19,7 +19,7 @@
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="choose_question_sets_label_text">Выберите наборы вопросов:</string>
-    <string name="game_type_label">Режим игры</string>
+    <string name="game_type_label">Режим игры:</string>
     <string name="language_title">Язык</string>
     <string name="LangDialogTitle">Выберите язык:</string>
     <string name="LangSummary">Язык приложения.\nПосле изменения необходимо перезапустить приложение!</string>
@@ -52,9 +52,9 @@
     <string name="seconds">сек.</string>
     <string name="delete_sounds_files">Удалить все звуковые файлы</string>
     <string name="deleting_sounds_dialog_title">Удаление звуковых файлов</string>
-    <string name="five_seconds_game_rule">Five seconds game rule</string>
+    <string name="five_seconds_game_rule">Об игре \"Ответь за 5 секунд. Удобная версия!\"</string>
     <string name="back">Назад</string>
-    <string name="rules_text">Цель игры\nПолучить к концу игры больше очков чем другие игроки правильно отвечая на вопросы.\n\nПроцесс игры\n</string>
+    <string name="rules_text"><b>Цель игры:</b>\nПолучить к концу игры больше очков чем другие игроки, правильно отвечая на вопросы.\n\n<b>Процесс игры:</b>\nВсе просто: нужно успеть дать три ответа на вопрос до того, как закончится время на таймере.\n\nТаймер ведет себя по-разному в зависимости от режима игры:\n\nВ режиме <b><i>«Автовоспроизведение вопроса»</i></b> вопросы озвучиваются, 5-ти секундный таймер запускается сразу после того как прозвучит вопрос.\n\nВ режиме <b><i>«Дополнительное время для прочтения»</i></b> вопрос не озвучивается, а к стандартному времени 5 сек. добавляется дополнительное время на прочтение вопроса (время указывается в настройках).\n\nВ режиме <b><i>«Вручную»</i></b> таймер стартует только после нажатия игроком на кнопку «Старт».</string>
     <string name="next">Далее</string>
     <string name="sound_files_deleted_successfully">Звуковые файлы успешно удалены!</string>
     <string name="buy">Купить</string>
@@ -62,4 +62,7 @@
     <string name="update">Обновить</string>
     <string name="round">Раунд</string>
     <string name="available_question_pack">Доступные наборы вопросов</string>
+    <string name="sound_file_downloaded">Набор звуков загружен!</string>
+    <string name="sound_file_download_error">Ошибка загрузки!\nПожалуйста, попробуйте еще раз. Код ошибки:</string>
+    <string name="play_sound_after_timer_ends">Проигрывать звук после завершения таймера</string>
 </resources>

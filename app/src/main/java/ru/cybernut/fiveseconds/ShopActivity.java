@@ -2,6 +2,7 @@ package ru.cybernut.fiveseconds;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.billingclient.api.BillingClient;
@@ -33,10 +33,9 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
 
     private static final String TAG = "ShopActivity";
     private ShopItemsAdapter shopItemsAdapter;
-    private Button shopButton;
     private RecyclerView shopItemsRecyclerView;
     private BillingManager mBillingManager;
-    private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private Map<String, SkuData> skuDataMap = new HashMap<>();
 
     @Override
@@ -47,14 +46,15 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
         // Create and initialize BillingManager which talks to BillingLibrary
         mBillingManager = new BillingManager(this, this);
 
-        progressBar = findViewById(R.id.progressBar);
-        shopButton = findViewById(R.id.shop_test_button);
-        shopButton.setOnClickListener(new View.OnClickListener() {
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
                 updateItemList();
             }
         });
+        swipeRefreshLayout.setRefreshing(true);
         shopItemsRecyclerView = findViewById(R.id.shop_item_list);
         shopItemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         shopItemsAdapter = new ShopItemsAdapter();
@@ -77,13 +77,13 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
         if(shopItemsAdapter!=null) {
             shopItemsAdapter.notifyDataSetChanged();
         }
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onBillingClientSetupFinished() {
         Log.i(TAG, "onBillingClientSetupFinished: ");
         updateItemList();
-        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -128,7 +128,6 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
             }
         }
         shopItemsAdapter.notifyDataSetChanged();
-        progressBar.setVisibility(View.GONE);
     }
 
     private class ShopItemHolder extends RecyclerView.ViewHolder {

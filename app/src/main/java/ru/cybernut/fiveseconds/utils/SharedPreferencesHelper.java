@@ -11,6 +11,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.cybernut.fiveseconds.FiveSecondsApplication;
 import ru.cybernut.fiveseconds.model.Player;
 
 public class SharedPreferencesHelper {
@@ -35,5 +36,15 @@ public class SharedPreferencesHelper {
     public void savePlayers(List<Player> playerList) {
         sharedPreferences.edit().putString(PLAYERS_KEY,
                 gson.toJson(playerList, PLAYERS_TYPE)).apply();
+    }
+
+    public void savePlaySoundAfterTimerEnds(boolean isNeedPlay) {
+        sharedPreferences.edit().putBoolean(FiveSecondsApplication.PREF_PLAY_SOUND_AFTER_TIMER_ENDS, isNeedPlay).apply();
+    }
+
+    public boolean isNeedPlaySoundAfterTimerEnds() {
+        boolean isNeed = true;
+        sharedPreferences.getBoolean(FiveSecondsApplication.PREF_PLAY_SOUND_AFTER_TIMER_ENDS, isNeed);
+        return isNeed;
     }
 }

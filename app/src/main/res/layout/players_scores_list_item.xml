@@ -18,7 +18,7 @@
             android:id="@+id/item_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/playerCard_background"
+            android:background="@color/blueLight"
             android:src="@drawable/avatar_icon_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

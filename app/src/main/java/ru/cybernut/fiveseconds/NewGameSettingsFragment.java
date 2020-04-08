@@ -149,7 +149,7 @@ public class NewGameSettingsFragment extends Fragment {
             }
         });
 
-        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog = new ProgressDialog(getActivity(), R.style.DialogTheme);
         mProgressDialog.setMessage(getResources().getString(R.string.sound_downloading_progressbar_title));
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -250,7 +250,7 @@ public class NewGameSettingsFragment extends Fragment {
     private void openConfirmUsingMobileNetworkDialog(final QuestionSetModel questionSetModelForLoading) {
 
         AlertDialog.Builder confirmMobileNetworkDialog = new AlertDialog.Builder(
-                getActivity());
+                getActivity(), R.style.DialogTheme);
         confirmMobileNetworkDialog.setTitle(R.string.mobile_network_using_dialog_title);
 
         confirmMobileNetworkDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -459,9 +459,9 @@ public class NewGameSettingsFragment extends Fragment {
         protected void onPostExecute(String result) {
             mProgressDialog.dismiss();
             if (result != null)
-                Toast.makeText(context,"Download error: "+result, Toast.LENGTH_LONG).show();
+                Toast.makeText(context,getString(R.string.sound_file_download_error)+result, Toast.LENGTH_LONG).show();
             else
-                Toast.makeText(context,"File downloaded", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.sound_file_downloaded, Toast.LENGTH_SHORT).show();
         }
     }
 

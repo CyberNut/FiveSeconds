@@ -2,8 +2,10 @@ package ru.cybernut.fiveseconds;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import ru.cybernut.fiveseconds.databinding.GameActivity2playersBinding;
 import ru.cybernut.fiveseconds.databinding.GameActivity4playersBinding;
 import ru.cybernut.fiveseconds.databinding.GameActivity6playersBinding;
+import ru.cybernut.fiveseconds.utils.SharedPreferencesHelper;
 import ru.cybernut.fiveseconds.view.GameViewModel;
 import ru.cybernut.fiveseconds.view.OnBackPressedListener;
 import ru.cybernut.fiveseconds.view.PlayerModel;
@@ -50,7 +53,10 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
         int gameType = getArguments().getInt(GAME_TYPE_KEY);
         ArrayList<Integer> setIds = getArguments().getIntegerArrayList(QUESTION_SET_IDS_KEY);
 
-        viewModel = new GameViewModel(gameType, numberOfRounds, setIds);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(FiveSecondsApplication.getAppContext());
+        boolean isNeedPlaySound = sharedPreferences.getBoolean(FiveSecondsApplication.PREF_PLAY_SOUND_AFTER_TIMER_ENDS, FiveSecondsApplication.DEFAULT_IS_NEED_PLAY_SOUND_AFTER_TIMER_ENDS);
+
+        viewModel = new GameViewModel(gameType, numberOfRounds, setIds, isNeedPlaySound);
         int numberOfPlayers = viewModel.getNumberOfPlayers();
         if( numberOfPlayers == 2) {
             GameActivity2playersBinding binding = DataBindingUtil.inflate(inflater, R.layout.game_activity_2players, container, false);
@@ -76,6 +82,9 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
 
     @Override
     public void gameOver(ArrayList<PlayerModel> playerModelList) {
+        if(viewModel!= null) {
+            viewModel.cleanViewModel();
+        }
         Intent intent = GameOverActivity.newIntent(getActivity(), playerModelList);
         startActivity(intent);
     }
@@ -94,13 +103,14 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
             return;
         }
 
-        AlertDialog.Builder quitDialog = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder quitDialog = new AlertDialog.Builder(getActivity(), R.style.DialogTheme);
         quitDialog.setTitle(R.string.quit_dialog_title);
 
         quitDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
+                viewModel.cleanViewModel();
                 Intent intent = new Intent(getActivity(), StartActivity.class);
                 getActivity().finish();
                 startActivity(intent);

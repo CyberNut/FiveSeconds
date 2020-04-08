@@ -64,9 +64,12 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:background="@null"
-            android:text="@string/start_game"
-            android:drawableLeft="@drawable/ready_game"
+            android:drawableLeft="@drawable/start_button"
             android:onClick="@{viewModel::onNextTurn}"
+            android:text="@string/start_game"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:visibility="@{viewModel.gameReady &amp;&amp; !viewModel.started ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -136,6 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:textColor="@color/colorGray"
                 android:text="@{@string/round + ` ` + viewModel.currentRound + `/` + viewModel.numberOfRounds}"
                 android:textSize="12sp" />
 
@@ -160,6 +164,11 @@
                 android:gravity="center"
                 android:onClick="@{() -> viewModel.manualStartTimer()}"
                 android:text="@string/start_game"
+                android:background="@null"
+                android:drawableLeft="@drawable/start_button"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:visibility="@{viewModel.manualStartTimer ? View.VISIBLE : View.GONE}" />
         </LinearLayout>
 

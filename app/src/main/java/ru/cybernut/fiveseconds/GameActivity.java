@@ -37,8 +37,11 @@ public class GameActivity extends SingleFragmentFullScreenActivity {
 
     @Override
     protected void onDestroy() {
+        if (viewModel!= null) {
+            viewModel.cleanViewModel();
+            viewModel = null;
+        }
         super.onDestroy();
-        viewModel = null;
     }
 
     @Override

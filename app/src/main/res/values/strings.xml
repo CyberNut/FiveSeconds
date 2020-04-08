@@ -20,7 +20,7 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="choose_question_sets_label_text">Choose question sets:</string>
-    <string name="game_type_label">Game type</string>
+    <string name="game_type_label">Game type:</string>
     <string name="language_title">Language</string>
     <string name="LangDialogTitle">Select language:</string>
     <string name="LangSummary">Application language.\nIt is necessary to restart application for applying changes!</string>
@@ -47,6 +47,9 @@
     <string name="round">Round</string>
     <string name="update">Update</string>
     <string name="available_question_pack">Available question pack</string>
+    <string name="sound_file_downloaded">Sound file downloaded</string>
+    <string name="sound_file_download_error">Download error!\nPlease try again. Error code:</string>
+    <string name="play_sound_after_timer_ends">Play sound after timer ends</string>
     <string-array name="game_type_list">
         <item>Auto play sound</item>
         <item>Add time for reading</item>

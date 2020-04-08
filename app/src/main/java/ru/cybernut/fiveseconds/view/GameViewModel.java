@@ -35,11 +35,11 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     private int currentQuestionNumber = 1;
     private GameOverable gameActivity;
 
-    public GameViewModel(int gameType, int numberOfRounds, ArrayList<Integer> setIds) {
+    public GameViewModel(int gameType, int numberOfRounds, ArrayList<Integer> setIds, boolean isNeedPlaySound) {
         this.setIds = setIds;
         this.numberOfRounds = numberOfRounds;
         initPlayers();
-        game = new GameEngine(this, gameType, players.size() * numberOfRounds);
+        game = new GameEngine(this, gameType, players.size() * numberOfRounds, isNeedPlaySound);
         setManualStartButtonVisible();
     }
 
@@ -62,6 +62,12 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     public void initialize(GameOverable gameActivity) {
         this.gameActivity = gameActivity;
         game.initialize(setIds);
+    }
+
+    public void cleanViewModel() {
+        game.destroy();
+        gameActivity = null;
+
     }
 
     public PlayerModel getPlayer(int index) {

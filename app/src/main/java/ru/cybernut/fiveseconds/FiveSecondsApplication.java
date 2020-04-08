@@ -3,11 +3,15 @@ package ru.cybernut.fiveseconds;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.Locale;
+
+import javax.security.auth.login.LoginException;
 
 import ru.cybernut.fiveseconds.database.FiveSecondsDBSchema;
 
@@ -21,10 +25,12 @@ public class FiveSecondsApplication extends Application {
     public static final String PREF_DEFAULT_GAME_TYPE = "default_game_type";
     public static final String PREF_ADD_TIME_VALUE = "additional_time_value";
     public static final String PREF_DEFAULT_NUMBER_OF_ROUNDS = "default_number_of_rounds";
+    public static final String PREF_PLAY_SOUND_AFTER_TIMER_ENDS = "play_sound_after_timer_ends";
     public static final int DEFAULT_ADDITIONAL_TIME_VALUE = 2;
     public static final int DEFAULT_NUMBER_OF_ROUNDS = 5;
+    public static final boolean DEFAULT_IS_NEED_PLAY_SOUND_AFTER_TIMER_ENDS = true;
 
-
+    public static final String TIMER_FINISHED_FILENAME = "timer_finished.wav";
     private static final String SOUNDS_FOLDER = "/Sounds/";
     private static final String[] supportLanguages = new String[] {"en", "ru", "es"};
     private static final String defaultLanguage = "en";
@@ -32,6 +38,7 @@ public class FiveSecondsApplication extends Application {
     private static String soundFolderPath;
     private static String externalFilesDirPath;
     private static Context appContext;
+    private static AssetFileDescriptor timerFinishedAssetFileDescriptor;
 
     @Override
     public void onCreate() {
@@ -40,6 +47,16 @@ public class FiveSecondsApplication extends Application {
         appContext = getApplicationContext();
         externalFilesDirPath = getExternalFilesDir(null).toString() ;
         loadLocaleSetting();
+        initStaticSound();
+
+    }
+
+    private void initStaticSound() {
+        try {
+            timerFinishedAssetFileDescriptor = getAssets().openFd(TIMER_FINISHED_FILENAME);
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
 
     private static void updateLocaleSettings() {
@@ -100,5 +117,9 @@ public class FiveSecondsApplication extends Application {
     public static Context getAppContext() {
         Log.i(TAG, "getAppContext: " + language);
         return appContext;
+    }
+
+    public static AssetFileDescriptor getTimerFinishedAssetFileDescriptor() {
+        return timerFinishedAssetFileDescriptor;
     }
 }
