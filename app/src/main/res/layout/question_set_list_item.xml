@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -9,23 +10,38 @@
         android:id="@+id/question_set_name_checkbox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:buttonTint="@color/colorWhite"
+        android:padding="0dp"
         android:textColor="@color/checkbox_color_selector"
-        app:layout_constraintBottom_toBottomOf="@+id/load_sounds_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/load_sounds_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/load_sounds_button" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <Button
         android:id="@+id/load_sounds_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
-        android:src="@drawable/anim_download_sounds_button"
+        android:drawableRight="@drawable/download_button"
+        android:text="@string/download_soundspack"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buy_question_set_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:drawableRight="@drawable/pay_icon"
+        android:text="@string/buy"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>

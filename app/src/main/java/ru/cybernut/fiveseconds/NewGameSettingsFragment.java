@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -99,6 +101,20 @@ public class NewGameSettingsFragment extends Fragment {
         numberOfPlayers = PlayersList.getInstance().getNumberOfPlayers();
 
         gameTypeSpinner = v.findViewById(R.id.game_type_spinner);
+        gameTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i == 1) {
+                    addTimeValueTextView.setVisibility(View.VISIBLE);
+                } else {
+                    addTimeValueTextView.setVisibility(View.INVISIBLE);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         startNewGameButton = v.findViewById(R.id.startNewGameButton);
         startNewGameButton.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +137,6 @@ public class NewGameSettingsFragment extends Fragment {
             }
 
         });
-
 
         questionSetsRecyclerView = v.findViewById(R.id.question_sets_recycler_view);
         questionSetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -273,7 +288,8 @@ public class NewGameSettingsFragment extends Fragment {
 
         private QuestionSetModel questionSetModel;
         private CheckBox questionSetNameCheckBox;
-        private ImageButton loadSoundsButton;
+        private Button loadSoundsButton;
+        private Button buyQuestionsSetButton;
 
         public QuestionSetHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.question_set_list_item, parent, false));
@@ -282,11 +298,11 @@ public class NewGameSettingsFragment extends Fragment {
             loadSoundsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!questionSetModel.isAvailable()) {
-                        Intent intent = new Intent(getContext(), ShopActivity.class);
-                        startActivity(intent);
-                        return;
-                    }
+//                    if(!questionSetModel.isAvailable()) {
+//                        Intent intent = new Intent(getContext(), ShopActivity.class);
+//                        startActivity(intent);
+//                        return;
+//                    }
 
                     int networkType = checkNetworkConnection();
                     switch (networkType) {
@@ -300,6 +316,15 @@ public class NewGameSettingsFragment extends Fragment {
                             openConfirmUsingMobileNetworkDialog(questionSetModel);
                             break;
                     }
+                }
+            });
+
+            buyQuestionsSetButton = itemView.findViewById(R.id.buy_question_set_button);
+            buyQuestionsSetButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getContext(), ShopActivity.class);
+                    startActivity(intent);
                 }
             });
             questionSetNameCheckBox = itemView.findViewById(R.id.question_set_name_checkbox);
@@ -318,8 +343,11 @@ public class NewGameSettingsFragment extends Fragment {
                 questionSetNameCheckBox.setText(this.questionSetModel.getName() + (questionSetModel.isFree() ? "" : " ($)"));
                 if(!questionSetModel.isAvailable()) {
                     questionSetNameCheckBox.setEnabled(false);
+                    loadSoundsButton.setVisibility(View.GONE);
+                    buyQuestionsSetButton.setVisibility(View.VISIBLE);
                 } else {
                     questionSetNameCheckBox.setEnabled(true);
+                    buyQuestionsSetButton.setVisibility(View.GONE);
                 }
                 questionSetNameCheckBox.setChecked(questionSetModel.isChecked());
             }

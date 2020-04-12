@@ -30,9 +30,9 @@ public class FiveSecondsApplication extends Application {
     public static final int DEFAULT_NUMBER_OF_ROUNDS = 5;
     public static final boolean DEFAULT_IS_NEED_PLAY_SOUND_AFTER_TIMER_ENDS = true;
 
-    public static final String TIMER_FINISHED_FILENAME = "timer_finished.wav";
+    public static final String TIMER_FINISHED_FILENAME = "timer_finished.mp3";
     private static final String SOUNDS_FOLDER = "/Sounds/";
-    private static final String[] supportLanguages = new String[] {"en", "ru", "es"};
+    private static final String[] supportLanguages = new String[] {"en", "ru"};
     private static final String defaultLanguage = "en";
     private static String language;
     private static String soundFolderPath;

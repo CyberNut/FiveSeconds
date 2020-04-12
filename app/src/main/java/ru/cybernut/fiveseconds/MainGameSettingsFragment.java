@@ -208,7 +208,7 @@ public class MainGameSettingsFragment extends Fragment {
 
     private void openQuitDialog() {
         AlertDialog.Builder quitDialog = new AlertDialog.Builder(
-                getActivity());
+                getActivity(), R.style.DialogTheme);
         quitDialog.setTitle(R.string.change_language_dialog_title);
 
         quitDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

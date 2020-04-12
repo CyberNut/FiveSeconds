@@ -24,6 +24,7 @@ public class StartFragment extends Fragment {
     private ImageButton helpButton;
     private ImageButton settingsButton;
     private ImageButton shopButton;
+    private ImageButton shareButton;
 
     public static StartFragment newInstance() {
         return new StartFragment();
@@ -73,6 +74,20 @@ public class StartFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ShopActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        shareButton = binding.shareButton;
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/apps/internaltest/4699175933318535405");
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
             }
         });
 

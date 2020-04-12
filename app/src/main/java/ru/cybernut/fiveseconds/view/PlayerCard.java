@@ -7,18 +7,18 @@ import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
 import ru.cybernut.fiveseconds.R;
-import ru.cybernut.fiveseconds.databinding.NewPlayerCardBinding;
+import ru.cybernut.fiveseconds.databinding.PlayerCardBinding;
 
 public class PlayerCard extends RelativeLayout {
 
     private PlayerModel player;
-    private NewPlayerCardBinding binding;
+    private PlayerCardBinding binding;
 
     public PlayerCard(Context context) {
         super(context);
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        binding = DataBindingUtil.inflate(mInflater, R.layout.new_player_card, this, true);
+        binding = DataBindingUtil.inflate(mInflater, R.layout.player_card, this, true);
 
     }
 
@@ -26,14 +26,14 @@ public class PlayerCard extends RelativeLayout {
         super(context, attrs);
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        binding = DataBindingUtil.inflate(mInflater, R.layout.new_player_card, this, true);
+        binding = DataBindingUtil.inflate(mInflater, R.layout.player_card, this, true);
     }
 
     public PlayerCard(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        binding = DataBindingUtil.inflate(mInflater, R.layout.new_player_card, this, true);
+        binding = DataBindingUtil.inflate(mInflater, R.layout.player_card, this, true);
     }
 
     public boolean isCurrentPlayer() {

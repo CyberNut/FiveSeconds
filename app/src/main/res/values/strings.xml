@@ -50,6 +50,7 @@
     <string name="sound_file_downloaded">Sound file downloaded</string>
     <string name="sound_file_download_error">Download error!\nPlease try again. Error code:</string>
     <string name="play_sound_after_timer_ends">Play sound after timer ends</string>
+    <string name="download_soundspack">Download soundspack</string>
     <string-array name="game_type_list">
         <item>Auto play sound</item>
         <item>Add time for reading</item>

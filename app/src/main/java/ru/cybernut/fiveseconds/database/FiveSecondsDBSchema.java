@@ -29,14 +29,4 @@ public class FiveSecondsDBSchema {
         }
     }
 
-    public static final class SoundsTable {
-
-        public static final String NAME = "sounds";
-
-        public static final class Cols {
-            public static final String QUESTION_UUID = "question_uuid";
-            public static final String FILE_PATH = "file_path";
-        }
-
-    }
 }

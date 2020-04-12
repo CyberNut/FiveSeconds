@@ -65,4 +65,5 @@
     <string name="sound_file_downloaded">Набор звуков загружен!</string>
     <string name="sound_file_download_error">Ошибка загрузки!\nПожалуйста, попробуйте еще раз. Код ошибки:</string>
     <string name="play_sound_after_timer_ends">Проигрывать звук после завершения таймера</string>
+    <string name="download_soundspack">Загрузить набор звуков</string>
 </resources>

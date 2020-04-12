@@ -7,7 +7,6 @@ package ru.cybernut.fiveseconds.database;
 
         import ru.cybernut.fiveseconds.model.Question;
         import ru.cybernut.fiveseconds.model.QuestionSet;
-        import ru.cybernut.fiveseconds.model.Sound;
 
         import static ru.cybernut.fiveseconds.database.FiveSecondsDBSchema.*;
 
@@ -37,12 +36,5 @@ public class FiveSecondsCursorWrapper extends CursorWrapper {
         return new QuestionSet(name, type, link, soundsLoaded > 0 ? true : false, shopItemId, owned);
     }
 
-    public Sound getSound() {
-        String path = getString(getColumnIndex(SoundsTable.Cols.FILE_PATH));
-        String questionUUIDString = getString(getColumnIndex(SoundsTable.Cols.QUESTION_UUID));
-
-        Sound sound = new Sound(path, UUID.fromString(questionUUIDString));
-        return sound;
-    }
 }
 
