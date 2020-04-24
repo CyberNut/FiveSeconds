@@ -10,7 +10,7 @@
             type="ru.cybernut.fiveseconds.view.GameViewModel"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/root_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -235,5 +235,5 @@
             </LinearLayout>
         </com.github.rongi.rotate_layout.layout.RotateLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

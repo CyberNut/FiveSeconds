@@ -80,7 +80,10 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     }
 
     public void destroy() {
-        gameTimer.cancel();
+        if(gameTimer != null) {
+            gameTimer.cancel();
+            gameTimer = null;
+        }
         soundPool.release();
         mediaPlayer.release();
         viewModel = null;

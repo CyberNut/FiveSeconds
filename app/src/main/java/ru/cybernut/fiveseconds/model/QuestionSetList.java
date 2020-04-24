@@ -49,6 +49,7 @@ public class QuestionSetList {
         values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.OWNED, questionSet.getOwned());
         values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.SOUNDS_LINK, questionSet.getSoundsLink());
         values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.SOUNDS_LOADED, questionSet.isSoundsLoaded());
+        values.put(FiveSecondsDBSchema.QuestionSetsTable.Cols.SOUNDS_FILES_SIZE, questionSet.getSoundsFilesSize());
         return values;
     }
 

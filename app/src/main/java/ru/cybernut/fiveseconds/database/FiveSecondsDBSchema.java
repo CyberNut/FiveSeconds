@@ -26,6 +26,7 @@ public class FiveSecondsDBSchema {
             public static final String OWNED = "owned";
             public static final String SOUNDS_LINK = FiveSecondsApplication.getLanguage() +"_sounds_link";
             public static final String SOUNDS_LOADED = FiveSecondsApplication.getLanguage() +"_sounds_loaded";
+            public static final String SOUNDS_FILES_SIZE = FiveSecondsApplication.getLanguage() +"_sounds_files_size";
         }
     }
 

@@ -10,7 +10,7 @@
             type="ru.cybernut.fiveseconds.view.GameViewModel"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
 
         android:id="@+id/root_container"
         android:layout_width="match_parent"
@@ -172,5 +172,5 @@
                 android:visibility="@{viewModel.manualStartTimer ? View.VISIBLE : View.GONE}" />
         </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

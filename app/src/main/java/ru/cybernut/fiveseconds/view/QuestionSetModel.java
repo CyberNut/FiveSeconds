@@ -9,13 +9,14 @@ public class QuestionSetModel {
     private boolean isAvailable;
     private boolean isFree;
     private boolean isSoundsAvailable;
-
+    private String soundsFilesSize;
     public QuestionSetModel(QuestionSet questionSet) {
         this.questionSet = questionSet;
         this.isFree = questionSet.getType().equalsIgnoreCase(QuestionSet.QuestionSetType.free.toString());
         this.isAvailable = this.isFree || questionSet.getOwned() >= 500;
         this.isSoundsAvailable = questionSet.isSoundsLoaded();
         this.isChecked = isAvailable;
+        this.soundsFilesSize = questionSet.getSoundsFilesSize();
     }
 
     public QuestionSet getQuestionSet() {
@@ -40,6 +41,10 @@ public class QuestionSetModel {
 
     public String getType() {
         return questionSet.getType();
+    }
+
+    public String getSoundsFilesSize() {
+        return soundsFilesSize;
     }
 
     public boolean isAvailable() {

@@ -32,8 +32,9 @@ public class FiveSecondsCursorWrapper extends CursorWrapper {
         Integer owned = getInt(getColumnIndex(QuestionSetsTable.Cols.OWNED));
         String link = getString(getColumnIndex(QuestionSetsTable.Cols.SOUNDS_LINK));
         int soundsLoaded = getInt(getColumnIndex(QuestionSetsTable.Cols.SOUNDS_LOADED));
+        String soundFilesSize = getString(getColumnIndex(QuestionSetsTable.Cols.SOUNDS_FILES_SIZE));
 
-        return new QuestionSet(name, type, link, soundsLoaded > 0 ? true : false, shopItemId, owned);
+        return new QuestionSet(name, type, link, soundsLoaded > 0 ? true : false, shopItemId, owned, soundFilesSize);
     }
 
 }

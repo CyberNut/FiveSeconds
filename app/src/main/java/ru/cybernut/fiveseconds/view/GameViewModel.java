@@ -1,9 +1,10 @@
 package ru.cybernut.fiveseconds.view;
 
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
 import android.util.Log;
 import android.view.View;
+
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -290,6 +291,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     }
 
     public void pauseGame() {
+        Log.i(TAG, "pauseGame");
         if(game == null) {return;}
 
         if(isStarted && !game.isPaused()) {

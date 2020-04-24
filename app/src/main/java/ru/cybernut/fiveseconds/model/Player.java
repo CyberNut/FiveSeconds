@@ -1,8 +1,9 @@
 package ru.cybernut.fiveseconds.model;
 
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
 import android.graphics.drawable.Drawable;
+
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
 
 import com.google.gson.annotations.Expose;
 

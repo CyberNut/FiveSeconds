@@ -10,11 +10,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +23,12 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -243,10 +244,7 @@ public class NewGameSettingsFragment extends Fragment {
 
     public void downloadSounds(QuestionSetModel questionSetModel) {
         downloadTask = new DownloadTask(getActivity());
-        downloadTask.execute(questionSetModel.getSoundsLink());
-        //TODO: need real downloading check
-        questionSetModel.markAsDownloaded();
-        QuestionSetList.getInstance().updateQuestionSet(questionSetModel.getQuestionSet());
+        downloadTask.execute(questionSetModel);
     }
 
     private int checkNetworkConnection() {
@@ -347,9 +345,11 @@ public class NewGameSettingsFragment extends Fragment {
                     buyQuestionsSetButton.setVisibility(View.VISIBLE);
                 } else {
                     questionSetNameCheckBox.setEnabled(true);
+                    loadSoundsButton.setVisibility(View.VISIBLE);
                     buyQuestionsSetButton.setVisibility(View.GONE);
                 }
                 questionSetNameCheckBox.setChecked(questionSetModel.isChecked());
+                loadSoundsButton.setText(getResources().getText(R.string.download_soundspack) + " (" + questionSetModel.getSoundsFilesSize() + ")");
             }
         }
     }
@@ -378,7 +378,7 @@ public class NewGameSettingsFragment extends Fragment {
 
     // usually, subclasses of AsyncTask are declared inside the activity class.
     // that way, you can easily modify the UI thread from here
-    private class DownloadTask extends AsyncTask<String, Integer, String> {
+    private class DownloadTask extends AsyncTask<QuestionSetModel, Integer, String> {
 
         private Context context;
         public DownloadTask(Context context) {
@@ -386,12 +386,13 @@ public class NewGameSettingsFragment extends Fragment {
         }
 
         @Override
-        protected String doInBackground(String... sUrl) {
+        protected String doInBackground(QuestionSetModel... questionSetModels) {
             InputStream input = null;
             OutputStream output = null;
             HttpURLConnection connection = null;
             try {
-                URL url = new URL(sUrl[0]);
+                QuestionSetModel questionSetModel = questionSetModels[0];
+                URL url = new URL(questionSetModel.getSoundsLink());
                 Log.i(TAG, "doInBackground: trying to connect");
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
@@ -449,6 +450,10 @@ public class NewGameSettingsFragment extends Fragment {
                     zipInputStream.closeEntry();
                     fileOutputStream.close();
                 }
+                //TODO: incorrect place for this code
+                questionSetModel.markAsDownloaded();
+                QuestionSetList.getInstance().updateQuestionSet(questionSetModel.getQuestionSet());
+
                 zipInputStream.close();
                 file.delete();
             } catch (Exception e) {

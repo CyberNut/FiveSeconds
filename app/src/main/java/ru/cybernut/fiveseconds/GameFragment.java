@@ -3,23 +3,23 @@ package ru.cybernut.fiveseconds;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 
 import ru.cybernut.fiveseconds.databinding.GameActivity2playersBinding;
 import ru.cybernut.fiveseconds.databinding.GameActivity4playersBinding;
 import ru.cybernut.fiveseconds.databinding.GameActivity6playersBinding;
-import ru.cybernut.fiveseconds.utils.SharedPreferencesHelper;
 import ru.cybernut.fiveseconds.view.GameViewModel;
 import ru.cybernut.fiveseconds.view.OnBackPressedListener;
 import ru.cybernut.fiveseconds.view.PlayerModel;

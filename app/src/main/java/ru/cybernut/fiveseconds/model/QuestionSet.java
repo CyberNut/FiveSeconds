@@ -10,6 +10,7 @@ public class QuestionSet {
     private Integer owned;
     private String soundsLink;
     private boolean soundsLoaded;
+    private String soundsFilesSize;
 
 
     public QuestionSet(String name, String type) {
@@ -27,10 +28,11 @@ public class QuestionSet {
         this.soundsLink = soundsLink;
     }
 
-    public QuestionSet(String name, String type, String soundsLink, boolean soundsLoaded, String shopItemId, Integer owned) {
+    public QuestionSet(String name, String type, String soundsLink, boolean soundsLoaded, String shopItemId, Integer owned, String soundsFilesSize) {
         this(name, type, soundsLink, soundsLoaded);
         this.shopItemId = shopItemId;
         this.owned = owned;
+        this.soundsFilesSize = soundsFilesSize;
     }
 
     public String getName() {
@@ -75,6 +77,14 @@ public class QuestionSet {
 
     public boolean isSoundsLoaded() {
         return soundsLoaded;
+    }
+
+    public String getSoundsFilesSize() {
+        return soundsFilesSize;
+    }
+
+    public void setSoundsFilesSize(String soundsFilesSize) {
+        this.soundsFilesSize = soundsFilesSize;
     }
 
     public void setSoundsLoaded(boolean soundsLoaded) {

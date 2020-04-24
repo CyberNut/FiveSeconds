@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "11127310600",
+    "firebase_url": "https://fiveseconds-57154.firebaseio.com",
+    "project_id": "fiveseconds-57154",
+    "storage_bucket": "fiveseconds-57154.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:11127310600:android:f9d9e8f70468cd1a9e44bd",
+        "android_client_info": {
+          "package_name": "ru.cybernut.fiveseconds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "11127310600-9fit352pjchii2kh7pb5vqbt00av5ldp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAlPfRcNZ13LwnuwLJEWDPECYWPmRVSWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "11127310600-9fit352pjchii2kh7pb5vqbt00av5ldp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
