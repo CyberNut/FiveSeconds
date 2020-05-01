@@ -120,7 +120,7 @@ public class StartFragment extends Fragment implements BillingManager.BillingUpd
             public void onClick(View view) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/apps/internaltest/4699175933318535405");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=ru.cybernut.fiveseconds");
                 sendIntent.setType("text/plain");
 
                 Intent shareIntent = Intent.createChooser(sendIntent, null);
