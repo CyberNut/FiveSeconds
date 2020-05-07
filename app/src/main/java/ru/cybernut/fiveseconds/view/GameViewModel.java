@@ -1,16 +1,20 @@
 package ru.cybernut.fiveseconds.view;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.cybernut.fiveseconds.BR;
+import ru.cybernut.fiveseconds.FiveSecondsApplication;
 import ru.cybernut.fiveseconds.model.GameEngine;
 import ru.cybernut.fiveseconds.model.Player;
 import ru.cybernut.fiveseconds.model.PlayersList;
@@ -35,6 +39,8 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     private int currentRound = 1;
     private int currentQuestionNumber = 1;
     private GameOverable gameActivity;
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public GameViewModel(int gameType, int numberOfRounds, ArrayList<Integer> setIds, boolean isNeedPlaySound) {
         this.setIds = setIds;
@@ -63,12 +69,13 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     public void initialize(GameOverable gameActivity) {
         this.gameActivity = gameActivity;
         game.initialize(setIds);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(FiveSecondsApplication.getAppContext());
     }
 
     public void cleanViewModel() {
         game.destroy();
         gameActivity = null;
-
+        mFirebaseAnalytics = null;
     }
 
     public PlayerModel getPlayer(int index) {
@@ -85,9 +92,20 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
 
     public void updateCurrentRound() {
         if((currentQuestionNumber++ % numberOfPlayers) == 0) {
-            if(currentRound<numberOfRounds) {
+            if(currentRound < numberOfRounds) {
                 currentRound++;
                 notifyPropertyChanged(BR.currentRound);
+                logEventRoundChange(currentRound);
+            }
+        }
+    }
+
+    private void logEventRoundChange(int round) {
+        if ( mFirebaseAnalytics!= null) {
+            if ((round % 5) == 0) {
+                Bundle eventParams = new Bundle();
+                eventParams.putInt("round_number", round);
+                mFirebaseAnalytics.logEvent("round_number_started", eventParams);
             }
         }
     }
@@ -275,6 +293,12 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     @Override
     public void gameOver() {
         isGameOver = true;
+        if ( mFirebaseAnalytics!= null) {
+            Bundle eventParams = new Bundle();
+            eventParams.putInt("number_of_players", numberOfPlayers);
+            eventParams.putInt("number_of_rounds", numberOfRounds);
+            mFirebaseAnalytics.logEvent("finished_game", eventParams);
+        }
     }
 
     @Override

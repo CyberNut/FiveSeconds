@@ -51,6 +51,11 @@
     <string name="sound_file_download_error">Download error!\nPlease try again. Error code:</string>
     <string name="play_sound_after_timer_ends">Play sound after timer ends</string>
     <string name="download_soundspack">Download soundspack</string>
+    <string name="launch_playstore_app_error">Couldn\'t launch the Google Playstore app</string>
+    <string name="rate_app_title">"If you enjoy using FiveSecondsGame, please take a moment to rate it. Thanks for your support!</string>
+    <string name="rate">Rate</string>
+    <string name="remind_later">Remind later</string>
+    <string name="dont_ask_me_again">Don\'t ask me again</string>
     <string-array name="game_type_list">
         <item>Auto play sound</item>
         <item>Add time for reading</item>

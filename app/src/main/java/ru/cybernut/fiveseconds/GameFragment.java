@@ -15,6 +15,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.ArrayList;
 
 import ru.cybernut.fiveseconds.databinding.GameActivity2playersBinding;
@@ -29,6 +31,8 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
     private static final String NUMBER_OF_ROUNDS_KEY = "NUMBER_OF_ROUNDS_KEY";
     private static final String QUESTION_SET_IDS_KEY = "QUESTION_SET_IDS_KEY";
     private static final String GAME_TYPE_KEY = "GAME_TYPE_KEY";
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     private GameViewModel viewModel;
     private boolean isQuitDialogVisible = false;
@@ -58,6 +62,15 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
 
         viewModel = new GameViewModel(gameType, numberOfRounds, setIds, isNeedPlaySound);
         int numberOfPlayers = viewModel.getNumberOfPlayers();
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        if ( mFirebaseAnalytics!= null) {
+            Bundle eventParams = new Bundle();
+            eventParams.putInt("number_of_players", numberOfPlayers);
+            eventParams.putInt("number_of_rounds", numberOfRounds);
+            mFirebaseAnalytics.logEvent("start_game", eventParams);
+        }
+
         if( numberOfPlayers == 2) {
             GameActivity2playersBinding binding = DataBindingUtil.inflate(inflater, R.layout.game_activity_2players, container, false);
             binding.setViewModel(viewModel);

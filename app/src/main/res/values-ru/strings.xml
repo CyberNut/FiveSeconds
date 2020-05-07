@@ -66,4 +66,9 @@
     <string name="sound_file_download_error">Ошибка загрузки!\nПожалуйста, попробуйте еще раз. Код ошибки:</string>
     <string name="play_sound_after_timer_ends">Проигрывать звук после завершения таймера</string>
     <string name="download_soundspack">Загрузить набор звуков</string>
+    <string name="launch_playstore_app_error">Ошибка запуска приложения магазина!</string>
+    <string name="rate_app_title">Если Вам понравилась игра, уделите минутку, поставьте оценку в Google Play.\nСпасибо за поддержку!</string>
+    <string name="rate">Оценить</string>
+    <string name="remind_later">Позднее</string>
+    <string name="dont_ask_me_again">Больше не спрашивать</string>
 </resources>

@@ -21,6 +21,7 @@ import java.util.List;
 
 import ru.cybernut.fiveseconds.databinding.GameOverActivityBinding;
 import ru.cybernut.fiveseconds.databinding.PlayersScoresListItemBinding;
+import ru.cybernut.fiveseconds.utils.AppRater;
 import ru.cybernut.fiveseconds.view.OnBackPressedListener;
 import ru.cybernut.fiveseconds.view.PlayerModel;
 
@@ -60,6 +61,9 @@ public class GameOverFragment extends Fragment implements OnBackPressedListener 
         playerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         View v = binding.getRoot();
+
+        AppRater.app_launched(getActivity());
+
         return v;
     }
 
