@@ -56,6 +56,7 @@
     <string name="rate">Rate</string>
     <string name="remind_later">Remind later</string>
     <string name="dont_ask_me_again">Don\'t ask me again</string>
+    <string name="timer_duration">Timer duration (sec):</string>
     <string-array name="game_type_list">
         <item>Auto play sound</item>
         <item>Add time for reading</item>

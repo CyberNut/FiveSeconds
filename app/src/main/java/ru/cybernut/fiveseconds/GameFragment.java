@@ -68,6 +68,7 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
             Bundle eventParams = new Bundle();
             eventParams.putInt("number_of_players", numberOfPlayers);
             eventParams.putInt("number_of_rounds", numberOfRounds);
+            eventParams.putInt("game_type", gameType);
             mFirebaseAnalytics.logEvent("start_game", eventParams);
         }
 

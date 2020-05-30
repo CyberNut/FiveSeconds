@@ -8,8 +8,8 @@ android {
         applicationId "ru.cybernut.fiveseconds"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 24
-        versionName "0.92"
+        versionCode 26
+        versionName "0.94"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

@@ -109,7 +109,7 @@ public class ShopActivity extends AppCompatActivity implements BillingManager.Bi
                 skuDataMap.put(sku, newSkuData);
             }
             if(purchased) {
-                QuestionSetList.getInstance().setOwned(purchase.getSku());
+                QuestionSetList.getInstance().setOwned(purchase.getSku(), 1133);
             }
         }
         shopItemsAdapter.notifyDataSetChanged();

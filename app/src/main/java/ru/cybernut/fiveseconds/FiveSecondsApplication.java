@@ -9,6 +9,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Locale;
 
 import javax.security.auth.login.LoginException;
@@ -26,14 +29,18 @@ public class FiveSecondsApplication extends Application {
     public static final String PREF_ADD_TIME_VALUE = "additional_time_value";
     public static final String PREF_DEFAULT_NUMBER_OF_ROUNDS = "default_number_of_rounds";
     public static final String PREF_PLAY_SOUND_AFTER_TIMER_ENDS = "play_sound_after_timer_ends";
+    public static final String PREF_TIMER_DURATION = "default_timer_duration";
     public static final int DEFAULT_ADDITIONAL_TIME_VALUE = 2;
     public static final int DEFAULT_NUMBER_OF_ROUNDS = 5;
+    public static final int DEFAULT_TIMER_DURATION = 5;
+    public static final int MIN_TIMER_DURATION = 4;
+    public static final int MAX_TIMER_DURATION = 7;
     public static final boolean DEFAULT_IS_NEED_PLAY_SOUND_AFTER_TIMER_ENDS = true;
 
     public static final String TIMER_FINISHED_FILENAME = "timer_finished.mp3";
     private static final String SOUNDS_FOLDER = "/Sounds/";
     private static final String[] supportLanguages = new String[] {"en", "ru"};
-    private static final String defaultLanguage = "en";
+    private static final String defaultLanguage = "ru";
     private static String language;
     private static String soundFolderPath;
     private static String externalFilesDirPath;
@@ -62,6 +69,9 @@ public class FiveSecondsApplication extends Application {
     private static void updateLocaleSettings() {
         Log.i(TAG, "updateLocaleSettings: " + language);
         language = getLocale();
+        if (!Arrays.asList(supportLanguages).contains(language)) {
+            language = defaultLanguage;
+        }
         //TODO: this fix for initialize static fields
         String temp = FiveSecondsDBSchema.QuestionSetsTable.Cols.NAME;
         temp = FiveSecondsDBSchema.QuestionsTable.Cols.QUESTION_TEXT;

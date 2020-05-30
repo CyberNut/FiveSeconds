@@ -9,165 +9,201 @@
 
     </data>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_clean"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/background_clean"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/language_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/language_title"
-                    android:textStyle="bold" />
-
-                <Spinner
-                    android:id="@+id/language_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/language_list"
-                    android:popupBackground="@color/blueLight"
-                    android:textAlignment="viewEnd" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/default_game_type_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/default_game_type"
-                    android:textStyle="bold" />
-
-                <Spinner
-                    android:id="@+id/default_game_type_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/game_type_list"
-                    android:popupBackground="@color/blueLight"
-                    android:textAlignment="viewEnd" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/additional_time_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/add_time_value_textview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/add_time_value_title"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/add_time_value_edittext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="3"
-                    android:imeOptions="actionDone"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/number_of_question_textview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/default_number_of_rounds"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/number_of_question_edittext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="3"
-                    android:imeOptions="actionDone"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/playSoundAfterTimeDoneCheckBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/colorWhite"
-                    android:layoutDirection="rtl"
-                    android:text="@string/play_sound_after_timer_ends"
-                    android:textAlignment="viewEnd"
-                    android:textColor="@color/colorWhite"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/delete_sounds_files_textview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/delete_sounds_files"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/delete_sounds_files_button"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/delete_sounds_files_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:text="@string/delete_sounds_files"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/anim_delete_sounds_button" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:visibility="gone">
 
             <TextView
-                android:id="@+id/notice_label"
+                android:id="@+id/language_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="@string/language_title"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/language_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/change_settings_notice_label"
-                android:textColor="@android:color/holo_red_light"
-                android:visibility="invisible" />
+                android:entries="@array/language_list"
+                android:popupBackground="@color/blueLight"
+                android:textAlignment="viewEnd" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/default_game_type_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="@string/default_game_type"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/default_game_type_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/game_type_list"
+                android:popupBackground="@color/blueLight"
+                android:textAlignment="viewEnd" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/timer_duration_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/timer_duration_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="@string/timer_duration"
+                android:layout_centerVertical="true"
+                android:textStyle="bold" />
+
+            <SeekBar
+                android:id="@+id/timer_duration_seekbar"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@+id/timer_duration_value_textView"
+                android:progress="2" />
+
+            <TextView
+                android:id="@+id/timer_duration_value_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/additional_time_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/add_time_value_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif"
+                android:text="@string/add_time_value_title"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/add_time_value_edittext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="3"
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/number_of_question_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif"
+                android:text="@string/default_number_of_rounds"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/number_of_question_edittext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="3"
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/playSoundAfterTimeDoneCheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/colorWhite"
+                android:layoutDirection="rtl"
+                android:text="@string/play_sound_after_timer_ends"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold" />
 
         </LinearLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/delete_sounds_files_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/delete_sounds_files"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/delete_sounds_files_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/delete_sounds_files_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:text="@string/delete_sounds_files"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/anim_delete_sounds_button" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/notice_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/change_settings_notice_label"
+            android:textColor="@android:color/holo_red_light"
+            android:visibility="invisible" />
+
+    </LinearLayout>
 </layout>

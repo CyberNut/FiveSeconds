@@ -21,6 +21,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.android.billingclient.api.AcknowledgePurchaseParams;
+import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClient.FeatureType;
 import com.android.billingclient.api.BillingClient.SkuType;
@@ -254,13 +256,29 @@ public class BillingManager implements PurchasesUpdatedListener {
      * @param purchase Purchase to be handled
      */
     private void handlePurchase(Purchase purchase) {
-        if (!verifyValidSignature(purchase.getOriginalJson(), purchase.getSignature())) {
-            Log.i(TAG, "Got a purchase: " + purchase + "; but signature is bad. Skipping...");
-            return;
+        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+            if (!verifyValidSignature(purchase.getOriginalJson(), purchase.getSignature())) {
+                Log.i(TAG, "Got a purchase: " + purchase + "; but signature is bad. Skipping...");
+                return;
+            }
+            // Acknowledge the purchase if it hasn't already been acknowledged.
+            if (!purchase.isAcknowledged()) {
+                AcknowledgePurchaseParams acknowledgePurchaseParams =
+                        AcknowledgePurchaseParams.newBuilder()
+                                .setPurchaseToken(purchase.getPurchaseToken())
+                                .build();
+                mBillingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
+                    @Override
+                    public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
+                        int responseCode = billingResult.getResponseCode();
+                        String debugMessage = billingResult.getDebugMessage();
+                        Log.d(TAG, "acknowledgePurchase: " + responseCode + " " + debugMessage);
+                    }
+                });
+            }
+            Log.d(TAG, "Got a verified purchase: " + purchase);
+            mPurchases.add(purchase);
         }
-
-        Log.d(TAG, "Got a verified purchase: " + purchase);
-        mPurchases.add(purchase);
     }
 
     /**
@@ -380,13 +398,13 @@ public class BillingManager implements PurchasesUpdatedListener {
         // Some sanity checks to see if the developer (that's you!) really followed the
         // instructions to run this sample (don't put these checks on your app!)
         //TODO: need realize
-        return true;
-//        try {
-//            return Security.verifyPurchase(BASE_64_ENCODED_PUBLIC_KEY, signedData, signature);
-//        } catch (IOException e) {
-//            Log.e(TAG, "Got an exception trying to validate a purchase: " + e);
-//            return false;
-//        }
+        //return true;
+        try {
+            return Security.verifyPurchase(BASE_64_ENCODED_PUBLIC_KEY, signedData, signature);
+        } catch (IOException e) {
+            Log.e(TAG, "Got an exception trying to validate a purchase: " + e);
+            return false;
+        }
     }
 }
 

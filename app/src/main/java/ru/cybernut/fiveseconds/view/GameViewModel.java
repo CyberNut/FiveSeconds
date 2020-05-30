@@ -34,6 +34,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
     private ArrayList<Integer> setIds;
     private ArrayList<PlayerModel> players;
     private PlayerModel currentPlayer;
+    private int gameType;
     private int currentRotationValue;
     private int numberOfRounds;
     private int currentRound = 1;
@@ -42,9 +43,11 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
+
     public GameViewModel(int gameType, int numberOfRounds, ArrayList<Integer> setIds, boolean isNeedPlaySound) {
         this.setIds = setIds;
         this.numberOfRounds = numberOfRounds;
+        this.gameType = gameType;
         initPlayers();
         game = new GameEngine(this, gameType, players.size() * numberOfRounds, isNeedPlaySound);
         setManualStartButtonVisible();
@@ -297,6 +300,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
             Bundle eventParams = new Bundle();
             eventParams.putInt("number_of_players", numberOfPlayers);
             eventParams.putInt("number_of_rounds", numberOfRounds);
+            eventParams.putInt("game_type", gameType);
             mFirebaseAnalytics.logEvent("finished_game", eventParams);
         }
     }

@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -49,6 +51,8 @@ public class MainGameSettingsFragment extends Fragment {
     private EditText numberOfRoundsEdittext;
     private int languagePositionFromPref;
     private ImageButton deleteSoundsFilesButton;
+    private SeekBar timerDurationSeekbar;
+    private TextView timerDurationValueTextView;
     private ProgressDialog progressDialog;
     private DeleteSoundFilesTask deleteSoundFilesTask;
 
@@ -113,6 +117,31 @@ public class MainGameSettingsFragment extends Fragment {
 
         isNeedPlaySoundCheckBox = binding.playSoundAfterTimeDoneCheckBox;
 
+        timerDurationValueTextView = binding.timerDurationValueTextView;
+        timerDurationSeekbar = binding.timerDurationSeekbar;
+        timerDurationSeekbar.setMax(FiveSecondsApplication.MAX_TIMER_DURATION - FiveSecondsApplication.MIN_TIMER_DURATION);
+        updateTimerDurationTextView();
+        timerDurationSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                updateTimerDurationTextView();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                updateTimerDurationTextView();
+            }
+        });
+
+    }
+
+    private void updateTimerDurationTextView() {
+        timerDurationValueTextView.setText(String.valueOf(FiveSecondsApplication.MIN_TIMER_DURATION + timerDurationSeekbar.getProgress()));
     }
 
     public Boolean getNeedToShowNotice() {
@@ -153,6 +182,9 @@ public class MainGameSettingsFragment extends Fragment {
             int numberOfRounds = sharedPreferences.getInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_ROUNDS, FiveSecondsApplication.DEFAULT_NUMBER_OF_ROUNDS);
             numberOfRoundsEdittext.setText(String.valueOf(numberOfRounds));
             isNeedPlaySoundCheckBox.setChecked(sharedPreferences.getBoolean(FiveSecondsApplication.PREF_PLAY_SOUND_AFTER_TIMER_ENDS, FiveSecondsApplication.DEFAULT_IS_NEED_PLAY_SOUND_AFTER_TIMER_ENDS));
+            int timerDuration = sharedPreferences.getInt(FiveSecondsApplication.PREF_TIMER_DURATION, FiveSecondsApplication.DEFAULT_TIMER_DURATION);
+            timerDurationSeekbar.setProgress(timerDuration - FiveSecondsApplication.MIN_TIMER_DURATION);
+            updateTimerDurationTextView();
         }
     }
 
@@ -162,6 +194,7 @@ public class MainGameSettingsFragment extends Fragment {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             int numberOfRounds = 0;
             int addTimeValue = 0;
+            int timerDuration = 0;
             try {
                 numberOfRounds = Integer.valueOf(numberOfRoundsEdittext.getText().toString());
                 if (numberOfRounds < FiveSecondsApplication.MIN_QUANTITY_OF_ROUNDS) {
@@ -177,6 +210,11 @@ public class MainGameSettingsFragment extends Fragment {
             } catch (NumberFormatException e) {
                 addTimeValue = FiveSecondsApplication.DEFAULT_ADDITIONAL_TIME_VALUE;
             }
+            try {
+                timerDuration = Integer.valueOf(FiveSecondsApplication.MIN_TIMER_DURATION + timerDurationSeekbar.getProgress());
+            } catch (NumberFormatException e) {
+                timerDuration = FiveSecondsApplication.DEFAULT_TIMER_DURATION;
+            }
             sharedPreferences.edit()
                 //Default game type
                 .putInt(FiveSecondsApplication.PREF_DEFAULT_GAME_TYPE, gameTypeSpinner.getSelectedItemPosition())
@@ -185,6 +223,7 @@ public class MainGameSettingsFragment extends Fragment {
                 //default number of questions
                 .putInt(FiveSecondsApplication.PREF_DEFAULT_NUMBER_OF_ROUNDS, numberOfRounds)
                 .putBoolean(FiveSecondsApplication.PREF_PLAY_SOUND_AFTER_TIMER_ENDS, isNeedPlaySoundCheckBox.isChecked())
+                .putInt(FiveSecondsApplication.PREF_TIMER_DURATION, timerDuration)
                 .apply();
             //Language
             String[] languages = getResources().getStringArray(R.array.language_list_values);

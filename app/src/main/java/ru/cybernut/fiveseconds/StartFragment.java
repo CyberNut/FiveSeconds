@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -63,7 +64,7 @@ public class StartFragment extends Fragment implements BillingManager.BillingUpd
         for (Purchase purchase : purchases) {
             Boolean purchased = purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED;
             if(purchased) {
-                QuestionSetList.getInstance().setOwned(purchase.getSku());
+                QuestionSetList.getInstance().setOwned(purchase.getSku(), 1133);
             }
         }
     }
@@ -128,5 +129,7 @@ public class StartFragment extends Fragment implements BillingManager.BillingUpd
             }
         });
 
+        TextView versionTextView = binding.versionTextView;
+        versionTextView.setText("v" + BuildConfig.VERSION_NAME + "(" + BuildConfig.VERSION_CODE + ")");
     }
 }

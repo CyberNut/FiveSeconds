@@ -14,10 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.security.auth.login.LoginException;
-
 import ru.cybernut.fiveseconds.FiveSecondsApplication;
-import ru.cybernut.fiveseconds.R;
 
 public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer.OnPreparedListener {
 
@@ -28,7 +25,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     public static final int MAX_PLAYERS = 6;
     private static final String TAG = "GameEngine";
     private static final int MAX_SOUND = 5;
-    private static final long STANDART_ROUND_DURATION = 5000; //ms
     private static final long TICK_DURATION = 100; //ms
 
     private int gameType;
@@ -59,13 +55,14 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         this.gameType = gameType;
         this.isNeedPlaySound = isNeedPlaySound;
         this.numberOfQuestions = numberOfQuestions;
-        this.roundDuration = STANDART_ROUND_DURATION;
         this.soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
         this.mediaPlayer = new MediaPlayer();
     }
 
     public void initialize(ArrayList<Integer> setIds) {
         this.setIds = setIds;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(FiveSecondsApplication.getAppContext());
+        roundDuration = sharedPreferences.getInt(FiveSecondsApplication.PREF_TIMER_DURATION, FiveSecondsApplication.DEFAULT_TIMER_DURATION) * 1000;
         soundPool.setOnLoadCompleteListener(this);
         mediaPlayer.setOnPreparedListener(this);
         new GameInitTask().execute();
@@ -73,7 +70,6 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
             gameTimer = initializeGameTimer();
         }
         if (gameType == GAME_TYPE_ADDITION_TIME_FOR_READING) {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(FiveSecondsApplication.getAppContext());
             additionalTime = sharedPreferences.getInt(FiveSecondsApplication.PREF_ADD_TIME_VALUE, FiveSecondsApplication.DEFAULT_ADDITIONAL_TIME_VALUE) * 1000;
             roundDuration = roundDuration + additionalTime;
         }

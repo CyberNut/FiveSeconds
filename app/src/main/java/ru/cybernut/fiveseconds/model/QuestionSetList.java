@@ -92,12 +92,12 @@ public class QuestionSetList {
         }
     }
 
-    public boolean setOwned(String itemId) {
+    public boolean setOwned(String itemId, int value) {
         try (FiveSecondsCursorWrapper cursorWrapper = queryQuestionSets("shop_item_id = ?", new String[]{String.valueOf(itemId)})) {
             if(cursorWrapper.moveToFirst()) {
                 while (!cursorWrapper.isAfterLast()) {
                     QuestionSet temp = cursorWrapper.getQuestionSet();
-                    temp.setOwned(1133);
+                    temp.setOwned(value);
                     updateQuestionSet(temp);
                     cursorWrapper.moveToNext();
                 }
