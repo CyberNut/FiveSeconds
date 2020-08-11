@@ -38,8 +38,8 @@
     <string name="delete_sounds_files">Delete all sounds files</string>
     <string name="deleting_sounds_dialog_title">Deleting sound files</string>
     <string name="back">Back</string>
-    <string name="five_seconds_game_rule">Five seconds game rule</string>
-    <string name="rules_text">Game goal\nGet more score than other players\n\nGame proccess\n1.\n2.\n3.\n</string>
+    <string name="five_seconds_game_rule">Answer in 5 seconds</string>
+    <string name="rules_text"><b>Game goal:</b>\nGet more points by the end of the game than other players by answering questions correctly.\n\n<b>Game process:</b>\nIt\'s simple: you need to have time to give three answers to the question before the timer runs out.\n\nThe timer works differently depending on the game mode:\n\nIn the <b><i>\"Autoplay question\"</i></b> mode, questions are voiced, the timer starts immediately after the question is asked.\n\nIn the <b><i>\"Additional time for reading\"</i></b> mode, the question is not voiced, and additional time for reading the question is added to the standard timer time (the time is specified in the settings).\n\nIn the <b><i>\"Manual\"</i></b> mode, the timer starts only after the player presses the \"Start\" button.</string>
     <string name="next">Next</string>
     <string name="sound_files_deleted_successfully">Sound files deleted successfully!</string>
     <string name="buy">Buy</string>

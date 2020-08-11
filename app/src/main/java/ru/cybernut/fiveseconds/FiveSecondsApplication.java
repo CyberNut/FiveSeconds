@@ -9,12 +9,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
-
-import javax.security.auth.login.LoginException;
+import java.util.Map;
 
 import ru.cybernut.fiveseconds.database.FiveSecondsDBSchema;
 
@@ -39,8 +36,13 @@ public class FiveSecondsApplication extends Application {
 
     public static final String TIMER_FINISHED_FILENAME = "timer_finished.mp3";
     private static final String SOUNDS_FOLDER = "/Sounds/";
-    private static final String[] supportLanguages = new String[] {"en", "ru"};
-    private static final String defaultLanguage = "ru";
+    private static final Map<String, String> supportLanguages = new HashMap<String, String>(){{
+        put("en", "en");
+        put("ru", "ru");
+        put("uk", "ru");
+        put("be", "ru");
+    }};
+    private static final String defaultLanguage = "en";
     private static String language;
     private static String soundFolderPath;
     private static String externalFilesDirPath;
@@ -69,7 +71,9 @@ public class FiveSecondsApplication extends Application {
     private static void updateLocaleSettings() {
         Log.i(TAG, "updateLocaleSettings: " + language);
         language = getLocale();
-        if (!Arrays.asList(supportLanguages).contains(language)) {
+        if (supportLanguages.containsKey(language)) {
+            language = supportLanguages.get(language);
+        } else {
             language = defaultLanguage;
         }
         //TODO: this fix for initialize static fields

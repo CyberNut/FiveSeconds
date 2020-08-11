@@ -2,10 +2,8 @@ package ru.cybernut.fiveseconds.model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -18,7 +16,7 @@ import static ru.cybernut.fiveseconds.database.FiveSecondsDBSchema.QuestionsTabl
 public class QuestionList {
 
     private static QuestionList questionList;
-    private SQLiteDatabase database;
+    private FiveSecondsBaseHelper fiveSecondsBaseHelper;
 
     public static QuestionList getInstance() {
         if(questionList == null) {
@@ -28,17 +26,7 @@ public class QuestionList {
     }
 
     private QuestionList() {
-        FiveSecondsBaseHelper fiveSecondsBaseHelper = FiveSecondsBaseHelper.getInstance();
-        try {
-            fiveSecondsBaseHelper.updateDataBase();
-        } catch (IOException mIOException) {
-            throw new Error("UnableToUpdateDatabase");
-        }
-        try {
-            this.database = fiveSecondsBaseHelper.getInstance().getWritableDatabase();
-        } catch (SQLException mSQLException) {
-            throw mSQLException;
-        }
+        fiveSecondsBaseHelper = FiveSecondsBaseHelper.getInstance();
     }
 
     private static ContentValues getContentValues(Question question) {
@@ -49,6 +37,7 @@ public class QuestionList {
     }
 
     private FiveSecondsCursorWrapper queryQuestions(String whereClause, String[] whereArgs) {
+        SQLiteDatabase database = fiveSecondsBaseHelper.getReadableDatabase();
         Cursor cursor = database.query(
                 QuestionsTable.NAME,
                 null,
@@ -120,21 +109,21 @@ public class QuestionList {
         return questions;
     }
 
-    public void addQuestion(Question question) {
-        ContentValues values = QuestionList.getContentValues(question);
-        database.insert(QuestionsTable.NAME, null, values);
-    }
-
-    public void updateQuestion(Question question) {
-        String uuidString = question.getId().toString();
-        ContentValues contentValues = QuestionList.getContentValues(question);
-        database.update(QuestionsTable.NAME, contentValues, QuestionsTable.Cols.UUID + " = ?", new String[] {uuidString});
-    }
-
-    public void deleteQuestion(Question question) {
-        String uuidString = question.getId().toString();
-        database.delete(QuestionsTable.NAME, QuestionsTable.Cols.UUID + " = ?", new String[] {uuidString});
-    }
+//    public void addQuestion(Question question) {
+//        ContentValues values = QuestionList.getContentValues(question);
+//        database.insert(QuestionsTable.NAME, null, values);
+//    }
+//
+//    public void updateQuestion(Question question) {
+//        String uuidString = question.getId().toString();
+//        ContentValues contentValues = QuestionList.getContentValues(question);
+//        database.update(QuestionsTable.NAME, contentValues, QuestionsTable.Cols.UUID + " = ?", new String[] {uuidString});
+//    }
+//
+//    public void deleteQuestion(Question question) {
+//        String uuidString = question.getId().toString();
+//        database.delete(QuestionsTable.NAME, QuestionsTable.Cols.UUID + " = ?", new String[] {uuidString});
+//    }
 
     public Question getQuestion(String id){
         try (FiveSecondsCursorWrapper cursor = queryQuestions(QuestionsTable.Cols.UUID + " = ?", new String[]{id})) {

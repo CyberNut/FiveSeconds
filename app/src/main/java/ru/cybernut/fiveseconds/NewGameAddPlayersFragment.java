@@ -118,7 +118,7 @@ public class NewGameAddPlayersFragment extends Fragment {
 
         playersAdapter = new PlayersAdapter(PlayersList.getInstance().getList());
         playerRecyclerView.setAdapter(playersAdapter);
-        addDefaultPlayersIfNecessery();
+        PlayersList.getInstance().addDefaultPlayersIfNecessery();
 
         addPlayerButton = view.findViewById(R.id.add_player_button);
         addPlayerButton.setOnClickListener(new View.OnClickListener() {

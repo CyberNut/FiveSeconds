@@ -2,11 +2,9 @@ package ru.cybernut.fiveseconds.model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +16,7 @@ public class QuestionSetList {
 
     private static final String TAG = "QuestionSetList";
     private static QuestionSetList questionSetList;
-    private SQLiteDatabase database;
+    private FiveSecondsBaseHelper fiveSecondsBaseHelper;
 
     public static QuestionSetList getInstance() {
         if(questionSetList == null) {
@@ -28,17 +26,7 @@ public class QuestionSetList {
     }
 
     private QuestionSetList() {
-        FiveSecondsBaseHelper fiveSecondsBaseHelper = FiveSecondsBaseHelper.getInstance();
-        try {
-            fiveSecondsBaseHelper.updateDataBase();
-        } catch (IOException mIOException) {
-            throw new Error("UnableToUpdateDatabase");
-        }
-        try {
-            this.database = fiveSecondsBaseHelper.getInstance().getWritableDatabase();
-        } catch (SQLException mSQLException) {
-            throw mSQLException;
-        }
+        fiveSecondsBaseHelper =  FiveSecondsBaseHelper.getInstance();
     }
 
     private static ContentValues getContentValues(QuestionSet questionSet) {
@@ -54,6 +42,7 @@ public class QuestionSetList {
     }
 
     private FiveSecondsCursorWrapper queryQuestionSets(String whereClause, String[] whereArgs) {
+        SQLiteDatabase database = fiveSecondsBaseHelper.getReadableDatabase();
         Cursor cursor = database.query(
                 FiveSecondsDBSchema.QuestionSetsTable.NAME,
                 null,
@@ -67,6 +56,7 @@ public class QuestionSetList {
     }
 
     public List<QuestionSet> getQuestionSets() {
+
         List<QuestionSet> sets = new ArrayList<>();
 
         try (FiveSecondsCursorWrapper cursorWrapper = queryQuestionSets(null, null)) {
@@ -109,8 +99,17 @@ public class QuestionSetList {
     }
 
     public void updateQuestionSet(QuestionSet questionSet) {
+        SQLiteDatabase database = fiveSecondsBaseHelper.getWritableDatabase();
         String name = questionSet.getName();
         ContentValues contentValues = QuestionSetList.getContentValues(questionSet);
-        database.update(FiveSecondsDBSchema.QuestionSetsTable.NAME, contentValues, FiveSecondsDBSchema.QuestionSetsTable.Cols.NAME + " = ?", new String[] {name});
+        database.beginTransaction();
+        try {
+            database.update(FiveSecondsDBSchema.QuestionSetsTable.NAME, contentValues, FiveSecondsDBSchema.QuestionSetsTable.Cols.NAME + " = ?", new String[] {name});
+            database.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.d(TAG, "Error while trying to update QuestionSet in database");
+        } finally {
+            database.endTransaction();
+        }
     }
 }

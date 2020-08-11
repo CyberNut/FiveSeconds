@@ -490,7 +490,9 @@ public class NewGameSettingsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            mProgressDialog.dismiss();
+            if(mProgressDialog != null) {
+                mProgressDialog.dismiss();
+            }
             if (result != null)
                 Toast.makeText(context,getString(R.string.sound_file_download_error)+result, Toast.LENGTH_LONG).show();
             else

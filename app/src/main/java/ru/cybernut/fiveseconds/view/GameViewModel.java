@@ -61,7 +61,9 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
 
     private void initPlayers() {
         players = new ArrayList<>();
-        List<Player> list = PlayersList.getInstance().getList();
+        PlayersList playersList = PlayersList.getInstance();
+        playersList.addDefaultPlayersIfNecessery();
+        List<Player> list = playersList.getList();
         numberOfPlayers = list.size();
         for (Player player : list) {
             players.add(new PlayerModel(player));
@@ -198,7 +200,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
         if (isCorrectAnswer) {
             currentPlayer.setScore();
         }
-        if (isGameOver) {
+        if (isGameOver && gameActivity != null) {
             gameActivity.gameOver(players);
         }
         if (isNeedShowAnswer) {
@@ -301,6 +303,7 @@ public class GameViewModel extends BaseObservable implements GameEngine.Updatabl
             eventParams.putInt("number_of_players", numberOfPlayers);
             eventParams.putInt("number_of_rounds", numberOfRounds);
             eventParams.putInt("game_type", gameType);
+            eventParams.putString("question_set_ids", setIds.toString());
             mFirebaseAnalytics.logEvent("finished_game", eventParams);
         }
     }

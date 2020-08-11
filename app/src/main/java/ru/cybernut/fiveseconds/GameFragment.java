@@ -69,6 +69,7 @@ public class GameFragment extends Fragment implements GameViewModel.GameOverable
             eventParams.putInt("number_of_players", numberOfPlayers);
             eventParams.putInt("number_of_rounds", numberOfRounds);
             eventParams.putInt("game_type", gameType);
+            eventParams.putString("question_set_ids", setIds.toString());
             mFirebaseAnalytics.logEvent("start_game", eventParams);
         }
 

@@ -18,13 +18,13 @@ public class FiveSecondsBaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "FiveSecondsBaseHelper";
     private static String DB_PATH;
     private static FiveSecondsBaseHelper instance;
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
     private static final String DB_NAME = "five_seconds.db";
 
     private SQLiteDatabase mDataBase;
-    private boolean mNeedUpdate = false;
+    private static boolean mNeedUpdate = false;
 
-    public static FiveSecondsBaseHelper getInstance() {
+    public static synchronized FiveSecondsBaseHelper getInstance() {
         if(instance == null) {
             instance = new FiveSecondsBaseHelper(FiveSecondsApplication.getAppContext());
         }
@@ -37,19 +37,19 @@ public class FiveSecondsBaseHelper extends SQLiteOpenHelper {
 
         copyDataBase();
 
-        this.getReadableDatabase();
+        //to force onUpdate
+        mDataBase = this.getReadableDatabase();
+        if (mNeedUpdate) {
+            updateDataBase();
+        }
     }
 
-    public void updateDataBase() throws IOException{
-        if (mNeedUpdate) {
+    public void updateDataBase() {
             File dbFile = new File(DB_PATH + DB_NAME);
             if (dbFile.exists())
                 dbFile.delete();
-
             copyDataBase();
-
             mNeedUpdate = false;
-        }
     }
 
     private boolean checkDataBase() {
@@ -59,7 +59,6 @@ public class FiveSecondsBaseHelper extends SQLiteOpenHelper {
 
     private void copyDataBase() {
         if (!checkDataBase()) {
-            this.getReadableDatabase();
             this.close();
             try {
                 copyDBFile();
@@ -88,8 +87,9 @@ public class FiveSecondsBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public synchronized void close() {
-        if (mDataBase != null)
+        if (mDataBase != null) {
             mDataBase.close();
+        }
         super.close();
     }
 
@@ -99,10 +99,10 @@ public class FiveSecondsBaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (newVersion > oldVersion)
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)  {
+        if (newVersion > oldVersion) {
             mNeedUpdate = true;
+        }
     }
-
 }
 

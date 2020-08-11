@@ -50,6 +50,15 @@ public class PlayersList {
         }
     }
 
+    public void addDefaultPlayersIfNecessery() {
+        if (list.size() == 0) {
+            Player tempPlayer = new Player("Player1");
+            list.add(tempPlayer);
+            tempPlayer = new Player("Player2");
+            list.add(tempPlayer);
+        }
+    }
+
     public int getId(Player player) {
         return list.indexOf(player);
     }
