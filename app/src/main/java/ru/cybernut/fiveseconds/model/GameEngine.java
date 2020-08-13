@@ -37,6 +37,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     private int currentSoundDuration = 0;
     private List<String> uuidList;
     private SoundPool soundPool;
+    private List<Question> questions;
     private ArrayList<Integer> setIds;
     private volatile boolean isGameOver = false;
     private volatile boolean isGameReady = false;
@@ -57,6 +58,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         this.numberOfQuestions = numberOfQuestions;
         this.soundPool = new SoundPool(MAX_SOUND, AudioManager.STREAM_MUSIC, 0);
         this.mediaPlayer = new MediaPlayer();
+        questions = new ArrayList<>();
     }
 
     public void initialize(ArrayList<Integer> setIds) {
@@ -96,6 +98,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
     private Question getNextQuestion() {
         if(uuidList.size() > 0) {
             String uuid = uuidList.get(0);
+            QuestionList.getInstance().increaseNumberOfUsage(uuid);
             uuidList.remove(0);
             return QuestionList.getInstance().getQuestion(uuid);
         } else {
@@ -228,6 +231,7 @@ public class GameEngine implements SoundPool.OnLoadCompleteListener, MediaPlayer
         protected Void doInBackground(Void... voids) {
 
             uuidList = QuestionList.getInstance().getRandomIdList(numberOfQuestions, setIds);
+            questions = QuestionList.getInstance().getQuestions();
             currentQuestion = getNextQuestion();
             if (isGameOver) {
                 viewModel.gameOver();

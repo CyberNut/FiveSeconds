@@ -19,9 +19,10 @@ public class FiveSecondsCursorWrapper extends CursorWrapper {
     public Question getQuestion() {
         String uuidString = getString(getColumnIndex(QuestionsTable.Cols.UUID));
         String title = getString(getColumnIndex(QuestionsTable.Cols.QUESTION_TEXT));
-
+        int count = getInt(getColumnIndex(QuestionsUsageTable.Cols.COUNT));
         Question question = new Question(UUID.fromString(uuidString));
         question.setText(title);
+        question.setNumberOfUses(count);
         return question;
     }
 

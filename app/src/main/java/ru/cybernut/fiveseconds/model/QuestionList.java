@@ -10,6 +10,7 @@ import java.util.Random;
 
 import ru.cybernut.fiveseconds.database.FiveSecondsBaseHelper;
 import ru.cybernut.fiveseconds.database.FiveSecondsCursorWrapper;
+import ru.cybernut.fiveseconds.database.FiveSecondsDBSchema;
 
 import static ru.cybernut.fiveseconds.database.FiveSecondsDBSchema.QuestionsTable;
 
@@ -49,6 +50,22 @@ public class QuestionList {
         );
         return new FiveSecondsCursorWrapper(cursor);
     }
+
+    private FiveSecondsCursorWrapper queryQuestionsWithNumbersOfUsage(String whereClause, String[] whereArgs) {
+        SQLiteDatabase database = fiveSecondsBaseHelper.getReadableDatabase();
+        Cursor cursor = database.rawQuery("SELECT question._id, question.uuid, question.ru_text, question.question_set_id, ifnull(usage.count, 0) FROM questions question LEFT JOIN questions_usage usage ON question.uuid = usage.uuid", whereArgs);
+//        Cursor cursor = database.query(
+//                QuestionsTable.NAME,
+//                null,
+//                whereClause,
+//                whereArgs,
+//                null,
+//                null,
+//                null
+//        );
+        return new FiveSecondsCursorWrapper(cursor);
+    }
+
 
     public List<String> getRandomIdList(int numberOfQuestions, ArrayList<Integer> questionSetIdList) {
         int recievedQuestion = 0;
@@ -99,10 +116,12 @@ public class QuestionList {
     public List<Question> getQuestions() {
         List<Question> questions = new ArrayList<>();
 
-        try (FiveSecondsCursorWrapper cursorWrapper = queryQuestions(null, null)) {
+        try (FiveSecondsCursorWrapper cursorWrapper = queryQuestionsWithNumbersOfUsage(null, null)) {
             cursorWrapper.moveToFirst();
             while (!cursorWrapper.isAfterLast()) {
-                questions.add(cursorWrapper.getQuestion());
+                Question tempQuestion = cursorWrapper.getQuestion();
+                //tempQuestion.setNumberOfUses(getNumberOfUsage(tempQuestion));
+                questions.add(tempQuestion);
                 cursorWrapper.moveToNext();
             }
         }
@@ -124,6 +143,37 @@ public class QuestionList {
 //        String uuidString = question.getId().toString();
 //        database.delete(QuestionsTable.NAME, QuestionsTable.Cols.UUID + " = ?", new String[] {uuidString});
 //    }
+
+    private int getNumberOfUsage(Question question) {
+        SQLiteDatabase database = fiveSecondsBaseHelper.getReadableDatabase();
+        String[] whereArgs = new String[] {question.getId().toString()};
+
+        Cursor cursor = database.query(
+                FiveSecondsDBSchema.QuestionsUsageTable.NAME,
+                new String[] {FiveSecondsDBSchema.QuestionsUsageTable.Cols.COUNT},
+                "uuid = ?",
+                whereArgs,
+                null,
+                null,
+                null
+        );
+
+        if (cursor.moveToFirst()) {
+            return cursor.getInt(0);
+        }
+        return 0;
+    }
+
+    public void increaseNumberOfUsage(String uuid) {
+        SQLiteDatabase database = fiveSecondsBaseHelper.getReadableDatabase();
+        Question temp = getQuestion(uuid);
+        int count = getNumberOfUsage(temp);
+        count++;
+        ContentValues values = new ContentValues();
+        values.put(FiveSecondsDBSchema.QuestionsUsageTable.Cols.UUID, uuid);
+        values.put(FiveSecondsDBSchema.QuestionsUsageTable.Cols.COUNT, count);
+        database.replace(FiveSecondsDBSchema.QuestionsUsageTable.NAME, null, values);
+    }
 
     public Question getQuestion(String id){
         try (FiveSecondsCursorWrapper cursor = queryQuestions(QuestionsTable.Cols.UUID + " = ?", new String[]{id})) {

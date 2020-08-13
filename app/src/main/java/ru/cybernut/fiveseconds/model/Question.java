@@ -6,6 +6,7 @@ public class Question {
 
     private String text;
     private UUID id;
+    private int numberOfUses;
 
     public Question() {
         this(UUID.randomUUID());
@@ -32,4 +33,11 @@ public class Question {
         this.text = text;
     }
 
+    public int getNumberOfUses() {
+        return numberOfUses;
+    }
+
+    public void setNumberOfUses(int numberOfUses) {
+        this.numberOfUses = numberOfUses;
+    }
 }

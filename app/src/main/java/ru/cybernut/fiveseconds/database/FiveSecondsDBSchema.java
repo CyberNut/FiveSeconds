@@ -30,4 +30,15 @@ public class FiveSecondsDBSchema {
         }
     }
 
+    public static final class QuestionsUsageTable {
+
+        public static final String NAME =  "questions_usage";
+
+        public static final class Cols {
+            public static final String UUID = "uuid";
+            public static final String COUNT = "count";
+        }
+    }
+
+
 }
